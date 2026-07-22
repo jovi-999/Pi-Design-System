@@ -24,7 +24,7 @@
 5. 真的需要自訂樣式時，**import tokens 再寫**：
    ```scss
    @use "pi-design-system/tokens" as *;
-   .my-feature { padding: $space-4; color: $fg; }
+   .my-feature { padding: $sp-4; color: $fg; }
    ```
 
 ---
@@ -38,7 +38,7 @@
 | `background: white` | `background: $surface;` |
 | `border: 1px solid #eee` | `border: 1px solid $border;` |
 | `font-size: 14px` | `@extend .fz-body-sm;` 或 `font-size: $fz-body-sm;` |
-| `padding: 16px 20px` | `padding: $space-4 $space-5;` |
+| `padding: 16px 20px` | `padding: $sp-4 $sp-5;` |
 | `border-radius: 8px` | `border-radius: $radius-sm;` |
 | `box-shadow: 0 2px 4px rgba(0,0,0,.1)` | `box-shadow: $shadow-sm;` |
 | 自己寫 `<button class="my-btn">` | `<button class="gl_btn gl_btn-success gl_btn-md">` |
@@ -134,10 +134,10 @@ Size token：`xs`(32px) / `sm`(40px) / `md`(48px, **預設**) / `lg`(56px) / `xl
 
 ## 5. 間距 / 圓角 / 陰影
 
-**間距**：永遠用 4 的倍數。`$space-1`(4) / `-2`(8) / `-3`(12) / `-4`(16) / `-6`(24) / `-8`(32)...
+**間距**：永遠用 4 的倍數。`$sp-1`(4) / `-2`(8) / `-3`(12) / `-4`(16) / `-6`(24) / `-8`(32)...
 
 **圓角**：
-- 小 chip、tag → `$radius-xs` (2)
+- 小 chip、tag → `$radius-xs` (4)
 - input、小按鈕 → `$radius-sm` (8)
 - ⭐ 預設卡片 / 按鈕 → `$radius-md` (12)
 - feature card、modal → `$radius-lg` (16)
@@ -262,7 +262,6 @@ letter-spacing: 0.5px;
 margin-top: 1.5em;
 padding: 1rem;
 ```
-✅ 一律用 `$space-*` 變數（px-based）。
 
 ---
 
@@ -309,16 +308,16 @@ padding: 1rem;
 @use "pi-design-system/tokens" as *;
 
 .my-card {
-  padding: $space-4;
+  padding: $sp-4;
   background: $surface;
   border-radius: $radius-md;
   box-shadow: $shadow-sm;
   color: $fg;
 
   &__actions {
-    margin-top: $space-4;
+    margin-top: $sp-4;
     display: flex;
-    gap: $space-2;
+    gap: $sp-2;
   }
 
   &:hover { box-shadow: $shadow-md; }

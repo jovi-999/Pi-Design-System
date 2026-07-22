@@ -1,6 +1,11 @@
 # Pi Design System
 
-這個 repo 是 **token 與 component 的唯一真相來源**，目前用途：**給前端切版時對照目前的元件內容與樣式**。本機跑預覽頁即可瀏覽，不發布到 npm。
+這個 repo 是 **token 與 component 的唯一真相來源**，用途：
+
+1. **前端切版對照**：本機跑預覽頁，對照元件內容與樣式。
+2. **原型專案的樣式基準**：PM 與 AI agent 討論功能產出原型時，vendored 本 repo 的 `src/` 作為元件 guideline（見 [docs/prototype-README.template.md](docs/prototype-README.template.md)）。
+
+不發布 npm；下游一律採 **vendored**（複製需要的檔案進自己專案）。
 
 ---
 
@@ -11,7 +16,9 @@
 | 文件 | 對象 | 內容 |
 |---|---|---|
 | [STRUCTURE.md](STRUCTURE.md) | 人 + agent | 檔案樹狀圖、各區用途、修改方式與注意 |
-| [docs/ai-guide.md](docs/ai-guide.md) | agent | Figma 名稱 ↔ class 對照表 |
+| [docs/ai-guide.md](docs/ai-guide.md) | agent | Figma 名稱 ↔ class 對照表、產頁硬規則 |
+| [docs/prototype-README.template.md](docs/prototype-README.template.md) | 原型專案 | 原型 repo 的 README 範本（vendored 清單 + 流程） |
+| [docs/prototype-CLAUDE.template.md](docs/prototype-CLAUDE.template.md) | 原型專案 | 原型 repo 的 CLAUDE.md 範本（agent 產頁規則） |
 | [CLAUDE.md](CLAUDE.md) | agent | 對話自動載入的專案規則（禁自創 token 等） |
 | [SKILL.md](SKILL.md) | agent | 結構化使用規則 |
 | `.claude/skills/` | agent | 專案 skill（如 figma-to-pi-ds：Figma→Pi DS 流程） |
@@ -27,9 +34,11 @@
 2. [色彩](#色彩)
 3. [圖示](#圖示)
 4. [間距、圓角與層次](#間距圓角與層次)
-5. [元件](#元件)
-6. [產品介面](#產品介面)
-7. [檔案結構](#檔案結構)
+5. [安裝與使用](#安裝與使用)
+6. [開發本系統](#開發本系統)
+7. [字型管理（Fonts）](#字型管理fonts)
+8. [icon 字型（symicon）維護](#icon-字型symicon維護)
+9. [授權 / 引用](#授權--引用)
 
 ---
 
@@ -54,34 +63,11 @@
 
 **色階結構。** 每個色相都有 50→900 的色階。500 是品牌／語意主色；400 是淺色背景上的 hover/active；600 是深色背景上的 hover。50 與 100 用於塊狀背景（badge、callout）。**永遠不要** 自創中間值（例如 550）—— 需要的話用 500 配 alpha overlay，或改用語意 alias。
 
-**色相。**
-
-- **Basic（中性）** —— 暖偏冷的灰。內文、border、surface。
-- **Primary（teal #009688）** —— 歷史品牌色、Logo、主視覺重點。
-- **Success（teal-green #00AA90）** —— 正向確認、流程內 CTA。**故意** 跟 Primary 很接近：CTA 走 Success，把 Primary 留給 logo / 品牌標。
-- **Info（blue #316AF6）** —— 中性訊息 callout、資料表中的連結。
-- **Warning（yellow #FAC919）** —— 提醒、軟性確認。
-- **Danger（red #F64B5C）** —— 破壞性動作、錯誤、負評 badge。
-- **Orange（#F77A3B）** —— **僅用於** VIP / 付費方案。不要當成一般輔助色。
-- **Purple（#8250FF）** —— **僅用於** AI 生成內容、推薦、智慧建議。不要當成一般輔助色。
-
-**語意 alias。** 元件程式碼裡用這些，不要直接用 raw 色票：`--bg`、`--bg-muted`、`--bg-subtle`、`--surface`、`--fg`、`--fg-2`、`--fg-3`、`--border`、`--border-strong`、`--brand`、`--brand-hover`、`--link`。
-
-**圖片上的深色文字：** `--cl-dark-*`（500→100）。**圖片上的淺色文字：** `--cl-light-*`。一律搭配 40–60% 漸層 scrim —— 文字不要直接放在未處理的影像上。
-
 ---
 
 ## 圖示
 
 **字體家族。** `symicon-fill` —— 172 個 glyph、單一線重的 filled 風格。幾何形狀對齊 24×24 畫板、2px 視覺筆畫；每個 icon 視覺量約佔 18×18。整套刻意只服務本產品族群：求職動詞為主（`interview-logo`、`interview-luckybag`、`allowance-book`、`atm`、`receipt`、`factory`），不收一般通用 dev / file 圖示。
-
-**尺寸。**
-
-- `14px` —— 跟 body-sm 內文混排
-- `16px` —— 跟 body-md 內文混排、輸入框內附件
-- `20px` —— 預設 nav-bar 與按鈕 icon
-- `24px` —— 卡片標題、空狀態裝飾
-- `32px+` —— 主視覺重點，不混排內文
 
 **用法。**
 
@@ -95,56 +81,29 @@
 
 **顏色。** Icon 透過 `currentColor` 繼承。**永遠不要** 在 icon 上寫死 hex —— 跟父層文字色繼承才會跟著主題切換。
 
-**旋轉與翻轉 helper。** `icon-rotate-{90,180,270}`、`icon-flip-x`、`icon-flip-y`。用這些而不是收一份重複 glyph（例如不要另外做 "arrow-left"，旋轉 "arrow-right" 即可）。
-
 完整 class 清單見 `assets/symicon.css`，視覺索引見 `preview/icons.html`。
 
 ---
 
 ## 間距、圓角與層次
 
-**Space scale**（`--sp-*`）：4、8、12、16、20、24、32、40、48、64。
+**Space scale**（`--sp-*` / `$sp-*`）：4、8、12、16、20、24、32、40、48、64。
 
-**圓角。**
+**圓角**（`--radius-*` / `$radius-*`）：
 
-- `--radius-xs` (2px) —— 子元件、tag 角
-- `--radius-sm` (8px) —— input、小按鈕
-- `--radius-md` (12px) —— **卡片與按鈕的預設值**
-- `--radius-lg` (16px) —— 主打卡片、modal
-- `--radius-xl` (24px) —— hero tile、行銷頁
-- `--radius-pill` (999px) —— filter chip、avatar、圓頭按鈕
-
-**層次（陰影）。** 六階（`--shadow-xs` → `--shadow-xxl`）。卡片預設 `--shadow-sm`，hover 升 `--shadow-md`。Modal 用 `--shadow-xl`。**「Ring」不是獨立 token**，而是 `.gl_shadow-*` 疊加 `.gl_border-outer` / `.gl_border-inner`。hadow 跟 1px border —— 二擇一。
-
----
-
-## 元件
-
-TBD —— 詳見 `preview/components.html`（即將補完）。
-
-規劃中的元件：Button、Input、Select、Checkbox/Radio、Switch、Badge/Chip、Tag、Card、List-Row、Avatar、Empty-State、Toast、Modal/Sheet、Nav-Bar、Tab-Bar、Pagination、Progress、Skeleton。
-
----
-
-## 產品介面
-
-TBD —— 各產品的小型 UI kit（HTML mockup）：
-
-1. **Interview Prep** —— 題庫、公司頁、面試評論流
-2. **Salary Insights** —— 角色薪資範圍、福利分解、匿名評論
-3. **Part-Time Match** —— 時薪職缺、班別篩選、津貼 badge
-
----
-
-## 檔案結構
-
-完整檔案樹狀圖、各區用途與「要改什麼動哪裡」的修改指南，已獨立成 **[STRUCTURE.md](STRUCTURE.md)**（人 + agent 共用、單一真相，避免與本檔漂移）。
+- `--radius-xs` : 4px
+- `--radius-sm` : 8px
+- `--radius-md` : 12px
+- `--radius-lg` : 16px
+- `--radius-xl` : 24px
+- `--radius-xxl` : 32px
+- `--radius-pill` : 999px
 
 ---
 
 ## 安裝與使用
 
-這個 repo **不發布到 npm**。前端切版時用法：clone 下來，本機跑預覽頁，對照元件樣式與 class 名稱即可。
+前端切版時用法：clone 下來，本機跑預覽頁，對照元件樣式與 class 名稱即可。
 
 ### 1. 啟動預覽
 
@@ -164,35 +123,18 @@ npm run dev            # 啟動預覽，開瀏覽器看左側目錄 + 各元件�
 - **查 token / 色票 / 圖示**：foundation 對照頁（color / type / shadow / tokens / icons）同樣在預覽左側目錄。
 - **禁自創 token / class**：切版只能用設計系統已存在的 token / class，不確定先 `grep src/` 或讀 `src/tokens`、`src/components` 確認。
 
-### 3. 要拿 CSS 產物時
+### 3. 給原型專案使用（vendored）
 
-需要編譯後的 CSS（例如貼進其他頁面比對）：
+PM + AI agent 的原型專案把本 repo 的 `src/` 與 `docs/ai-guide.md` 複製（vendored）進去，agent 依 guideline 產出畫面。完整複製清單、指令與規則範本：
 
-```bash
-npm run build          # 產出 dist/pi-ds.css（expanded）
-npm run build:min      # 產出 dist/pi-ds.min.css（compressed）
-```
-
-`dist/` 是 build 產物（`.gitignore`，不入版控）。
+- [docs/prototype-README.template.md](docs/prototype-README.template.md) —— 原型 repo 的 README 範本
+- [docs/prototype-CLAUDE.template.md](docs/prototype-CLAUDE.template.md) —— 原型 repo 的 CLAUDE.md 範本
 
 ---
 
 ## 開發本系統
 
-### Repo 結構
-
-```
-Pi-Design-System/
-├── src/                   ← 主程式（你寫的 SCSS，單一真相源）
-│   ├── tokens/            ← 設計 token（色 / 字 / 間距 / 圓角 / 陰影…）
-│   ├── base/              ← reset / fonts / utilities
-│   └── components/        ← 元件，每元件一檔，class 前綴 gl_
-├── preview/               ← 視覺對照頁（npm run dev 看，不用 build）
-├── dist/                  ← npm run build 的產物（.gitignore，不入版控）
-└── assets/ fonts/         ← icon 字體 / 字型檔
-```
-
-完整檔案地圖見 [STRUCTURE.md](STRUCTURE.md)。
+Repo 結構與「要改什麼動哪裡」見 **[STRUCTURE.md](STRUCTURE.md)**（單一真相，此處不重複）。
 
 ### 日常開發
 
@@ -243,7 +185,7 @@ $font-path: "../../fonts" !default;
 }
 ```
 
-`$font-path` 用 `!default` 留了覆寫鉤子（預設 `"../../fonts"`，相對 `src/base/`）。預覽頁吃這個預設值即可，不用改。
+預設 `"../../fonts"`（相對 `src/base/`），預覽頁吃這個預設值即可，不用改；下游 vendored 時依自己的字型存放位置覆寫 `$font-path`。
 
 ### 換 / 升級字型怎麼做
 
@@ -347,7 +289,3 @@ npm run dev
 - **Noto Sans TC** —— SIL Open Font License 1.1，© Google。
 - **Google Sans Flex** —— SIL Open Font License 1.1，© Google。
 - **symicon-fill** —— 內部資產，© Pi。
-
-## SKILL.md
-
-給在這套系統裡工作的 agent 用的子文件（程式碼慣例、命名規則、什麼時候用哪個 token）會放在 `SKILL.md`，等元件補完後上線。
