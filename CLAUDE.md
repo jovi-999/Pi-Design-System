@@ -12,3 +12,17 @@
 ## 修改範圍
 - 使用者要求小修改時，只動該處，不要順手「改善」其他部分。
 - 改 token / class 命名屬於 breaking change，需同步更新所有引用處與文件（README、SKILL.md、preview）。
+
+## Agent skills
+
+### Issue tracker
+
+GitHub Issues via the `gh` CLI（repo：`jovi-999/Pi-Design-System-`）。See `docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+五個 canonical 預設 label（label 字串 = 角色名）。See `docs/agents/triage-labels.md`.
+
+### Domain docs
+
+Single-context — 根目錄 `CONTEXT.md` + `docs/adr/`。See `docs/agents/domain.md`.
