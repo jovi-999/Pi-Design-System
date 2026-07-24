@@ -29,7 +29,7 @@
 
 ## 組合件（⚠️ 待確認）
 <!-- 缺件門檻第 2 層：無正式元件、用現有 token 疊出。scss 為 prototype-scoped。無則刪 -->
-- <組合件名> — class `.proto-x-<part>`（`resources/sass/prototypes/_<name>.scss`）— 用 <哪些 token> 疊出 — ⚠️ 待確認「組合而非正式元件」
+- <組合件名> — class `.preview-<name>-<part>`（`resources/sass/preview-<name>.scss`）— 用 <哪些 token> 疊出 — ⚠️ 待確認「組合而非正式元件」
 
 ## 狀態 + 互動（AI 推測）
 - 頁面級：整頁 loading / 空狀態 / 權限 — ⚠️ 待確認
@@ -40,9 +40,10 @@
 - <新提議元件> — 🆕 待確認（4 欄 + 正式 class 待設計）
 
 ## Blade / SCSS 產物
-- Blade view：`resources/views/prototypes/<name>.blade.php`
-- 組合件 scss：`resources/sass/prototypes/_<name>.scss`（若有）
-- Route：`/prototypes/<name>`；`npm run dev` + `php artisan serve` 可開
+- Blade view：`resources/views/prototypes/preview-<name>.blade.php`
+- SCSS 入口：`resources/sass/preview-<name>.scss`（獨立檔，@use 'pi-ds/index'；含組合件樣式）
+- 已加進 `vite.config.*` input；Route：`/prototypes/preview-<name>`
+- 跑：Laradock 內 `npm run watch`
 ```
 
 ## 後端 handoff 模板
