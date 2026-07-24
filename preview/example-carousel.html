@@ -1,0 +1,48 @@
+<!doctype html>
+<!-- @dsCard group="Prototype" name="Carousel (新件 placeholder)" subtitle="pm-to-preview 實戰：真缺件 carousel → PM 同意 → placeholder" viewport="1200x600" -->
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=1200" />
+<title>Pi DS — Prototype · Carousel placeholder</title>
+<link rel="stylesheet" href="/src/index.scss" />
+<link rel="stylesheet" href="/preview/preview.scss" />
+<link rel="stylesheet" href="/assets/symicon.css" />
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="eyebrow fz-title-xs fz-tit text-basic-alpha-500">Prototype</div>
+    <h1 class="fz-headline-xl fz-tit text-basic-alpha-900">輪播圖 banner — 新件 placeholder</h1>
+  </header>
+
+  <section>
+    <h2>頁面 Render</h2>
+    <p class="dek">
+      門檻第 3 層<strong>真缺件</strong>：carousel 需 JS 自動輪播 + slide 過場，現有 token 疊不出。
+      PM 已同意做新件 → prototype 用 <strong>placeholder</strong>（單張靜態圖頂替），標
+      <code>🆕 待確認</code>；正式輪播件待前端做。本頁零自創。
+    </p>
+
+    <div class="panel gl_border-inner">
+
+      <!-- ============================================================
+           carousel placeholder —— 04 缺件流程：真缺件、PM 同意新件
+           無 carousel/slider 元件；暫用「單張靜態圖」頂替。
+           外層 gl_border-outer（現有 solid 描邊，無 dashed token 故不自創）
+           框出待做範圍 + 可見標籤 + 本註解。正式件待前端做。
+           ============================================================ -->
+      <div class="gl_border-outer" style="border-radius:var(--radius-md); overflow:hidden;">
+        <!-- 頂替：單張靜態圖（此處以色塊代表一張 banner 圖） -->
+        <div style="height:260px; background:var(--cl-basic-200);
+                    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px;">
+          <span class="fz-title-md fz-tit" style="color:var(--fg-3);">🆕 carousel（待確認）</span>
+          <span class="fz-body-sm" style="color:var(--fg-3);">暫用單張靜態圖頂替，正式輪播件待前端做</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+</div>
+</body>
+</html>
