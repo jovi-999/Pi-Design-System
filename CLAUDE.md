@@ -17,7 +17,7 @@
 
 ### Issue tracker
 
-GitHub Issues via the `gh` CLI（repo：`jovi-999/Pi-Design-System-`）。See `docs/agents/issue-tracker.md`.
+Local markdown — issue 存為 `.scratch/<feature>/` 下的 markdown 檔。See `docs/agents/issue-tracker.md`.
 
 ### Triage labels
 
