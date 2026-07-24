@@ -4,7 +4,13 @@
 
 ## 一次性前置（新專案設定，只做一次）
 
-1. **Vendor Pi DS**：把 Pi DS 的 `src/` 複製到 `resources/sass/pi-ds/`（含 `tokens/` `base/` `components/` `index.scss`）。字型檔（`*.woff2`）依 `pi-ds/base/_fonts.scss` 的 `@font-face` url 放好，或改 url 指向 `public/fonts/`。
+> **懶人法**：直接跑 skill 內附 `setup.sh`，自動做完 1–4 + 建 layout scaffold + 印剩餘手動步驟：
+> ```bash
+> bash .claude/skills/pm-to-blade/setup.sh <Pi-Design-System repo 路徑>
+> ```
+> 以下為它做的事（也可手動）：
+
+1. **Vendor Pi DS**：把 Pi DS 的 `src/` 複製到 `resources/sass/pi-ds/`（含 `tokens/` `base/` `components/` `index.scss`）。字型只有 **symicon**（`symicon-6.4s.woff*`）是本地檔（Google Sans Flex 內嵌 CDN、Noto Sans TC `@import` CDN），copy 到 `public/fonts/`，並在 app.scss 覆寫 `$font-path: '/fonts'`。
 2. **編譯入口** `resources/sass/app.scss`：
    ```scss
    @use 'pi-ds/index' as *;          // 全套 tokens + base + components
