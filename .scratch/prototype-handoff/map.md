@@ -33,5 +33,5 @@
 
 ## Out of scope
 
-- 把整條流程固化成可重用 skill / guideline 文件 —— 本次終點是驗證流程 + 定格式，skill 化另開 effort。
+- 把整條流程固化成可重用 skill / guideline 文件 —— 本次終點是驗證流程 + 定格式，skill 化另開 effort。**（已於後續 effort 完成：skill `pm-to-preview`，commit f68b3d6；fog 全消故未建圖，直接建 + 05 回歸驗證。）**
 - 前後端實作本身（handoff 之後的任務）。
