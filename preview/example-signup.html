@@ -1,0 +1,73 @@
+<!doctype html>
+<!-- @dsCard group="Prototype" name="Signup (E2E)" subtitle="端到端範例：navbar(組合件) + 註冊表單" viewport="1200x1400" -->
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=1200" />
+<title>Pi DS — Prototype · 會員註冊</title>
+<link rel="stylesheet" href="/src/index.scss" />
+<link rel="stylesheet" href="/preview/preview.scss" />
+<link rel="stylesheet" href="/assets/symicon.css" />
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="eyebrow fz-title-xs fz-tit text-basic-alpha-500">Prototype</div>
+    <h1 class="fz-headline-xl fz-tit text-basic-alpha-900">會員註冊頁 — 端到端範例</h1>
+  </header>
+
+  <section>
+    <h2>頁面 Render</h2>
+    <p class="dek">
+      驗證 01→04 流程：navbar（<strong>組合件 ⚠️</strong>，非正式元件）+ 註冊表單
+      （<code>.gl_form-group</code> / <code>.gl_form-control</code> / <code>.gl_btn</code>）。
+      本頁零自創 token/class：navbar 僅用現有 CSS var 疊出。
+    </p>
+
+    <div class="panel gl_border-inner">
+
+      <!-- ============================================================
+           navbar —— 04 門檻第 2 層「組合件」
+           無 navbar 元件；用現有 token（--cl-basic-* / --radius-md）+
+           純 HTML flex 疊出橫幅。handoff 標 ⚠️ 待確認「組合而非正式元件」。
+           ============================================================ -->
+      <nav style="display:flex; align-items:center; justify-content:space-between;
+                  padding:12px 20px; border-radius:var(--radius-md);
+                  background:var(--cl-basic-900);">
+        <span class="fz-title-md fz-tit" style="color:var(--cl-basic-0);">Pi&nbsp;Portal</span>
+        <button class="gl_btn gl_btn-sm gl_btn-ghost-basic" style="color:var(--cl-basic-0);">登入</button>
+      </nav>
+
+      <!-- ============================================================
+           註冊表單 —— 全部命中現有元件（門檻第 1 層）
+           2 input（姓名 / Email）+ 1 select（產業別）+ 送出鈕
+           ============================================================ -->
+      <form style="max-width:480px; margin:32px auto 8px; display:flex;
+                   flex-direction:column; gap:16px;"
+            onsubmit="return false;">
+
+        <div class="gl_form-group">
+          <input class="gl_form-control" type="text" placeholder="姓名" />
+        </div>
+
+        <div class="gl_form-group">
+          <input class="gl_form-control" type="email" placeholder="Email" />
+        </div>
+
+        <div class="gl_form-group">
+          <select class="gl_form-control">
+            <option>請選擇產業別</option>
+            <option>半導體</option>
+            <option>金融服務</option>
+            <option>電子商務</option>
+          </select>
+        </div>
+
+        <button type="submit" class="gl_btn gl_btn-md gl_btn-success">送出註冊</button>
+      </form>
+
+    </div>
+  </section>
+</div>
+</body>
+</html>
