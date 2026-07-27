@@ -5,45 +5,47 @@
 
 @use "../tokens" as *;
 
-.gl_content-switcher-outer {
-  display: flex;
-  align-items: center;
-  gap: 24px;
-  padding-top: 12px;
-  border-bottom: 1px solid $cl-basic-alpha-100;
-}
-
-.gl_content-switcher {
-  position: relative;
-  display: flex;
-  align-items: center;
-  padding-bottom: 12px;
-  color: $cl-basic-500;
-  cursor: pointer;
-  background: transparent;
-  border: 0;
-  font: inherit;
-  font-weight: 500;
-
-  &::after {
-    content: "";
-    position: absolute;
-    bottom: 4px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 24px;
-    height: 4px;
-    display: none;
-    border-radius: 24px;
+@layer pi {
+  .gl_content-switcher-outer {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    padding-top: 12px;
+    border-bottom: 1px solid $cl-basic-alpha-100;
   }
 
-  &.is-active {
-    @include fz-tit;
+  .gl_content-switcher {
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding-bottom: 12px;
+    color: $cl-basic-500;
+    cursor: pointer;
+    background: transparent;
+    border: 0;
+    font: inherit;
+    font-weight: 500;
 
-    &::after { display: block; }
+    &::after {
+      content: "";
+      position: absolute;
+      bottom: 4px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 24px;
+      height: 4px;
+      display: none;
+      border-radius: 24px;
+    }
+
+    &.is-active {
+      @include fz-tit;
+
+      &::after { display: block; }
+    }
   }
-}
 
-.gl_content-switcher-success .gl_content-switcher.is-active { color: $cl-green-500; &::after { background: $cl-green-500; } }
-.gl_content-switcher-info    .gl_content-switcher.is-active { color: $cl-blue-500;  &::after { background: $cl-blue-500; } }
-.gl_content-switcher-basic   .gl_content-switcher.is-active { color: $cl-basic-900; &::after { background: $cl-basic-900; } }
+  .gl_content-switcher-success .gl_content-switcher.is-active { color: $cl-green-500; &::after { background: $cl-green-500; } }
+  .gl_content-switcher-info    .gl_content-switcher.is-active { color: $cl-blue-500;  &::after { background: $cl-blue-500; } }
+  .gl_content-switcher-basic   .gl_content-switcher.is-active { color: $cl-basic-900; &::after { background: $cl-basic-900; } }
+}

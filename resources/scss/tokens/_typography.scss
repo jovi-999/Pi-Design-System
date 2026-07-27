@@ -2,10 +2,12 @@
 // Pi DS — Typography Tokens
 // ============================================================
 
-:root {
-  --font-sans:    "Google Sans Flex", "Noto Sans TC", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang TC", "Microsoft JhengHei", sans-serif;
-  --font-display: "Google Sans Flex", "Noto Sans TC", ui-sans-serif, system-ui, sans-serif;
-  --font-icon:    "symicon";
+@layer pi {
+  :root {
+    --font-sans:    "Google Sans Flex", "Noto Sans TC", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang TC", "Microsoft JhengHei", sans-serif;
+    --font-display: "Google Sans Flex", "Noto Sans TC", ui-sans-serif, system-ui, sans-serif;
+    --font-icon:    "symicon";
+  }
 }
 
 $font-sans:    var(--font-sans);
@@ -34,52 +36,13 @@ $fz-body-md: (size: 16px, lh: 28px, tracking: 0);
 $fz-body-sm: (size: 14px, lh: 24px, tracking: 0);
 $fz-body-xs: (size: 12px, lh: 20px, tracking: 0);
 
-// ---------- Type classes ----------
-// Headline
-.fz-headline-xxl { font-size: 48px; line-height: 72px; letter-spacing: -0.01em; }
-.fz-headline-xl  { font-size: 40px; line-height: 60px; letter-spacing: -0.01em; }
-.fz-headline-lg  { font-size: 32px; line-height: 48px; letter-spacing: -0.005em; }
-.fz-headline-md  { font-size: 28px; line-height: 42px; }
-.fz-headline-sm  { font-size: 24px; line-height: 36px; }
-.fz-headline-xs  { font-size: 20px; line-height: 30px; }
-
-// Title
-.fz-title-lg { font-size: 18px; line-height: 28px; }
-.fz-title-md { font-size: 16px; line-height: 24px; }
-.fz-title-sm { font-size: 14px; line-height: 20px; }
-.fz-title-xs { font-size: 12px; line-height: 18px; }
-
-// Body
-.fz-body-lg { font-size: 18px; line-height: 32px; }
-.fz-body-md { font-size: 16px; line-height: 28px; }
-.fz-body-sm { font-size: 14px; line-height: 24px; }
-.fz-body-xs { font-size: 12px; line-height: 20px; }
-
-// Legacy aliases (h1-h4 / s1-s4 / t1-t4) — preserved for migration
-.fz-h1 { font-size: 40px; line-height: 48px; }
-.fz-h2 { font-size: 32px; line-height: 40px; }
-.fz-h3 { font-size: 24px; line-height: 32px; }
-.fz-h4 { font-size: 20px; line-height: 24px; }
-.fz-s1 { font-size: 18px; line-height: 26px; }
-.fz-s2 { font-size: 16px; line-height: 24px; }
-.fz-s3 { font-size: 14px; line-height: 22px; }
-.fz-s4 { font-size: 12px; line-height: 20px; }
-.fz-t1 { font-size: 18px; line-height: 32px; }
-.fz-t2 { font-size: 16px; line-height: 28px; }
-.fz-t3 { font-size: 14px; line-height: 24px; }
-.fz-t4 { font-size: 12px; line-height: 20px; }
-
-// Legacy display aliases. Prefer .ft-semicondensed / .ft-condensed.
-.ft-d-din,
-.ft-d-din-c {
-  font-family: $font-display;
-  font-variant-numeric: tabular-nums lining-nums;
-  letter-spacing: -0.02em;
-}
-.ft-d-din-c { letter-spacing: -1px; }
-
-// 標題字重。提供 mixin 版是必要的：`@extend .fz-tit` 會讓被 extend 的宣告
-// 輸出在「原始 .fz-tit 規則的位置」，因此若使用端在 `@layer pi` 內，
+// ---------- Mixins ----------
+// 標題字重。必須定義在 @layer 之外 —— Sass 的 mixin 定義有區塊作用域，
+// 寫在 `@layer pi { }` 內就不會被 @forward 匯出，其他檔案 @include 會
+// 得到 "Undefined mixin"。
+//
+// 提供 mixin 版而非讓元件 `@extend .fz-tit` 的原因：@extend 會把被 extend
+// 的宣告輸出在「原始 .fz-tit 規則的位置」，因此使用端在 `@layer pi` 內時，
 // 樣式會逃出 layer 變成未分層，破壞 layer 的優先權保證。
 // → 元件內一律用 `@include fz-tit;`，不要 `@extend .fz-tit;`
 @mixin fz-tit {
@@ -96,17 +59,63 @@ $fz-body-xs: (size: 12px, lh: 20px, tracking: 0);
   }
 }
 
-.fz-tit { @include fz-tit; }
+@layer pi {
+  // ---------- Type classes ----------
+  // Headline
+  .fz-headline-xxl { font-size: 48px; line-height: 72px; letter-spacing: -0.01em; }
+  .fz-headline-xl  { font-size: 40px; line-height: 60px; letter-spacing: -0.01em; }
+  .fz-headline-lg  { font-size: 32px; line-height: 48px; letter-spacing: -0.005em; }
+  .fz-headline-md  { font-size: 28px; line-height: 42px; }
+  .fz-headline-sm  { font-size: 24px; line-height: 36px; }
+  .fz-headline-xs  { font-size: 20px; line-height: 30px; }
 
-// Google Sans Flex condensed display（窄體變體）
-// 註：與 .fz-tit 併用時的字重降級（648）已移進 `@mixin fz-tit` 內宣告，
-// 這樣所有 `@include fz-tit` 的元件都能一併取得，不必逐處重複。
-.ft-semicondensed {
-  font-family: "Google Sans Flex", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, Arial, "Segoe UI", sans-serif !important;
-  font-stretch: 64%;
-}
+  // Title
+  .fz-title-lg { font-size: 18px; line-height: 28px; }
+  .fz-title-md { font-size: 16px; line-height: 24px; }
+  .fz-title-sm { font-size: 14px; line-height: 20px; }
+  .fz-title-xs { font-size: 12px; line-height: 18px; }
 
-.ft-condensed {
-  font-family: "Google Sans Flex", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, Arial, "Segoe UI", sans-serif !important;
-  font-stretch: 48%;
+  // Body
+  .fz-body-lg { font-size: 18px; line-height: 32px; }
+  .fz-body-md { font-size: 16px; line-height: 28px; }
+  .fz-body-sm { font-size: 14px; line-height: 24px; }
+  .fz-body-xs { font-size: 12px; line-height: 20px; }
+
+  // Legacy aliases (h1-h4 / s1-s4 / t1-t4) — preserved for migration
+  .fz-h1 { font-size: 40px; line-height: 48px; }
+  .fz-h2 { font-size: 32px; line-height: 40px; }
+  .fz-h3 { font-size: 24px; line-height: 32px; }
+  .fz-h4 { font-size: 20px; line-height: 24px; }
+  .fz-s1 { font-size: 18px; line-height: 26px; }
+  .fz-s2 { font-size: 16px; line-height: 24px; }
+  .fz-s3 { font-size: 14px; line-height: 22px; }
+  .fz-s4 { font-size: 12px; line-height: 20px; }
+  .fz-t1 { font-size: 18px; line-height: 32px; }
+  .fz-t2 { font-size: 16px; line-height: 28px; }
+  .fz-t3 { font-size: 14px; line-height: 24px; }
+  .fz-t4 { font-size: 12px; line-height: 20px; }
+
+  // Legacy display aliases. Prefer .ft-semicondensed / .ft-condensed.
+  .ft-d-din,
+  .ft-d-din-c {
+    font-family: $font-display;
+    font-variant-numeric: tabular-nums lining-nums;
+    letter-spacing: -0.02em;
+  }
+  .ft-d-din-c { letter-spacing: -1px; }
+
+  .fz-tit { @include fz-tit; }
+
+  // Google Sans Flex condensed display（窄體變體）
+  // 註：與 .fz-tit 併用時的字重降級（648）已移進 `@mixin fz-tit` 內宣告，
+  // 這樣所有 `@include fz-tit` 的元件都能一併取得，不必逐處重複。
+  .ft-semicondensed {
+    font-family: "Google Sans Flex", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, Arial, "Segoe UI", sans-serif !important;
+    font-stretch: 64%;
+  }
+
+  .ft-condensed {
+    font-family: "Google Sans Flex", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, Arial, "Segoe UI", sans-serif !important;
+    font-stretch: 48%;
+  }
 }

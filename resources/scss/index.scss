@@ -1,7 +1,7 @@
 // ============================================================
 // Pi DS — Entry point
 //
-// 使用方式（本 repo 不發 npm，下游採 vendored：複製需要的 src 進專案後 @use 相對路徑）：
+// 使用方式：
 //
 //   // 方案 A：全部載入（tokens + base + components）
 //   @use "pi-design-system/resources/scss/index" as ds;
@@ -13,7 +13,15 @@
 //   @use "pi-design-system/resources/scss/tokens" as ds;
 //   @use "pi-design-system/resources/scss/components/button";
 //   @use "pi-design-system/resources/scss/components/modal";
+//
+// 注意：本檔不含 reset。reset 是頁面級意見（html/body、h1..h6、p），
+// 既有專案已有自己的一套，硬塞會跟專案打架 —— 需要時另外
+// `@use "pi-design-system/resources/scss/reset";`（見該檔說明）。
 // ============================================================
+
+// 必須放在所有 @forward 之前：先宣告 @layer 順序，避免順序隨載入順序漂移。
+// 用 @use 而非 @forward —— @forward 只轉發成員，不輸出 CSS。
+@use "layers";
 
 @forward "tokens";
 @forward "base";

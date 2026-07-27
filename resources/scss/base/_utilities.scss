@@ -4,26 +4,28 @@
 
 @use "../tokens" as *;
 
-.text-basic-0   { color: $cl-basic-0; }
-.text-basic-50  { color: $cl-basic-50; }
-.text-basic-100 { color: $cl-basic-100; }
-.text-basic-300 { color: $cl-basic-300; }
-.text-basic-500 { color: $cl-basic-500; }
-.text-basic-700 { color: $cl-basic-700; }
-.text-basic-900 { color: $cl-basic-900; }
-.text-basic-alpha-500 { color: $cl-basic-alpha-500; }
-.text-basic-alpha-700 { color: $cl-basic-alpha-700; }
-.text-basic-alpha-900 { color: $cl-basic-alpha-900; }
+@layer pi {
+  .text-basic-0   { color: $cl-basic-0; }
+  .text-basic-50  { color: $cl-basic-50; }
+  .text-basic-100 { color: $cl-basic-100; }
+  .text-basic-300 { color: $cl-basic-300; }
+  .text-basic-500 { color: $cl-basic-500; }
+  .text-basic-700 { color: $cl-basic-700; }
+  .text-basic-900 { color: $cl-basic-900; }
+  .text-basic-alpha-500 { color: $cl-basic-alpha-500; }
+  .text-basic-alpha-700 { color: $cl-basic-alpha-700; }
+  .text-basic-alpha-900 { color: $cl-basic-alpha-900; }
 
-.text-primary-500 { color: $cl-primary-500; }
-.text-green-500   { color: $cl-green-500; }
-.text-green-600   { color: $cl-green-600; }
-.text-green-700   { color: $cl-green-700; }
-.text-blue-500    { color: $cl-blue-500; }
-.text-yellow-500  { color: $cl-yellow-500; }
-.text-yellow-700  { color: $cl-yellow-700; }
-.text-red-500     { color: $cl-red-500; }
-.text-red-600     { color: $cl-red-600; }
-.text-orange-500  { color: $cl-orange-500; }
-.text-orange-600  { color: $cl-orange-600; }
-.text-purple-500  { color: $cl-purple-500; }
+  .text-primary-500 { color: $cl-primary-500; }
+  .text-green-500   { color: $cl-green-500; }
+  .text-green-600   { color: $cl-green-600; }
+  .text-green-700   { color: $cl-green-700; }
+  .text-blue-500    { color: $cl-blue-500; }
+  .text-yellow-500  { color: $cl-yellow-500; }
+  .text-yellow-700  { color: $cl-yellow-700; }
+  .text-red-500     { color: $cl-red-500; }
+  .text-red-600     { color: $cl-red-600; }
+  .text-orange-500  { color: $cl-orange-500; }
+  .text-orange-600  { color: $cl-orange-600; }
+  .text-purple-500  { color: $cl-purple-500; }
+}

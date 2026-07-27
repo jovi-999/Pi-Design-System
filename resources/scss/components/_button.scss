@@ -4,117 +4,119 @@
 
 @use "../tokens" as *;
 
-.gl_btn {
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
-  vertical-align: middle;
-  text-align: center;
-  outline: none;
-  cursor: pointer;
-  padding: 4px 16px;
-  border-radius: $radius-sm;
-  font-family: $font-sans;
-  border: 0;
-  transition: background $dur-fast $ease-standard;
-  text-decoration: none;
-  white-space: nowrap;
+@layer pi {
+  .gl_btn {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    vertical-align: middle;
+    text-align: center;
+    outline: none;
+    cursor: pointer;
+    padding: 4px 16px;
+    border-radius: $radius-sm;
+    font-family: $font-sans;
+    border: 0;
+    transition: background $dur-fast $ease-standard;
+    text-decoration: none;
+    white-space: nowrap;
 
-  &:focus-visible {
-    outline: 2px solid $cl-green-500;
-    outline-offset: 2px;
+    &:focus-visible {
+      outline: 2px solid $cl-green-500;
+      outline-offset: 2px;
+    }
   }
+
+  // ---------- Sizes ----------
+  .gl_btn-xl { min-height: 64px; padding: 18px 24px; font-size: 18px; line-height: 28px; gap: 12px;
+    .icon { font-size: 24px; } }
+  .gl_btn-lg { min-height: 56px; padding: 14px 20px; font-size: 18px; line-height: 28px; gap: 12px;
+    .icon { font-size: 24px; } }
+  .gl_btn-md { min-height: 48px; padding: 12px 16px; font-size: 16px; line-height: 24px; gap: 8px;
+    .icon { font-size: 20px; } }
+  .gl_btn-sm { min-height: 40px; padding: 8px 12px;  font-size: 14px; line-height: 20px; gap: 8px;
+    .icon { font-size: 20px; } }
+  .gl_btn-xs { min-height: 32px; padding: 6px 8px;   font-size: 14px; line-height: 20px; gap: 8px;
+    .icon { font-size: 16px; } }
+
+  // ---------- Solid / filled ----------
+  .gl_btn-basic   { color: $cl-basic-0; background: $cl-basic-900; &:hover { background: $cl-basic-900; } }
+  .gl_btn-dark    { color: $cl-basic-900; background: $cl-basic-50;  &:hover { background: $cl-basic-100; } }
+  .gl_btn-info    { color: $cl-basic-0; background: $cl-blue-500;    &:hover { background: $cl-blue-600; } }
+  .gl_btn-success { color: $cl-basic-0; background: $cl-green-500;   &:hover { background: $cl-green-600; } }
+  .gl_btn-warning { color: $cl-basic-900; background: $cl-yellow-500;  &:hover { background: $cl-yellow-600; } }
+  .gl_btn-danger  { color: $cl-basic-0; background: $cl-red-500;     &:hover { background: $cl-red-600; } }
+  .gl_btn-orange  { color: $cl-basic-0; background: $cl-orange-500;  &:hover { background: $cl-orange-600; } }
+  .gl_btn-purple  { color: $cl-basic-0; background: $cl-purple-500;  &:hover { background: $cl-purple-600; } }
+
+  [class*="gl_btn-"][disabled],
+  [class*="gl_btn-"].gl_disabled {
+    cursor: not-allowed;
+    opacity: 0.32;
+  }
+
+  // ---------- Outline ----------
+  .gl_btn-outline-basic,
+  .gl_btn-outline-info,
+  .gl_btn-outline-success,
+  .gl_btn-outline-warning,
+  .gl_btn-outline-danger,
+  .gl_btn-outline-orange,
+  .gl_btn-outline-purple {
+    outline: 1px solid $cl-basic-alpha-100;
+    outline-offset: -1px;
+    background: rgba(255, 255, 255, 0.01);
+  }
+  .gl_btn-outline-basic   { color: $cl-basic-900; }
+  .gl_btn-outline-info    { color: $cl-blue-500; }
+  .gl_btn-outline-success { color: $cl-green-500; }
+  .gl_btn-outline-warning { color: $cl-yellow-600; }
+  .gl_btn-outline-danger  { color: $cl-red-500; }
+  .gl_btn-outline-orange  { color: $cl-orange-500; }
+  .gl_btn-outline-purple  { color: $cl-purple-500; }
+  [class*="gl_btn-outline-"]:hover { background: $cl-basic-alpha-50; }
+
+  // ---------- Ghost ----------
+  .gl_btn-ghost-basic   { color: $cl-basic-900;  background: transparent; }
+  .gl_btn-ghost-info    { color: $cl-blue-500;   background: transparent; }
+  .gl_btn-ghost-success { color: $cl-green-500;  background: transparent; }
+  .gl_btn-ghost-warning { color: $cl-yellow-600; background: transparent; }
+  .gl_btn-ghost-danger  { color: $cl-red-500;    background: transparent; }
+  .gl_btn-ghost-orange  { color: $cl-orange-500; background: transparent; }
+  .gl_btn-ghost-purple  { color: $cl-purple-500; background: transparent; }
+  [class*="gl_btn-ghost-"]:hover { background: $cl-basic-alpha-50; }
+
+  // ---------- Secondary (tinted) ----------
+  .gl_btn-secondary-basic   { color: $cl-basic-900;  background: $cl-basic-100;  &:hover { background: $cl-basic-200; } }
+  .gl_btn-secondary-info    { color: $cl-blue-700;   background: $cl-blue-50;    &:hover { background: $cl-blue-100; } }
+  .gl_btn-secondary-success { color: $cl-green-700;  background: $cl-green-50;   &:hover { background: $cl-green-100; } }
+  .gl_btn-secondary-warning { color: $cl-yellow-700; background: $cl-yellow-50;  &:hover { background: $cl-yellow-100; } }
+  .gl_btn-secondary-danger  { color: $cl-red-700;    background: $cl-red-50;     &:hover { background: $cl-red-100; } }
+  .gl_btn-secondary-orange  { color: $cl-orange-700; background: $cl-orange-50;  &:hover { background: $cl-orange-100; } }
+  .gl_btn-secondary-purple  { color: $cl-purple-700; background: $cl-purple-50;  &:hover { background: $cl-purple-100; } }
+
+  // ---------- Gray (neutral tint on alpha) ----------
+  .gl_btn-gray-basic,
+  .gl_btn-gray-info,
+  .gl_btn-gray-success,
+  .gl_btn-gray-warning,
+  .gl_btn-gray-danger,
+  .gl_btn-gray-orange,
+  .gl_btn-gray-purple { background: $cl-basic-alpha-100; }
+
+  .gl_btn-gray-basic   { color: $cl-basic-900; }
+  .gl_btn-gray-info    { color: $cl-blue-500; }
+  .gl_btn-gray-success { color: $cl-green-500; }
+  .gl_btn-gray-warning { color: $cl-yellow-600; }
+  .gl_btn-gray-danger  { color: $cl-red-500; }
+  .gl_btn-gray-orange  { color: $cl-orange-500; }
+  .gl_btn-gray-purple  { color: $cl-purple-500; }
+  [class*="gl_btn-gray-"]:hover { background: $cl-basic-alpha-200; }
+
+  // ---------- Icon-only ----------
+  .gl_btn-icon.gl_btn-xl { padding: 18px; width: 64px; }
+  .gl_btn-icon.gl_btn-lg { padding: 14px; width: 56px; }
+  .gl_btn-icon.gl_btn-md { padding: 12px; width: 48px; }
+  .gl_btn-icon.gl_btn-sm { padding: 8px;  width: 40px; }
+  .gl_btn-icon.gl_btn-xs { padding: 6px;  width: 32px; }
 }
-
-// ---------- Sizes ----------
-.gl_btn-xl { min-height: 64px; padding: 18px 24px; font-size: 18px; line-height: 28px; gap: 12px;
-  .icon { font-size: 24px; } }
-.gl_btn-lg { min-height: 56px; padding: 14px 20px; font-size: 18px; line-height: 28px; gap: 12px;
-  .icon { font-size: 24px; } }
-.gl_btn-md { min-height: 48px; padding: 12px 16px; font-size: 16px; line-height: 24px; gap: 8px;
-  .icon { font-size: 20px; } }
-.gl_btn-sm { min-height: 40px; padding: 8px 12px;  font-size: 14px; line-height: 20px; gap: 8px;
-  .icon { font-size: 20px; } }
-.gl_btn-xs { min-height: 32px; padding: 6px 8px;   font-size: 14px; line-height: 20px; gap: 8px;
-  .icon { font-size: 16px; } }
-
-// ---------- Solid / filled ----------
-.gl_btn-basic   { color: $cl-basic-0; background: $cl-basic-900; &:hover { background: $cl-basic-900; } }
-.gl_btn-dark    { color: $cl-basic-900; background: $cl-basic-50;  &:hover { background: $cl-basic-100; } }
-.gl_btn-info    { color: $cl-basic-0; background: $cl-blue-500;    &:hover { background: $cl-blue-600; } }
-.gl_btn-success { color: $cl-basic-0; background: $cl-green-500;   &:hover { background: $cl-green-600; } }
-.gl_btn-warning { color: $cl-basic-900; background: $cl-yellow-500;  &:hover { background: $cl-yellow-600; } }
-.gl_btn-danger  { color: $cl-basic-0; background: $cl-red-500;     &:hover { background: $cl-red-600; } }
-.gl_btn-orange  { color: $cl-basic-0; background: $cl-orange-500;  &:hover { background: $cl-orange-600; } }
-.gl_btn-purple  { color: $cl-basic-0; background: $cl-purple-500;  &:hover { background: $cl-purple-600; } }
-
-[class*="gl_btn-"][disabled],
-[class*="gl_btn-"].gl_disabled {
-  cursor: not-allowed;
-  opacity: 0.32;
-}
-
-// ---------- Outline ----------
-.gl_btn-outline-basic,
-.gl_btn-outline-info,
-.gl_btn-outline-success,
-.gl_btn-outline-warning,
-.gl_btn-outline-danger,
-.gl_btn-outline-orange,
-.gl_btn-outline-purple {
-  outline: 1px solid $cl-basic-alpha-100;
-  outline-offset: -1px;
-  background: rgba(255, 255, 255, 0.01);
-}
-.gl_btn-outline-basic   { color: $cl-basic-900; }
-.gl_btn-outline-info    { color: $cl-blue-500; }
-.gl_btn-outline-success { color: $cl-green-500; }
-.gl_btn-outline-warning { color: $cl-yellow-600; }
-.gl_btn-outline-danger  { color: $cl-red-500; }
-.gl_btn-outline-orange  { color: $cl-orange-500; }
-.gl_btn-outline-purple  { color: $cl-purple-500; }
-[class*="gl_btn-outline-"]:hover { background: $cl-basic-alpha-50; }
-
-// ---------- Ghost ----------
-.gl_btn-ghost-basic   { color: $cl-basic-900;  background: transparent; }
-.gl_btn-ghost-info    { color: $cl-blue-500;   background: transparent; }
-.gl_btn-ghost-success { color: $cl-green-500;  background: transparent; }
-.gl_btn-ghost-warning { color: $cl-yellow-600; background: transparent; }
-.gl_btn-ghost-danger  { color: $cl-red-500;    background: transparent; }
-.gl_btn-ghost-orange  { color: $cl-orange-500; background: transparent; }
-.gl_btn-ghost-purple  { color: $cl-purple-500; background: transparent; }
-[class*="gl_btn-ghost-"]:hover { background: $cl-basic-alpha-50; }
-
-// ---------- Secondary (tinted) ----------
-.gl_btn-secondary-basic   { color: $cl-basic-900;  background: $cl-basic-100;  &:hover { background: $cl-basic-200; } }
-.gl_btn-secondary-info    { color: $cl-blue-700;   background: $cl-blue-50;    &:hover { background: $cl-blue-100; } }
-.gl_btn-secondary-success { color: $cl-green-700;  background: $cl-green-50;   &:hover { background: $cl-green-100; } }
-.gl_btn-secondary-warning { color: $cl-yellow-700; background: $cl-yellow-50;  &:hover { background: $cl-yellow-100; } }
-.gl_btn-secondary-danger  { color: $cl-red-700;    background: $cl-red-50;     &:hover { background: $cl-red-100; } }
-.gl_btn-secondary-orange  { color: $cl-orange-700; background: $cl-orange-50;  &:hover { background: $cl-orange-100; } }
-.gl_btn-secondary-purple  { color: $cl-purple-700; background: $cl-purple-50;  &:hover { background: $cl-purple-100; } }
-
-// ---------- Gray (neutral tint on alpha) ----------
-.gl_btn-gray-basic,
-.gl_btn-gray-info,
-.gl_btn-gray-success,
-.gl_btn-gray-warning,
-.gl_btn-gray-danger,
-.gl_btn-gray-orange,
-.gl_btn-gray-purple { background: $cl-basic-alpha-100; }
-
-.gl_btn-gray-basic   { color: $cl-basic-900; }
-.gl_btn-gray-info    { color: $cl-blue-500; }
-.gl_btn-gray-success { color: $cl-green-500; }
-.gl_btn-gray-warning { color: $cl-yellow-600; }
-.gl_btn-gray-danger  { color: $cl-red-500; }
-.gl_btn-gray-orange  { color: $cl-orange-500; }
-.gl_btn-gray-purple  { color: $cl-purple-500; }
-[class*="gl_btn-gray-"]:hover { background: $cl-basic-alpha-200; }
-
-// ---------- Icon-only ----------
-.gl_btn-icon.gl_btn-xl { padding: 18px; width: 64px; }
-.gl_btn-icon.gl_btn-lg { padding: 14px; width: 56px; }
-.gl_btn-icon.gl_btn-md { padding: 12px; width: 48px; }
-.gl_btn-icon.gl_btn-sm { padding: 8px;  width: 40px; }
-.gl_btn-icon.gl_btn-xs { padding: 6px;  width: 32px; }

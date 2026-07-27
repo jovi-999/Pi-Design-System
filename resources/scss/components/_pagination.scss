@@ -15,75 +15,77 @@
 
 @use "../tokens" as *;
 
-// 頁碼 v3 樣式
-.iw_pagination-outer-v3 {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-
-  .iw_pagination-wrap {
-    display: flex;
-    justify-content: space-between;
-    max-width: 408px;
+@layer pi {
+  // 頁碼 v3 樣式
+  .iw_pagination-outer-v3 {
     width: 100%;
-    padding: 24px;
-  }
-
-  .gl_pagination-group {
-    // 數字清單置中排列
     display: flex;
-    align-items: center;
     justify-content: center;
-    gap: 4px;
-    overflow: hidden;
-    background-color: $cl-basic-0;
-    padding: 0;
-    border-radius: 0;
-    list-style: none;
-    margin: 0;
 
-    li { display: flex; }
-  }
-
-  .gl_page-link {
-    @include fz-tit;
-    box-sizing: border-box; // 固定寬高不與 border 疊加
-    color: $cl-basic-900;
-    background: $cl-basic-0;
-    text-decoration: none;
-    font-size: 14px;
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    border-radius: 8px;
-
-    &:hover { background: $cl-basic-alpha-50; }
-
-    // 首/末頁：箭頭停用
-    &.is-disabled {
-      background: transparent;
-      color: $cl-basic-300;
-      cursor: not-allowed;
-      pointer-events: none;
-
-      &:hover { background: transparent; }
+    .iw_pagination-wrap {
+      display: flex;
+      justify-content: space-between;
+      max-width: 408px;
+      width: 100%;
+      padding: 24px;
     }
 
-    // RWD：≤768px（tablet 以下）縮為 32px
-    @media (max-width: 768px) {
-      width: 32px;
-      height: 32px;
-    }
-  }
+    .gl_pagination-group {
+      // 數字清單置中排列
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      overflow: hidden;
+      background-color: $cl-basic-0;
+      padding: 0;
+      border-radius: 0;
+      list-style: none;
+      margin: 0;
 
-  // 當前頁：深色實心
-  .iw_active {
+      li { display: flex; }
+    }
+
     .gl_page-link {
-      color: $cl-basic-0;
-      background: $cl-basic-900;
+      @include fz-tit;
+      box-sizing: border-box; // 固定寬高不與 border 疊加
+      color: $cl-basic-900;
+      background: $cl-basic-0;
+      text-decoration: none;
+      font-size: 14px;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      border-radius: 8px;
+
+      &:hover { background: $cl-basic-alpha-50; }
+
+      // 首/末頁：箭頭停用
+      &.is-disabled {
+        background: transparent;
+        color: $cl-basic-300;
+        cursor: not-allowed;
+        pointer-events: none;
+
+        &:hover { background: transparent; }
+      }
+
+      // RWD：≤768px（tablet 以下）縮為 32px
+      @media (max-width: 768px) {
+        width: 32px;
+        height: 32px;
+      }
+    }
+
+    // 當前頁：深色實心
+    .iw_active {
+      .gl_page-link {
+        color: $cl-basic-0;
+        background: $cl-basic-900;
+      }
     }
   }
 }

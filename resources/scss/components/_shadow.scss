@@ -6,9 +6,11 @@
 
 @use "../tokens" as *;
 
-.gl_shadow-xs  { box-shadow: $shadow-xs; }
-.gl_shadow-sm  { box-shadow: $shadow-sm; }
-.gl_shadow-md  { box-shadow: $shadow-md; }
-.gl_shadow-lg  { box-shadow: $shadow-lg; }
-.gl_shadow-xl  { box-shadow: $shadow-xl; }
-.gl_shadow-xxl { box-shadow: $shadow-xxl; }
+@layer pi {
+  .gl_shadow-xs  { box-shadow: $shadow-xs; }
+  .gl_shadow-sm  { box-shadow: $shadow-sm; }
+  .gl_shadow-md  { box-shadow: $shadow-md; }
+  .gl_shadow-lg  { box-shadow: $shadow-lg; }
+  .gl_shadow-xl  { box-shadow: $shadow-xl; }
+  .gl_shadow-xxl { box-shadow: $shadow-xxl; }
+}

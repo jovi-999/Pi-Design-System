@@ -5,34 +5,36 @@
 
 @use "../tokens" as *;
 
-.gl_notification-item {
-  position: relative;
-  width: 100%;
-  padding: 16px 0;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  border-bottom: 1px solid $cl-basic-alpha-100;
-
-  .gl_icon-wrap {
-    padding: 8px;
-    border-radius: $radius-pill;
-    background: $cl-basic-200;
-    color: $cl-basic-alpha-700;
-    display: inline-flex;
+@layer pi {
+  .gl_notification-item {
+    position: relative;
+    width: 100%;
+    padding: 16px 0;
+    display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
+    gap: 16px;
+    border-bottom: 1px solid $cl-basic-alpha-100;
 
-    .icon { font-size: 16px; }
+    .gl_icon-wrap {
+      padding: 8px;
+      border-radius: $radius-pill;
+      background: $cl-basic-200;
+      color: $cl-basic-alpha-700;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+
+      .icon { font-size: 16px; }
+    }
+
+    .gl_notification-item__main { flex: 1; }
   }
 
-  .gl_notification-item__main { flex: 1; }
+  .gl_notification-basic   .gl_icon-wrap { color: $cl-basic-alpha-700; background: $cl-basic-alpha-100; }
+  .gl_notification-info    .gl_icon-wrap { color: $cl-blue-500;       background: $cl-blue-50; }
+  .gl_notification-success .gl_icon-wrap { color: $cl-green-500;      background: $cl-green-50; }
+  .gl_notification-warning .gl_icon-wrap { color: $cl-yellow-500;     background: $cl-yellow-50; }
+  .gl_notification-danger  .gl_icon-wrap { color: $cl-red-500;        background: $cl-red-50; }
+  .gl_notification-purple  .gl_icon-wrap { color: $cl-purple-500;     background: $cl-purple-50; }
 }
-
-.gl_notification-basic   .gl_icon-wrap { color: $cl-basic-alpha-700; background: $cl-basic-alpha-100; }
-.gl_notification-info    .gl_icon-wrap { color: $cl-blue-500;       background: $cl-blue-50; }
-.gl_notification-success .gl_icon-wrap { color: $cl-green-500;      background: $cl-green-50; }
-.gl_notification-warning .gl_icon-wrap { color: $cl-yellow-500;     background: $cl-yellow-50; }
-.gl_notification-danger  .gl_icon-wrap { color: $cl-red-500;        background: $cl-red-50; }
-.gl_notification-purple  .gl_icon-wrap { color: $cl-purple-500;     background: $cl-purple-50; }

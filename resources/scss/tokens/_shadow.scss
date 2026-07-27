@@ -5,17 +5,19 @@
 // 的組合（見 resources/scss/components/_border.scss 與 _shadow.scss）。
 // ============================================================
 
-:root {
-  --shadow-xs:   0 1px 2px 0 var(--cl-basic-alpha-100);
-  --shadow-sm:   0 1px 2px -1px var(--cl-basic-alpha-200),
-                 0 2px 4px -1px var(--cl-basic-alpha-100);
-  --shadow-md:   0 2px 4px -2px var(--cl-basic-alpha-200),
-                 0 4px 6px -2px var(--cl-basic-alpha-100);
-  --shadow-lg:   0 4px 8px -4px var(--cl-basic-alpha-200),
-                 0 8px 12px -4px var(--cl-basic-alpha-100);
-  --shadow-xl:   0 8px 16px -8px var(--cl-basic-alpha-200),
-                 0 16px 24px -8px var(--cl-basic-alpha-100);
-  --shadow-xxl:  0 24px 48px -12px var(--cl-basic-alpha-200);
+@layer pi {
+  :root {
+    --shadow-xs:   0 1px 2px 0 var(--cl-basic-alpha-100);
+    --shadow-sm:   0 1px 2px -1px var(--cl-basic-alpha-200),
+                   0 2px 4px -1px var(--cl-basic-alpha-100);
+    --shadow-md:   0 2px 4px -2px var(--cl-basic-alpha-200),
+                   0 4px 6px -2px var(--cl-basic-alpha-100);
+    --shadow-lg:   0 4px 8px -4px var(--cl-basic-alpha-200),
+                   0 8px 12px -4px var(--cl-basic-alpha-100);
+    --shadow-xl:   0 8px 16px -8px var(--cl-basic-alpha-200),
+                   0 16px 24px -8px var(--cl-basic-alpha-100);
+    --shadow-xxl:  0 24px 48px -12px var(--cl-basic-alpha-200);
+  }
 }
 
 $shadow-xs:   var(--shadow-xs);

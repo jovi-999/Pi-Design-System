@@ -4,31 +4,33 @@
 
 @use "../tokens" as *;
 
-.gl_callout-wrap {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  padding: 16px;
-  border-radius: $radius-md;
-  background: $cl-basic-50;
-
-  .gl_callout-wrap__icon-wrap {
-    padding: 8px;
-    border-radius: $radius-pill;
-    display: inline-flex;
+@layer pi {
+  .gl_callout-wrap {
+    display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 16px;
+    border-radius: $radius-md;
+    background: $cl-basic-50;
 
-    .icon { font-size: 16px; }
+    .gl_callout-wrap__icon-wrap {
+      padding: 8px;
+      border-radius: $radius-pill;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+
+      .icon { font-size: 16px; }
+    }
+
+    .gl_callout-wrap__content { flex: 1; }
   }
 
-  .gl_callout-wrap__content { flex: 1; }
+  .gl_callout-basic   .gl_callout-wrap__icon-wrap { background: $cl-basic-100;  color: $cl-basic-700; }
+  .gl_callout-info    .gl_callout-wrap__icon-wrap { background: $cl-blue-50;    color: $cl-blue-600; }
+  .gl_callout-success .gl_callout-wrap__icon-wrap { background: $cl-green-50;   color: $cl-green-600; }
+  .gl_callout-warning .gl_callout-wrap__icon-wrap { background: $cl-yellow-100; color: $cl-yellow-600; }
+  .gl_callout-danger  .gl_callout-wrap__icon-wrap { background: $cl-red-50;     color: $cl-red-600; }
+  .gl_callout-purple  .gl_callout-wrap__icon-wrap { background: $cl-purple-50;  color: $cl-purple-600; }
 }
-
-.gl_callout-basic   .gl_callout-wrap__icon-wrap { background: $cl-basic-100;  color: $cl-basic-700; }
-.gl_callout-info    .gl_callout-wrap__icon-wrap { background: $cl-blue-50;    color: $cl-blue-600; }
-.gl_callout-success .gl_callout-wrap__icon-wrap { background: $cl-green-50;   color: $cl-green-600; }
-.gl_callout-warning .gl_callout-wrap__icon-wrap { background: $cl-yellow-100; color: $cl-yellow-600; }
-.gl_callout-danger  .gl_callout-wrap__icon-wrap { background: $cl-red-50;     color: $cl-red-600; }
-.gl_callout-purple  .gl_callout-wrap__icon-wrap { background: $cl-purple-50;  color: $cl-purple-600; }

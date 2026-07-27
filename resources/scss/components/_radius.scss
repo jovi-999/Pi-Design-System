@@ -9,10 +9,12 @@
 
 @use "../tokens" as *;
 
-.gl_radius-xs   { border-radius: $radius-xs;   corner-shape: $corner-shape; }
-.gl_radius-sm   { border-radius: $radius-sm;   corner-shape: $corner-shape; }
-.gl_radius-md   { border-radius: $radius-md;   corner-shape: $corner-shape; }
-.gl_radius-lg   { border-radius: $radius-lg;   corner-shape: $corner-shape; }
-.gl_radius-xl   { border-radius: $radius-xl;   corner-shape: $corner-shape; }
-.gl_radius-xxl  { border-radius: $radius-xxl;  corner-shape: $corner-shape; }
-.gl_radius-pill { border-radius: $radius-pill; corner-shape: $corner-shape; }
+@layer pi {
+  .gl_radius-xs   { border-radius: $radius-xs;   corner-shape: $corner-shape; }
+  .gl_radius-sm   { border-radius: $radius-sm;   corner-shape: $corner-shape; }
+  .gl_radius-md   { border-radius: $radius-md;   corner-shape: $corner-shape; }
+  .gl_radius-lg   { border-radius: $radius-lg;   corner-shape: $corner-shape; }
+  .gl_radius-xl   { border-radius: $radius-xl;   corner-shape: $corner-shape; }
+  .gl_radius-xxl  { border-radius: $radius-xxl;  corner-shape: $corner-shape; }
+  .gl_radius-pill { border-radius: $radius-pill; corner-shape: $corner-shape; }
+}

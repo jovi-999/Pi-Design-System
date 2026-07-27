@@ -2,16 +2,18 @@
 // Pi DS — Breakpoints & z-index
 // ============================================================
 
-:root {
-  --bp-sm: 0;
-  --bp-md: 768px;
-  --bp-lg: 1152px;
+@layer pi {
+  :root {
+    --bp-sm: 0;
+    --bp-md: 768px;
+    --bp-lg: 1152px;
 
-  --z-navbar: 23;
-  --z-dropdown: 23;
-  --z-modal-mask: 26;
-  --z-modal: 27;
-  --z-alert: 30;
+    --z-navbar: 23;
+    --z-dropdown: 23;
+    --z-modal-mask: 26;
+    --z-modal: 27;
+    --z-alert: 30;
+  }
 }
 
 // Numeric (for @media queries, which can't use CSS vars)

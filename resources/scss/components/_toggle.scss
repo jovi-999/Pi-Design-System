@@ -4,75 +4,77 @@
 
 @use "../tokens" as *;
 
-.gl_toggle {
-  position: relative;
-  overflow: hidden;
-  display: inline-block;
-
-  .toggle-checkbox {
+@layer pi {
+  .gl_toggle {
     position: relative;
-    width: 100%;
-    height: 100%;
-    padding: 0;
-    margin: 0;
-    opacity: 0;
-    cursor: pointer;
-    z-index: 3;
+    overflow: hidden;
+    display: inline-block;
+
+    .toggle-checkbox {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      padding: 0;
+      margin: 0;
+      opacity: 0;
+      cursor: pointer;
+      z-index: 3;
+    }
+
+    .knobs,
+    .layer {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+    }
+    .knobs { z-index: 2; }
+    .layer {
+      width: 100%;
+      background: $cl-basic-300;
+      transition: .3s ease all;
+      z-index: 1;
+      border-radius: $radius-pill;
+    }
+
+    .knobs::before {
+      content: '';
+      position: absolute;
+      top: 4px;
+      left: 4px;
+      background: $cl-basic-0;
+      transition: .3s ease all, left .3s cubic-bezier(0.18, 0.89, 0.35, 1.15);
+      border-radius: $radius-pill;
+    }
+
+    .toggle-checkbox:checked + .knobs::before {
+      background: $cl-basic-0;
+      box-shadow: 0 2px 4px -2px $cl-basic-alpha-100;
+    }
   }
 
-  .knobs,
-  .layer {
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-  }
-  .knobs { z-index: 2; }
-  .layer {
-    width: 100%;
-    background: $cl-basic-300;
-    transition: .3s ease all;
-    z-index: 1;
-    border-radius: $radius-pill;
-  }
+  // ---------- Sizes ----------
+  .gl_toggle-lg { width: 100px; height: 56px;
+    .knobs::before { width: 48px; height: 48px; }
+    .toggle-checkbox:checked + .knobs::before { left: 48px; } }
 
-  .knobs::before {
-    content: '';
-    position: absolute;
-    top: 4px;
-    left: 4px;
-    background: $cl-basic-0;
-    transition: .3s ease all, left .3s cubic-bezier(0.18, 0.89, 0.35, 1.15);
-    border-radius: $radius-pill;
-  }
+  .gl_toggle-md { width: 84px; height: 48px;
+    .knobs::before { width: 40px; height: 40px; }
+    .toggle-checkbox:checked + .knobs::before { left: 40px; } }
 
-  .toggle-checkbox:checked + .knobs::before {
-    background: $cl-basic-0;
-    box-shadow: 0 2px 4px -2px $cl-basic-alpha-100;
-  }
+  .gl_toggle-sm { width: 68px; height: 40px;
+    .knobs::before { width: 32px; height: 32px; }
+    .toggle-checkbox:checked + .knobs::before { left: 32px; } }
+
+  .gl_toggle-xs { width: 52px; height: 32px;
+    .knobs::before { width: 24px; height: 24px; }
+    .toggle-checkbox:checked + .knobs::before { left: 24px; } }
+
+  // ---------- Colors ----------
+  .gl_toggle-success .toggle-checkbox:checked ~ .layer { background: $cl-green-500; }
+  .gl_toggle-info    .toggle-checkbox:checked ~ .layer { background: $cl-blue-500; }
+  .gl_toggle-warning .toggle-checkbox:checked ~ .layer { background: $cl-yellow-500; }
+  .gl_toggle-danger  .toggle-checkbox:checked ~ .layer { background: $cl-red-500; }
+  .gl_toggle-basic   .toggle-checkbox:checked ~ .layer { background: $cl-basic-800; }
 }
-
-// ---------- Sizes ----------
-.gl_toggle-lg { width: 100px; height: 56px;
-  .knobs::before { width: 48px; height: 48px; }
-  .toggle-checkbox:checked + .knobs::before { left: 48px; } }
-
-.gl_toggle-md { width: 84px; height: 48px;
-  .knobs::before { width: 40px; height: 40px; }
-  .toggle-checkbox:checked + .knobs::before { left: 40px; } }
-
-.gl_toggle-sm { width: 68px; height: 40px;
-  .knobs::before { width: 32px; height: 32px; }
-  .toggle-checkbox:checked + .knobs::before { left: 32px; } }
-
-.gl_toggle-xs { width: 52px; height: 32px;
-  .knobs::before { width: 24px; height: 24px; }
-  .toggle-checkbox:checked + .knobs::before { left: 24px; } }
-
-// ---------- Colors ----------
-.gl_toggle-success .toggle-checkbox:checked ~ .layer { background: $cl-green-500; }
-.gl_toggle-info    .toggle-checkbox:checked ~ .layer { background: $cl-blue-500; }
-.gl_toggle-warning .toggle-checkbox:checked ~ .layer { background: $cl-yellow-500; }
-.gl_toggle-danger  .toggle-checkbox:checked ~ .layer { background: $cl-red-500; }
-.gl_toggle-basic   .toggle-checkbox:checked ~ .layer { background: $cl-basic-800; }

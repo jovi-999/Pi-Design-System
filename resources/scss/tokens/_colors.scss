@@ -114,165 +114,167 @@ $_cl-purple-800-raw: #380094;
 $_cl-purple-900-raw: #260072;
 
 // ---------- Layer 1: CSS custom properties (runtime) ----------
-:root {
-  // Basic
-  --cl-basic-0: #{$_cl-basic-0-raw};
-  --cl-basic-50: #{$_cl-basic-50-raw};
-  --cl-basic-100: #{$_cl-basic-100-raw};
-  --cl-basic-200: #{$_cl-basic-200-raw};
-  --cl-basic-300: #{$_cl-basic-300-raw};
-  --cl-basic-400: #{$_cl-basic-400-raw};
-  --cl-basic-500: #{$_cl-basic-500-raw};
-  --cl-basic-600: #{$_cl-basic-600-raw};
-  --cl-basic-700: #{$_cl-basic-700-raw};
-  --cl-basic-800: #{$_cl-basic-800-raw};
-  --cl-basic-900: #{$_cl-basic-900-raw};
-  --cl-basic-1000: #{$_cl-basic-1000-raw};
+@layer pi {
+  :root {
+    // Basic
+    --cl-basic-0: #{$_cl-basic-0-raw};
+    --cl-basic-50: #{$_cl-basic-50-raw};
+    --cl-basic-100: #{$_cl-basic-100-raw};
+    --cl-basic-200: #{$_cl-basic-200-raw};
+    --cl-basic-300: #{$_cl-basic-300-raw};
+    --cl-basic-400: #{$_cl-basic-400-raw};
+    --cl-basic-500: #{$_cl-basic-500-raw};
+    --cl-basic-600: #{$_cl-basic-600-raw};
+    --cl-basic-700: #{$_cl-basic-700-raw};
+    --cl-basic-800: #{$_cl-basic-800-raw};
+    --cl-basic-900: #{$_cl-basic-900-raw};
+    --cl-basic-1000: #{$_cl-basic-1000-raw};
 
-  // Basic alpha (overlays)
-  --cl-basic-alpha-50:  rgba(55, 89, 123, 0.03);
-  --cl-basic-alpha-100: rgba(22, 56, 90, 0.06);
-  --cl-basic-alpha-200: rgba(5, 21, 36, 0.12);
-  --cl-basic-alpha-300: rgba(9, 23, 31, 0.24);
-  --cl-basic-alpha-400: rgba(2, 12, 18, 0.34);
-  --cl-basic-alpha-500: rgba(4, 12, 16, 0.45);
-  --cl-basic-alpha-600: rgba(2, 6, 9, 0.55);
-  --cl-basic-alpha-700: rgba(0, 6, 10, 0.64);
-  --cl-basic-alpha-800: rgba(2, 6, 9, 0.74);
-  --cl-basic-alpha-900: rgba(0, 3, 5, 0.88);
+    // Basic alpha (overlays)
+    --cl-basic-alpha-50:  rgba(55, 89, 123, 0.03);
+    --cl-basic-alpha-100: rgba(22, 56, 90, 0.06);
+    --cl-basic-alpha-200: rgba(5, 21, 36, 0.12);
+    --cl-basic-alpha-300: rgba(9, 23, 31, 0.24);
+    --cl-basic-alpha-400: rgba(2, 12, 18, 0.34);
+    --cl-basic-alpha-500: rgba(4, 12, 16, 0.45);
+    --cl-basic-alpha-600: rgba(2, 6, 9, 0.55);
+    --cl-basic-alpha-700: rgba(0, 6, 10, 0.64);
+    --cl-basic-alpha-800: rgba(2, 6, 9, 0.74);
+    --cl-basic-alpha-900: rgba(0, 3, 5, 0.88);
 
-  // Light / dark tints (for text on photos)
-  --cl-light-100: rgba(255, 255, 255, 0.24);
-  --cl-light-200: rgba(255, 255, 255, 0.40);
-  --cl-light-300: rgba(255, 255, 255, 0.56);
-  --cl-light-400: rgba(255, 255, 255, 0.72);
-  --cl-light-500: rgba(255, 255, 255, 0.88);
-  --cl-dark-100: rgba(31, 33, 35, 0.24);
-  --cl-dark-200: rgba(31, 33, 35, 0.40);
-  --cl-dark-300: rgba(31, 33, 35, 0.56);
-  --cl-dark-400: rgba(31, 33, 35, 0.72);
-  --cl-dark-500: rgba(31, 33, 35, 0.88);
+    // Light / dark tints (for text on photos)
+    --cl-light-100: rgba(255, 255, 255, 0.24);
+    --cl-light-200: rgba(255, 255, 255, 0.40);
+    --cl-light-300: rgba(255, 255, 255, 0.56);
+    --cl-light-400: rgba(255, 255, 255, 0.72);
+    --cl-light-500: rgba(255, 255, 255, 0.88);
+    --cl-dark-100: rgba(31, 33, 35, 0.24);
+    --cl-dark-200: rgba(31, 33, 35, 0.40);
+    --cl-dark-300: rgba(31, 33, 35, 0.56);
+    --cl-dark-400: rgba(31, 33, 35, 0.72);
+    --cl-dark-500: rgba(31, 33, 35, 0.88);
 
-  // White alpha
-  --cl-white-alpha-50:  rgba(255, 255, 255, 0.16);
-  --cl-white-alpha-100: rgba(255, 255, 255, 0.24);
-  --cl-white-alpha-200: rgba(255, 255, 255, 0.32);
-  --cl-white-alpha-300: rgba(255, 255, 255, 0.40);
-  --cl-white-alpha-400: rgba(255, 255, 255, 0.48);
-  --cl-white-alpha-500: rgba(255, 255, 255, 0.56);
-  --cl-white-alpha-600: rgba(255, 255, 255, 0.64);
-  --cl-white-alpha-700: rgba(255, 255, 255, 0.72);
-  --cl-white-alpha-800: rgba(255, 255, 255, 0.80);
-  --cl-white-alpha-900: rgba(255, 255, 255, 0.88);
+    // White alpha
+    --cl-white-alpha-50:  rgba(255, 255, 255, 0.16);
+    --cl-white-alpha-100: rgba(255, 255, 255, 0.24);
+    --cl-white-alpha-200: rgba(255, 255, 255, 0.32);
+    --cl-white-alpha-300: rgba(255, 255, 255, 0.40);
+    --cl-white-alpha-400: rgba(255, 255, 255, 0.48);
+    --cl-white-alpha-500: rgba(255, 255, 255, 0.56);
+    --cl-white-alpha-600: rgba(255, 255, 255, 0.64);
+    --cl-white-alpha-700: rgba(255, 255, 255, 0.72);
+    --cl-white-alpha-800: rgba(255, 255, 255, 0.80);
+    --cl-white-alpha-900: rgba(255, 255, 255, 0.88);
 
-  // Primary
-  --cl-primary-50:  #{$_cl-primary-50-raw};
-  --cl-primary-100: #{$_cl-primary-100-raw};
-  --cl-primary-200: #{$_cl-primary-200-raw};
-  --cl-primary-300: #{$_cl-primary-300-raw};
-  --cl-primary-400: #{$_cl-primary-400-raw};
-  --cl-primary-500: #{$_cl-primary-500-raw};
-  --cl-primary-600: #{$_cl-primary-600-raw};
-  --cl-primary-700: #{$_cl-primary-700-raw};
-  --cl-primary-800: #{$_cl-primary-800-raw};
-  --cl-primary-900: #{$_cl-primary-900-raw};
+    // Primary
+    --cl-primary-50:  #{$_cl-primary-50-raw};
+    --cl-primary-100: #{$_cl-primary-100-raw};
+    --cl-primary-200: #{$_cl-primary-200-raw};
+    --cl-primary-300: #{$_cl-primary-300-raw};
+    --cl-primary-400: #{$_cl-primary-400-raw};
+    --cl-primary-500: #{$_cl-primary-500-raw};
+    --cl-primary-600: #{$_cl-primary-600-raw};
+    --cl-primary-700: #{$_cl-primary-700-raw};
+    --cl-primary-800: #{$_cl-primary-800-raw};
+    --cl-primary-900: #{$_cl-primary-900-raw};
 
-  // Blue
-  --cl-blue-50:  #{$_cl-blue-50-raw};
-  --cl-blue-100: #{$_cl-blue-100-raw};
-  --cl-blue-200: #{$_cl-blue-200-raw};
-  --cl-blue-300: #{$_cl-blue-300-raw};
-  --cl-blue-400: #{$_cl-blue-400-raw};
-  --cl-blue-500: #{$_cl-blue-500-raw};
-  --cl-blue-600: #{$_cl-blue-600-raw};
-  --cl-blue-700: #{$_cl-blue-700-raw};
-  --cl-blue-800: #{$_cl-blue-800-raw};
-  --cl-blue-900: #{$_cl-blue-900-raw};
+    // Blue
+    --cl-blue-50:  #{$_cl-blue-50-raw};
+    --cl-blue-100: #{$_cl-blue-100-raw};
+    --cl-blue-200: #{$_cl-blue-200-raw};
+    --cl-blue-300: #{$_cl-blue-300-raw};
+    --cl-blue-400: #{$_cl-blue-400-raw};
+    --cl-blue-500: #{$_cl-blue-500-raw};
+    --cl-blue-600: #{$_cl-blue-600-raw};
+    --cl-blue-700: #{$_cl-blue-700-raw};
+    --cl-blue-800: #{$_cl-blue-800-raw};
+    --cl-blue-900: #{$_cl-blue-900-raw};
 
-  // Green
-  --cl-green-50:  #{$_cl-green-50-raw};
-  --cl-green-100: #{$_cl-green-100-raw};
-  --cl-green-200: #{$_cl-green-200-raw};
-  --cl-green-300: #{$_cl-green-300-raw};
-  --cl-green-400: #{$_cl-green-400-raw};
-  --cl-green-500: #{$_cl-green-500-raw};
-  --cl-green-600: #{$_cl-green-600-raw};
-  --cl-green-700: #{$_cl-green-700-raw};
-  --cl-green-800: #{$_cl-green-800-raw};
-  --cl-green-900: #{$_cl-green-900-raw};
+    // Green
+    --cl-green-50:  #{$_cl-green-50-raw};
+    --cl-green-100: #{$_cl-green-100-raw};
+    --cl-green-200: #{$_cl-green-200-raw};
+    --cl-green-300: #{$_cl-green-300-raw};
+    --cl-green-400: #{$_cl-green-400-raw};
+    --cl-green-500: #{$_cl-green-500-raw};
+    --cl-green-600: #{$_cl-green-600-raw};
+    --cl-green-700: #{$_cl-green-700-raw};
+    --cl-green-800: #{$_cl-green-800-raw};
+    --cl-green-900: #{$_cl-green-900-raw};
 
-  // Yellow
-  --cl-yellow-50:  #{$_cl-yellow-50-raw};
-  --cl-yellow-100: #{$_cl-yellow-100-raw};
-  --cl-yellow-200: #{$_cl-yellow-200-raw};
-  --cl-yellow-300: #{$_cl-yellow-300-raw};
-  --cl-yellow-400: #{$_cl-yellow-400-raw};
-  --cl-yellow-500: #{$_cl-yellow-500-raw};
-  --cl-yellow-600: #{$_cl-yellow-600-raw};
-  --cl-yellow-700: #{$_cl-yellow-700-raw};
-  --cl-yellow-800: #{$_cl-yellow-800-raw};
-  --cl-yellow-900: #{$_cl-yellow-900-raw};
+    // Yellow
+    --cl-yellow-50:  #{$_cl-yellow-50-raw};
+    --cl-yellow-100: #{$_cl-yellow-100-raw};
+    --cl-yellow-200: #{$_cl-yellow-200-raw};
+    --cl-yellow-300: #{$_cl-yellow-300-raw};
+    --cl-yellow-400: #{$_cl-yellow-400-raw};
+    --cl-yellow-500: #{$_cl-yellow-500-raw};
+    --cl-yellow-600: #{$_cl-yellow-600-raw};
+    --cl-yellow-700: #{$_cl-yellow-700-raw};
+    --cl-yellow-800: #{$_cl-yellow-800-raw};
+    --cl-yellow-900: #{$_cl-yellow-900-raw};
 
-  // Red
-  --cl-red-50:  #{$_cl-red-50-raw};
-  --cl-red-100: #{$_cl-red-100-raw};
-  --cl-red-200: #{$_cl-red-200-raw};
-  --cl-red-300: #{$_cl-red-300-raw};
-  --cl-red-400: #{$_cl-red-400-raw};
-  --cl-red-500: #{$_cl-red-500-raw};
-  --cl-red-600: #{$_cl-red-600-raw};
-  --cl-red-700: #{$_cl-red-700-raw};
-  --cl-red-800: #{$_cl-red-800-raw};
-  --cl-red-900: #{$_cl-red-900-raw};
+    // Red
+    --cl-red-50:  #{$_cl-red-50-raw};
+    --cl-red-100: #{$_cl-red-100-raw};
+    --cl-red-200: #{$_cl-red-200-raw};
+    --cl-red-300: #{$_cl-red-300-raw};
+    --cl-red-400: #{$_cl-red-400-raw};
+    --cl-red-500: #{$_cl-red-500-raw};
+    --cl-red-600: #{$_cl-red-600-raw};
+    --cl-red-700: #{$_cl-red-700-raw};
+    --cl-red-800: #{$_cl-red-800-raw};
+    --cl-red-900: #{$_cl-red-900-raw};
 
-  // Orange
-  --cl-orange-50:  #{$_cl-orange-50-raw};
-  --cl-orange-100: #{$_cl-orange-100-raw};
-  --cl-orange-200: #{$_cl-orange-200-raw};
-  --cl-orange-300: #{$_cl-orange-300-raw};
-  --cl-orange-400: #{$_cl-orange-400-raw};
-  --cl-orange-500: #{$_cl-orange-500-raw};
-  --cl-orange-600: #{$_cl-orange-600-raw};
-  --cl-orange-700: #{$_cl-orange-700-raw};
-  --cl-orange-800: #{$_cl-orange-800-raw};
-  --cl-orange-900: #{$_cl-orange-900-raw};
+    // Orange
+    --cl-orange-50:  #{$_cl-orange-50-raw};
+    --cl-orange-100: #{$_cl-orange-100-raw};
+    --cl-orange-200: #{$_cl-orange-200-raw};
+    --cl-orange-300: #{$_cl-orange-300-raw};
+    --cl-orange-400: #{$_cl-orange-400-raw};
+    --cl-orange-500: #{$_cl-orange-500-raw};
+    --cl-orange-600: #{$_cl-orange-600-raw};
+    --cl-orange-700: #{$_cl-orange-700-raw};
+    --cl-orange-800: #{$_cl-orange-800-raw};
+    --cl-orange-900: #{$_cl-orange-900-raw};
 
-  // Purple
-  --cl-purple-50:  #{$_cl-purple-50-raw};
-  --cl-purple-100: #{$_cl-purple-100-raw};
-  --cl-purple-200: #{$_cl-purple-200-raw};
-  --cl-purple-300: #{$_cl-purple-300-raw};
-  --cl-purple-400: #{$_cl-purple-400-raw};
-  --cl-purple-500: #{$_cl-purple-500-raw};
-  --cl-purple-600: #{$_cl-purple-600-raw};
-  --cl-purple-700: #{$_cl-purple-700-raw};
-  --cl-purple-800: #{$_cl-purple-800-raw};
-  --cl-purple-900: #{$_cl-purple-900-raw};
+    // Purple
+    --cl-purple-50:  #{$_cl-purple-50-raw};
+    --cl-purple-100: #{$_cl-purple-100-raw};
+    --cl-purple-200: #{$_cl-purple-200-raw};
+    --cl-purple-300: #{$_cl-purple-300-raw};
+    --cl-purple-400: #{$_cl-purple-400-raw};
+    --cl-purple-500: #{$_cl-purple-500-raw};
+    --cl-purple-600: #{$_cl-purple-600-raw};
+    --cl-purple-700: #{$_cl-purple-700-raw};
+    --cl-purple-800: #{$_cl-purple-800-raw};
+    --cl-purple-900: #{$_cl-purple-900-raw};
 
-  // ---------- Semantic aliases ----------
-  --bg:             var(--cl-basic-0);
-  --bg-muted:       var(--cl-basic-50);
-  --bg-subtle:      var(--cl-basic-100);
+    // ---------- Semantic aliases ----------
+    --bg:             var(--cl-basic-0);
+    --bg-muted:       var(--cl-basic-50);
+    --bg-subtle:      var(--cl-basic-100);
 
-  --surface:        var(--cl-basic-0);
-  --surface-raised: var(--cl-basic-0);
-  --surface-sunken: var(--cl-basic-50);
+    --surface:        var(--cl-basic-0);
+    --surface-raised: var(--cl-basic-0);
+    --surface-sunken: var(--cl-basic-50);
 
-  --fg:             var(--cl-basic-900);         // primary text
-  --fg-2:           var(--cl-basic-alpha-700);   // secondary
-  --fg-3:           var(--cl-basic-alpha-500);   // tertiary / placeholder
-  --fg-4:           var(--cl-basic-alpha-300);   // disabled
-  --fg-inverse:     var(--cl-basic-0);
+    --fg:             var(--cl-basic-900);         // primary text
+    --fg-2:           var(--cl-basic-alpha-700);   // secondary
+    --fg-3:           var(--cl-basic-alpha-500);   // tertiary / placeholder
+    --fg-4:           var(--cl-basic-alpha-300);   // disabled
+    --fg-inverse:     var(--cl-basic-0);
 
-  --border:         var(--cl-basic-alpha-100);
-  --border-strong:  var(--cl-basic-alpha-200);
+    --border:         var(--cl-basic-alpha-100);
+    --border-strong:  var(--cl-basic-alpha-200);
 
-  --link:           var(--cl-green-600);
-  --link-hover:     var(--cl-green-700);
+    --link:           var(--cl-green-600);
+    --link-hover:     var(--cl-green-700);
 
-  --brand:          var(--cl-green-500);
-  --brand-hover:    var(--cl-green-600);
-  --brand-soft:     var(--cl-green-50);
+    --brand:          var(--cl-green-500);
+    --brand-hover:    var(--cl-green-600);
+    --brand-soft:     var(--cl-green-50);
+  }
 }
 
 // ---------- Layer 2: SCSS aliases ----------

@@ -2,37 +2,45 @@
 // Pi DS — Base resets / body defaults
 // ============================================================
 
+// @layer 順序必須在任何 @layer 區塊之前宣告，因此放最前面。
+// reset 若被單獨載入（不經 index.scss），這行就是唯一的順序來源。
+@use "../layers";
 @use "../tokens" as *;
 
-// 圓角恆伴隨超橢圓角形：套在所有元素，border-radius 為 0 時 corner-shape 無視覺效果，
-// 故只要有圓角就自動套用 superellipse(1.05)，無需逐元件重複宣告。
-*, *::before, *::after {
-  corner-shape: $corner-shape;
-  font-weight: 500;
-}
+// reset 進 pi-reset layer（排在 pi 之前）而非未分層 —— 未分層樣式優先權
+// 高於任何分層樣式，若 reset 未分層，`<h2 class="fz-headline-xs">` 會吃到
+// reset 給 h2 的 32px 而非 .fz-headline-xs 的 20px。詳見 _layers.scss。
+@layer pi-reset {
+  // 圓角恆伴隨超橢圓角形：套在所有元素，border-radius 為 0 時 corner-shape 無視覺效果，
+  // 故只要有圓角就自動套用 superellipse(1.05)，無需逐元件重複宣告。
+  *, *::before, *::after {
+    corner-shape: $corner-shape;
+    font-weight: 500;
+  }
 
-html, body {
-  font-family: $font-sans;
-  color: $fg;
-  background: $bg;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
+  html, body {
+    font-family: $font-sans;
+    color: $fg;
+    background: $bg;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
 
-// Semantic heading defaults
-h1, h2, h3, h4, h5, h6 { @include fz-tit; }
-h1 { font-size: 40px; line-height: 48px; }
-h2 { font-size: 32px; line-height: 40px; }
-h3 { font-size: 24px; line-height: 32px; }
-h4 { font-size: 20px; line-height: 24px; }
-h5 { font-size: 18px; line-height: 26px; }
-h6 { font-size: 16px; line-height: 24px; }
-p  { font-size: 16px; line-height: 28px; font-weight: 500; color: $fg-2; }
-small { font-size: 12px; line-height: 20px; color: $fg-3; }
-code {
-  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
-  font-size: .92em;
-  background: $bg-subtle;
-  padding: 2px 6px;
-  border-radius: 4px;
+  // Semantic heading defaults
+  h1, h2, h3, h4, h5, h6 { @include fz-tit; }
+  h1 { font-size: 40px; line-height: 48px; }
+  h2 { font-size: 32px; line-height: 40px; }
+  h3 { font-size: 24px; line-height: 32px; }
+  h4 { font-size: 20px; line-height: 24px; }
+  h5 { font-size: 18px; line-height: 26px; }
+  h6 { font-size: 16px; line-height: 24px; }
+  p  { font-size: 16px; line-height: 28px; font-weight: 500; color: $fg-2; }
+  small { font-size: 12px; line-height: 20px; color: $fg-3; }
+  code {
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    font-size: .92em;
+    background: $bg-subtle;
+    padding: 2px 6px;
+    border-radius: 4px;
+  }
 }

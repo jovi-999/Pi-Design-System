@@ -22,11 +22,12 @@ header .eyebrow {
   margin-bottom: var(--sp-1);
 }
 
+// 字級不在此宣告：markup 已帶 .fz-headline-xl，字級由 DS class 決定。
+// （原本這裡有 font-size / line-height / letter-spacing，但 .fz-headline-xl
+//   的 0,1,0 勝過 header h1 的 0,0,2，所以那些宣告一直是死碼。DS 改用
+//   @layer 後未分層樣式反而會勝出，死碼會復活並蓋掉 DS 字級，故移除。）
 header h1 {
-  font-size: 40px;
-  line-height: 48px;
   margin: 0 0 var(--sp-1);
-  letter-spacing: -0.01em;
 }
 
 header p {
@@ -42,10 +43,20 @@ section {
   margin-bottom: 56px;
 }
 
-section > h2,
-section h2 {
+// 只給沒帶 DS 字級 class 的裸 <h2> 用。排除的原因同 header h1：
+// DS 進 @layer 後，本檔（未分層）會勝出並蓋掉 .fz-* 指定的字級。
+//
+// 用 :where(:not(…)) 而非 :not(…)：:where() 不貢獻特異度，選擇器維持
+// 原本的 0,0,2。若寫成 :not() 會變成 0,1,2，反過來蓋掉各頁 <style> 內
+// 同為 0,0,2 但位置更後的 section h2 覆寫（例：type.html 的 20px/28px）。
+section > h2:where(:not([class*="fz-"])),
+section h2:where(:not([class*="fz-"])) {
   font-size: 22px;
   line-height: 30px;
+}
+
+section > h2,
+section h2 {
   margin: 0 0 8px;
 }
 

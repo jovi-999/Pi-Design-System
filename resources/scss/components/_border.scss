@@ -9,19 +9,21 @@
 
 @use "../tokens" as *;
 
-// 描在元素外緣
-.gl_border-outer {
-  outline: 1px solid $cl-basic-alpha-100;
-}
+@layer pi {
+  // 描在元素外緣
+  .gl_border-outer {
+    outline: 1px solid $cl-basic-alpha-100;
+  }
 
-// 描在元素內緣（不超出圓角外框）
-.gl_border-inner {
-  outline: 1px solid $cl-basic-alpha-100;
-  outline-offset: -1px;
+  // 描在元素內緣（不超出圓角外框）
+  .gl_border-inner {
+    outline: 1px solid $cl-basic-alpha-100;
+    outline-offset: -1px;
 
-  // 手機下：描邊貼齊外框、色階降為 alpha-50
-  @media (max-width: $bp-md) {
-    outline: 1px solid $cl-basic-alpha-50;
-    outline-offset: 0;
+    // 手機下：描邊貼齊外框、色階降為 alpha-50
+    @media (max-width: $bp-md) {
+      outline: 1px solid $cl-basic-alpha-50;
+      outline-offset: 0;
+    }
   }
 }
