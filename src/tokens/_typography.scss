@@ -78,25 +78,35 @@ $fz-body-xs: (size: 12px, lh: 20px, tracking: 0);
 }
 .ft-d-din-c { letter-spacing: -1px; }
 
-.fz-tit { font-weight: 700; -webkit-font-smoothing: subpixel-antialiased; }
+// 標題字重。提供 mixin 版是必要的：`@extend .fz-tit` 會讓被 extend 的宣告
+// 輸出在「原始 .fz-tit 規則的位置」，因此若使用端在 `@layer pi` 內，
+// 樣式會逃出 layer 變成未分層，破壞 layer 的優先權保證。
+// → 元件內一律用 `@include fz-tit;`，不要 `@extend .fz-tit;`
+@mixin fz-tit {
+  font-weight: 700;
+  -webkit-font-smoothing: subpixel-antialiased;
 
-// Google Sans Flex condensed display（窄體變體）
-.ft-semicondensed {
-  font-family: "Google Sans Flex", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, Arial, "Segoe UI", sans-serif !important;
-  font-stretch: 64%;
-  &.fz-tit {
+  // 窄體變體同時在場時降字重（648）。原本靠 `.ft-semicondensed { &.fz-tit {…} }`
+  // + `@extend` 連帶生效；改 mixin 後必須在此重現，否則 extender 會漏掉這段。
+  &.ft-semicondensed,
+  &.ft-condensed {
     font-weight: 648;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
 }
 
+.fz-tit { @include fz-tit; }
+
+// Google Sans Flex condensed display（窄體變體）
+// 註：與 .fz-tit 併用時的字重降級（648）已移進 `@mixin fz-tit` 內宣告，
+// 這樣所有 `@include fz-tit` 的元件都能一併取得，不必逐處重複。
+.ft-semicondensed {
+  font-family: "Google Sans Flex", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, Arial, "Segoe UI", sans-serif !important;
+  font-stretch: 64%;
+}
+
 .ft-condensed {
   font-family: "Google Sans Flex", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, Arial, "Segoe UI", sans-serif !important;
   font-stretch: 48%;
-  &.fz-tit {
-    font-weight: 648;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  }
 }

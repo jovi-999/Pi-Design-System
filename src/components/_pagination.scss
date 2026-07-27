@@ -46,7 +46,7 @@
   }
 
   .gl_page-link {
-    @extend .fz-tit;
+    @include fz-tit;
     box-sizing: border-box; // 固定寬高不與 border 疊加
     color: $cl-basic-900;
     background: $cl-basic-0;
