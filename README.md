@@ -114,7 +114,34 @@ npm install            # 只裝 sass / vite 等 build 工具
 npm run dev            # 啟動預覽，開瀏覽器看左側目錄 + 各元件對照頁
 ```
 
-預覽頁吃 `resources/scss/index.scss`，改 SCSS 後 HMR 即時更新，不用先 build。
+預覽頁吃 `resources/scss/preview-all.scss`，改 SCSS 後 HMR 即時更新，不用先 build。
+
+### 1b. 三個 SCSS 入口，選哪個
+
+| 入口 | 內容 | 給誰 |
+|---|---|---|
+| `resources/scss/index.scss` | tokens + 字型 + 工具 class + 元件契約 + 元件。**不含 reset** | **既有專案**（有自己 reset 的） |
+| `resources/scss/reset.scss` | 頁面級預設：`box-sizing`、`html`/`body`、`h1..h6`、`p`、`code` | 從零開始的新專案，自行決定要不要載 |
+| `resources/scss/preview-all.scss` | = `reset` + `index` | 本 repo 的 preview |
+| `resources/scss/tokens/index.scss` | 只有 token（`:root` 變數 + Sass 變數） | 只要設計變數、自己寫元件 |
+
+**既有專案請用 `index.scss`，不要載 `reset.scss`。** reset 裡全是頁面級意見（`h1` 該多大、`body` 什麼底色），既有專案一定已經有自己的一套（normalize.css / Tailwind preflight / Bootstrap reboot），再蓋一層只會打架，而且會影響專案**所有既有頁面**，不只是用到 DS 元件的地方。
+
+元件不依賴 `reset.scss` 就能長對 —— 元件真正需要而標準 reset 不會提供的兩項（`corner-shape` 的超橢圓角、`font-weight: 500`）放在 `_component-base.scss`，已包含在 `index.scss` 內。
+
+### 1c. 樣式隔離（`@layer`）
+
+所有 DS 樣式都包在 CSS `@layer` 內，兩層：`pi-reset`（reset）在前、`pi`（token / 工具 class / 元件）在後。
+
+**因此專案既有樣式一行都不用改** —— CSS 規定「未分層樣式的優先權高於任何分層樣式」，所以衝突時專案永遠勝出，也不必煩惱 `@use` / `<link>` 的順序。
+
+反過來說：**專案若想覆寫 DS，直接寫未分層的 CSS 即可**，不需要提高特異度、不需要 `!important`。
+
+```scss
+// 專案的 app.scss —— 順序不影響結果
+@use "pi-ds/index";     // 進 @layer pi
+@use "legacy/main";     // 未分層 → 衝突時勝出
+```
 
 ### 2. 切版怎麼對照
 

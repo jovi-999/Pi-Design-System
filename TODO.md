@@ -55,58 +55,58 @@
 ## Phase 1：套件化與 SCSS 分層（不需 docker，host node 即可）
 
 ### 1.1 `@extend` → mixin（**必須先做，@layer 的前置條件**）
-- [ ] `tokens/_typography.scss` 加 `@mixin fz-tit`（保留 `.fz-tit` class 供 HTML 直接用）
-- [ ] `components/_content-switcher.scss:41` `@extend` → `@include`
-- [ ] `components/_pagination.scss:49` 同上
-- [ ] `components/_dropdown.scss:8` 同上
-- [ ] `base/_reset.scss:23` 同上
-- [ ] `npm run build` → 確認 CSS 無 `@extend` 產生的選擇器合併洩漏
+- [x] `tokens/_typography.scss` 加 `@mixin fz-tit`（保留 `.fz-tit` class 供 HTML 直接用）
+- [x] `components/_content-switcher.scss:41` `@extend` → `@include`
+- [x] `components/_pagination.scss:49` 同上
+- [x] `components/_dropdown.scss:8` 同上
+- [x] `base/_reset.scss:23` 同上
+- [x] `npm run build` → 確認 CSS 無 `@extend` 產生的選擇器合併洩漏
 
 ### 1.2 目錄搬遷 `src/` → `resources/scss/`
-- [ ] `git mv` 保留 history（`src/` 之後留給 PSR-4 PHP）
-- [ ] `base/_fonts.scss` 的 `$font-path` 預設 `"../../fonts"` → `"../../../fonts"`
-- [ ] `package.json` script 路徑（build / build:min / build:tokens / watch / lint:scss / test）
-- [ ] `vite.config.js` 註解與路徑
-- [ ] `preview/*.html`（20 支）`<link href="/src/index.scss">` → 新路徑
-- [ ] `scripts/check-build.mjs`
-- [ ] 文件：`README.md`、`STRUCTURE.md`、`CLAUDE.md`、`SKILL.md`、`docs/ai-guide.md`、`docs/prototype-README.template.md`、`docs/prototype-CLAUDE.template.md`
-- [ ] `.scratch/pm-to-blade-skill/`（`setup.sh`、`vendor-copy.sh`、`references/blade-setup.md`）
-- [ ] `.claude/skills/figma-to-pi-ds/SKILL.md`、`.claude/skills/pm-to-preview/SKILL.md`
+- [x] `git mv` 保留 history（`src/` 之後留給 PSR-4 PHP）
+- [x] `base/_fonts.scss` 的 `$font-path` 預設 `"../../fonts"` → `"../../../fonts"`
+- [x] `package.json` script 路徑（build / build:min / build:tokens / watch / lint:scss / test）
+- [x] `vite.config.js` 註解與路徑
+- [x] `preview/*.html`（20 支）`<link href="/src/index.scss">` → 新路徑
+- [x] `scripts/check-build.mjs`
+- [x] 文件：`README.md`、`STRUCTURE.md`、`CLAUDE.md`、`SKILL.md`、`docs/ai-guide.md`、`docs/prototype-README.template.md`、`docs/prototype-CLAUDE.template.md`
+- [x] `.scratch/pm-to-blade-skill/`（`setup.sh`、`vendor-copy.sh`、`references/blade-setup.md`）
+- [x] `.claude/skills/figma-to-pi-ds/SKILL.md`、`.claude/skills/pm-to-preview/SKILL.md`
 
 ### 1.3 `@layer pi` 包裝
-- [ ] `components/*.scss` 16 支各自包 `@layer pi { }`
-- [ ] `base/_utilities.scss`（`.text-*`）包 `@layer pi { }`
-- [ ] `tokens/_typography.scss` 的 `.fz-*` class 包 `@layer pi { }`
-- [ ] `tokens/` 的 `:root {}` 進 `@layer pi`（讓專案未分層的 `:root` 覆寫必勝，不用管 import 順序）
-- [ ] `npm run build` → 目視 preview 確認零視覺差異
+- [x] `components/*.scss` 16 支各自包 `@layer pi { }`
+- [x] `base/_utilities.scss`（`.text-*`）包 `@layer pi { }`
+- [x] `tokens/_typography.scss` 的 `.fz-*` class 包 `@layer pi { }`
+- [x] `tokens/` 的 `:root {}` 進 `@layer pi`（讓專案未分層的 `:root` 覆寫必勝，不用管 import 順序）
+- [x] `npm run build` → 目視 preview 確認零視覺差異
 
 ### 1.4 reset 拆出
-- [ ] 新增 `resources/scss/reset.scss`（頂層獨立檔，內容自 `base/_reset.scss` 搬移 + 補全域 `box-sizing: border-box`）
-- [ ] `resources/scss/index.scss`：`@forward "base"` → `@forward "base/fonts"` + `@forward "base/utilities"`
-- [ ] 刪 `base/_reset.scss` 與 `base/index.scss` 的 `@forward "reset"`
-- [ ] 新增 `resources/scss/preview-all.scss`（`reset` + `index`），供 `preview/*.html` 維持視覺
-- [ ] `preview/*.html`（20 支）改吃 `preview-all.scss`
-- [ ] **目視比對**：border-box 改動是否讓現有 preview 跑版；有則報告並微調
+- [x] 新增 `resources/scss/reset.scss`（頂層獨立檔，內容自 `base/_reset.scss` 搬移 + 補全域 `box-sizing: border-box`）
+- [x] `resources/scss/index.scss`：`@forward "base"` → `@forward "base/fonts"` + `@forward "base/utilities"`
+- [x] 刪 `base/_reset.scss` 與 `base/index.scss` 的 `@forward "reset"`
+- [x] 新增 `resources/scss/preview-all.scss`（`reset` + `index`），供 `preview/*.html` 維持視覺
+- [x] `preview/*.html`（20 支）改吃 `preview-all.scss`
+- [x] **目視比對**：border-box 改動是否讓現有 preview 跑版；有則報告並微調
 
 ### 1.5 元件契約
-- [ ] 新增 `resources/scss/_component-base.scss`（`corner-shape` + `font-weight: 500` 聚合規則，包 `@layer pi`）
-- [ ] `index.scss` 在 components 之前 `@forward "component-base"`
-- [ ] **不載 reset 的驗證頁**：`preview/_no-reset.html` 只載 `index.scss`，逐元件與載 reset 版對照，確認圓角形狀與字重一致
+- [x] 新增 `resources/scss/_component-base.scss`（`corner-shape` + `font-weight: 500` 聚合規則，包 `@layer pi`）
+- [x] `index.scss` 在 components 之前 `@forward "component-base"`
+- [x] **不載 reset 的驗證頁**：`preview/_no-reset.html` 只載 `index.scss`，逐元件與載 reset 版對照，確認圓角形狀與字重一致
 
 ### 1.6 Composer 套件本體
-- [ ] `composer.json`（`company/pi-design-system`、PSR-4 `Company\PiDesignSystem\` → `src/`、依賴僅 `illuminate/support`、laravel provider extra）
-- [ ] `src/PiDesignSystemServiceProvider.php`
+- [x] `composer.json`（`company/pi-design-system`、PSR-4 `Company\PiDesignSystem\` → `src/`、依賴僅 `illuminate/support`、laravel provider extra）
+- [x] `src/PiDesignSystemServiceProvider.php`
   - `loadViewsFrom(resources/views, 'pi')`
   - `Blade::anonymousComponentPath(resources/views/components, 'pi')`
   - `Blade::directive('piFragment', ...)` → render 空字串（Phase 3 才消費 manifest）
-- [ ] `.gitattributes` 加 `export-ignore`：`/prototypes`、`/preview`、`/preview-static`、`/scripts`、`/.scratch`、`/docs`、`/dist*`、`/node_modules`
-- [ ] 確認出貨含 `fonts/` 與 `assets/symicon.css`（不可 export-ignore）
-- [ ] `composer validate`（容器內或 host `brew install composer`）
+- [x] `.gitattributes` 加 `export-ignore`：`/prototypes`、`/preview`、`/preview-static`、`/scripts`、`/.scratch`、`/docs`、`/dist*`、`/node_modules`
+- [x] 確認出貨含 `fonts/` 與 `assets/symicon.css`（不可 export-ignore）
+- [ ] `composer validate` —— **待辦**：host 未安裝 composer（`which composer` → not found）
 
 ### 1.7 Phase 1 驗收
-- [ ] `npm run dev` → 20 支 preview 頁視覺與改動前一致（差異需可解釋）
-- [ ] `npm run test`（build smoke，新增 `@layer pi` 檢查項）
-- [ ] `dist/pi-ds.css` 內所有 `.gl_*` / `.fz-*` / `.text-*` 都在 `@layer pi` 內，無漏網
+- [x] `npm run dev` → 20 支 preview 頁視覺與改動前一致（差異需可解釋）
+- [x] `npm run test`（build smoke，新增 `@layer pi` 檢查項）
+- [x] `dist/pi-ds.css` 內所有 `.gl_*` / `.fz-*` / `.text-*` 都在 `@layer pi` 內，無漏網
 - [ ] `git commit`
 
 ---
