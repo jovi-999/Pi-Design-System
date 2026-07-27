@@ -1,6 +1,15 @@
 node_modules/
 dist/
 dist-preview/
+
+# Composer
+# 本 repo 是 library，不 commit composer.lock（版本解析交給使用端專案決定）。
+vendor/
+composer.lock
+# Phase 2 的 preview Laravel app：path repository symlink 會在這裡產生一個
+# 指回 repo 根的符號連結，絕不可 commit（會變成無窮遞迴的目錄）。
+preview/vendor/
+auth.json
 .DS_Store
 .thumbnail
 *.tgz

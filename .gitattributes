@@ -14,3 +14,41 @@
 # 二進位檔，git 不得干涉
 *.woff   binary
 *.woff2  binary
+
+# ============================================================
+# Composer 套件出貨範圍
+#
+# 這裡才是決定「專案 composer require 之後 vendor/ 裡有什麼」的地方。
+#
+# 不要改用 composer.json 的 archive.exclude —— 那個欄位只作用於
+# `composer archive` 指令。Composer 從 VCS repository 安裝時抓的是
+# GitHub 的 zipball，而 GitHub 是用 `git archive` 產生它的，只認
+# .gitattributes 的 export-ignore。寫在 archive.exclude 會完全沒效果。
+#
+# 驗證方式：git archive HEAD | tar -t
+# ============================================================
+
+# 開發工具與討論區，不進專案
+/preview            export-ignore
+/preview-static     export-ignore
+/prototypes         export-ignore
+/scripts            export-ignore
+/.scratch           export-ignore
+/.claude            export-ignore
+
+# repo 自己的建置設定，下游用不到（下游用自己的 Vite / sass）
+/package.json       export-ignore
+/package-lock.json  export-ignore
+/vite.config.js     export-ignore
+
+# 實作規格與待辦，非交付內容
+/design-guideline-spec.md  export-ignore
+/TODO.md                   export-ignore
+
+# 刻意「不」export-ignore 的（下游需要）：
+#   /resources   SCSS 原始碼 + Blade 元件 —— 套件本體
+#   /src         ServiceProvider
+#   /fonts       字型檔（含 symicon icon 字型）
+#   /assets      symicon.css + icon codepoint 對照
+#   /docs        ai-guide.md（Figma 名稱 ↔ class 對照，agent 產頁時要讀）
+#   README.md / STRUCTURE.md / CLAUDE.md / SKILL.md / CHANGELOG.md

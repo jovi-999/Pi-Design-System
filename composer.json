@@ -1,0 +1,27 @@
+{
+    "name": "company/pi-design-system",
+    "description": "Pi Design System — tokens、SCSS 元件與 Blade 元件（單一真相來源）",
+    "type": "library",
+    "license": "proprietary",
+    "require": {
+        "php": "^8.2",
+        "illuminate/support": "^11.0|^12.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Company\\PiDesignSystem\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Company\\PiDesignSystem\\PiDesignSystemServiceProvider"
+            ]
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}
