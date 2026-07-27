@@ -4,15 +4,15 @@
 // 使用方式（本 repo 不發 npm，下游採 vendored：複製需要的 src 進專案後 @use 相對路徑）：
 //
 //   // 方案 A：全部載入（tokens + base + components）
-//   @use "pi-design-system/src/index" as ds;
+//   @use "pi-design-system/resources/scss/index" as ds;
 //
 //   // 方案 B：只要 tokens（不要 .gl_* class，自己寫 component）
-//   @use "pi-design-system/src/tokens" as ds;
+//   @use "pi-design-system/resources/scss/tokens" as ds;
 //
 //   // 方案 C：挑選 component
-//   @use "pi-design-system/src/tokens" as ds;
-//   @use "pi-design-system/src/components/button";
-//   @use "pi-design-system/src/components/modal";
+//   @use "pi-design-system/resources/scss/tokens" as ds;
+//   @use "pi-design-system/resources/scss/components/button";
+//   @use "pi-design-system/resources/scss/components/modal";
 // ============================================================
 
 @forward "tokens";

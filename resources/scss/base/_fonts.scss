@@ -1,23 +1,22 @@
 // ============================================================
 // Pi DS — Fonts (@font-face)
 //
-// 字體路徑透過 $font-path 設定。預設值是相對於這個檔案的
-// "../../fonts"，也就是 repo 根的 /fonts/ —— 適合本地開發 +
-// 直接從 src/ 讀 SCSS 的情境（不過 npm 別人裝時通常需要覆寫）。
+// 字體路徑透過 $font-path 設定。預設 "/fonts"（web root 起算的絕對路徑）。
+//
+// 為什麼是絕對路徑而非相對路徑：Sass 不會 rebase url()，會原樣輸出；
+// Vite 則是相對於「entry CSS 檔的目錄」去解，不是相對於這支 partial。
+// 因此任何相對路徑都只能對其中一個消費端正確（sass CLI 輸出到 dist/、
+// Vite entry 在 resources/scss/、專案端 entry 在 resources/sass/ 各不相同）。
+// 絕對路徑對三者都成立，也正是專案端實際採用的值（字型放 public/fonts/）。
 //
 // 覆寫方式（在使用端的 app.scss）：
 //
 //   @use "pi-design-system/base/fonts" with (
-//     $font-path: "/fonts"          // 你的專案實際字體放哪
+//     $font-path: "https://cdn.example.com/fonts"
 //   );
-//
-// 常見覆寫值：
-//   "/fonts"                          → 專案 public/fonts/
-//   "~pi-design-system/fonts"  → webpack alias 解 node_modules
-//   "https://cdn.example.com/fonts"   → CDN
 // ============================================================
 
-$font-path: "../../fonts" !default;
+$font-path: "/fonts" !default;
 
 // ---------- Google Sans Flex（英數 / variable）400–700 / 48%–150% ----------
 @font-face {

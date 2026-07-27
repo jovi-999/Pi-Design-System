@@ -1,16 +1,16 @@
 // ============================================================
 // Pi DS — Vite 設定（僅供本 repo 開發 / 預覽用）
 //
-// 用途：改 src/**/*.scss → 預覽頁即時 HMR。
-// 預覽頁直接吃 src/index.scss（單一真相源）。
+// 用途：改 resources/scss/**/*.scss → 預覽頁即時 HMR。
+// 預覽頁直接吃 resources/scss/（單一真相源）。
 //
-// 此 repo 不發布 npm；下游採 vendored 方式複製 src/ 使用，
+// 此 repo 不發布 npm；下游透過 composer 套件取得 resources/scss，
 // Vite 僅供本機預覽，不進下游。
 // ============================================================
 
 export default {
-  // repo 根當 root：src/、fonts/、assets/、preview/ 全在底下，
-  // 預覽頁用絕對路徑 /src/index.scss 即可解到，免 fs.allow hack。
+  // repo 根當 root：resources/、fonts/、assets/、preview/ 全在底下，
+  // 預覽頁用絕對路徑 /resources/scss/… 即可解到，免 fs.allow hack。
   root: ".",
 
   server: {

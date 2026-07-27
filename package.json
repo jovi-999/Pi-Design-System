@@ -3,15 +3,15 @@
   "version": "0.1.0",
   "description": "Pi Design System — tokens & components (SCSS). 前端切版對照用，不發布 npm。",
   "scripts": {
-    "build": "sass src/index.scss dist/pi-ds.css --style=expanded --no-source-map",
-    "build:min": "sass src/index.scss dist/pi-ds.min.css --style=compressed --no-source-map",
-    "build:tokens": "sass src/tokens/index.scss dist/pi-ds-tokens.css --style=expanded --no-source-map",
-    "watch": "sass --watch src/index.scss:dist/pi-ds.css --style=expanded --no-source-map",
-    "lint:scss": "stylelint \"src/**/*.scss\"",
+    "build": "sass resources/scss/index.scss dist/pi-ds.css --style=expanded --no-source-map",
+    "build:min": "sass resources/scss/index.scss dist/pi-ds.min.css --style=compressed --no-source-map",
+    "build:tokens": "sass resources/scss/tokens/index.scss dist/pi-ds-tokens.css --style=expanded --no-source-map",
+    "watch": "sass --watch resources/scss/index.scss:dist/pi-ds.css --style=expanded --no-source-map",
+    "lint:scss": "stylelint \"resources/scss/**/*.scss\"",
     "dev": "vite",
     "preview:build": "vite build",
     "preview:serve": "vite preview",
-    "test": "npm run build && grep -q -- '--cl-green-500' dist/pi-ds.css && grep -q '.gl_btn' dist/pi-ds.css && echo 'smoke test passed'"
+    "test": "npm run build && node scripts/check-build.mjs"
   },
   "devDependencies": {
     "gsap": "^3.15.0",
