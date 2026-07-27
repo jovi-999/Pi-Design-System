@@ -44,5 +44,5 @@ page (單欄置中)
 
 ## Preview
 
-- 路徑 `preview/example-signup.html`
-- `npm run dev` → `localhost:5173/preview/index.html#example-signup`（已註冊 PAGES「Prototype」群組）
+- 路徑 `preview-static/example-signup.html`
+- `npm run dev` → `localhost:5173/preview-static/index.html#example-signup`（已註冊 PAGES「Prototype」群組）

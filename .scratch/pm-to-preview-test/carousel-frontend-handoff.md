@@ -31,5 +31,5 @@ page
 
 ## Preview
 
-- 路徑 `preview/example-carousel.html`
-- `npm run dev` → `localhost:5173/preview/index.html#example-carousel`（已註冊 PAGES「Prototype」群組）
+- 路徑 `preview-static/example-carousel.html`
+- `npm run dev` → `localhost:5173/preview-static/index.html#example-carousel`（已註冊 PAGES「Prototype」群組）

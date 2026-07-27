@@ -17,11 +17,11 @@ Blocked by: 01, 02, 03, 04
 2. **元件對應**：input/select/button 全命中現有元件（門檻第 1 層）；「選單」歧義收斂為原生 `select.gl_form-control`（非 `gl_dropdown-item` 面板）。
 3. **缺件（04）**：navbar 無正式元件 → **門檻第 2 層「組合件」**（`--cl-basic-900` + `--radius-md` + flex 疊得出）→ preview 直接跑、handoff 標 `⚠️ 待確認`「組合而非正式元件」，**未進提議 loop**。無真缺件。
 4. **產物**：
-   - 可跑 preview：`preview/example-signup.html`（已註冊 PAGES「Prototype」群組）。
+   - 可跑 preview：`preview-static/example-signup.html`（已註冊 PAGES「Prototype」群組）。
    - handoff（02 兩份分開）：`.scratch/prototype-handoff/example/{frontend,backend}-handoff.md`。
 
 ### 驗證結果
-- `npm run dev` → `/preview/example-signup.html` 回 **200**；`/resources/scss/index.scss` 編譯 **200** 無 error。
+- `npm run dev` → `/preview-static/example-signup.html` 回 **200**；`/resources/scss/index.scss` 編譯 **200** 無 error。
 - **零自創**：全用現有 `gl_*` class + 現有 CSS var，無新 token/class/SCSS。
 
 ### 暴露的格式缺口（可接受，記錄不阻塞）

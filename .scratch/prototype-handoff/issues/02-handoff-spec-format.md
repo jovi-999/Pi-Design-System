@@ -46,7 +46,7 @@ Blocked by:
 - <新提議元件> — 🆕 待確認
 
 ## Preview
-- 路徑 `preview/<name>.html`；`npm run dev` → `localhost:5173/preview/index.html#<hash>`
+- 路徑 `preview-static/<name>.html`；`npm run dev` → `localhost:5173/preview-static/index.html#<hash>`
 ```
 
 ### 後端 handoff 模板

@@ -46,5 +46,5 @@ page（單欄，內容區三段）
 
 ## Preview
 
-- 路徑 `preview/example-layout-3col.html`
-- `npm run dev` → `localhost:5173/preview/index.html#example-layout-3col`（已註冊 PAGES「Prototype」群組）
+- 路徑 `preview-static/example-layout-3col.html`
+- `npm run dev` → `localhost:5173/preview-static/index.html#example-layout-3col`（已註冊 PAGES「Prototype」群組）

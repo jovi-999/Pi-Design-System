@@ -33,7 +33,7 @@ PM 用自由文字／口述隨意描述，**不給模板、不要 PM 填欄位**
 
 ### 3. 產出可跑 preview
 
-照 `preview/button.html` 範本建 `preview/<name>.html`，只引 `/resources/scss/index.scss`（設計系統唯一真相源），只用現有 `gl_*` class + 現有 CSS var。新頁需**兩處註冊**（`preview/index.html` 的 PAGES 陣列 + `resources/scss/components/index.scss`）。目錄、引用方式、class 慣例、`npm run dev` 跑法**全部照 [references/preview-setup.md](references/preview-setup.md)**。收尾用 `npm run dev` 開該頁確認回 **200**、`/resources/scss/index.scss` 編譯無 error。
+照 `preview-static/button.html` 範本建 `preview-static/<name>.html`，只引 `/resources/scss/index.scss`（設計系統唯一真相源），只用現有 `gl_*` class + 現有 CSS var。新頁需**兩處註冊**（`preview-static/index.html` 的 PAGES 陣列 + `resources/scss/components/index.scss`）。目錄、引用方式、class 慣例、`npm run dev` 跑法**全部照 [references/preview-setup.md](references/preview-setup.md)**。收尾用 `npm run dev` 開該頁確認回 **200**、`/resources/scss/index.scss` 編譯無 error。
 
 ### 4. 產出兩份交棒規格（前端 + 後端各一）
 
@@ -41,7 +41,7 @@ PM 用自由文字／口述隨意描述，**不給模板、不要 PM 填欄位**
 
 ### 5. Capture（落檔）
 
-- preview HTML 落在 `preview/`（已在第 3 步）。
+- preview HTML 落在 `preview-static/`（已在第 3 步）。
 - 兩份 handoff 落在該需求的 `.scratch/<feature-slug>/`（或使用者指定處）。
 - 全程零自創：交付前再掃一遍，確認無新 token / class / SCSS。
 
@@ -49,8 +49,8 @@ PM 用自由文字／口述隨意描述，**不給模板、不要 PM 填欄位**
 
 - [ ] 回述摘要只含元件 + 版面，狀態/資料未問 PM
 - [ ] 每個元件都過了三層門檻；缺件有走提議 loop 或標組合件
-- [ ] preview `npm run dev` 回 200、無編譯 error、preview/index.html 已註冊
+- [ ] preview `npm run dev` 回 200、無編譯 error、preview-static/index.html 已註冊
 - [ ] 前後端兩份 handoff 齊、標記正確
 - [ ] 零自創（無新 token / class / SCSS）
 
-> 已驗證範例（可當回歸基準）：輸入「navbar + 表單（姓名/Email input + 產業別 select + 送出鈕）」→ 產出 `preview/example-signup.html` + `.scratch/prototype-handoff/example/{frontend,backend}-handoff.md`。
+> 已驗證範例（可當回歸基準）：輸入「navbar + 表單（姓名/Email input + 產業別 select + 送出鈕）」→ 產出 `preview-static/example-signup.html` + `.scratch/prototype-handoff/example/{frontend,backend}-handoff.md`。

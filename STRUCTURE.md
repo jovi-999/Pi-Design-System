@@ -39,7 +39,7 @@ Pi-Design-System/
 │   ├── icon-names.json / icon-cp-map.json / icons-preview.html
 │   └── noise.svg
 ├── fonts/                    ★ 字型檔（woff/woff2，含 symicon-X.s icon 字型）
-├── preview/                  ☆ 開發預覽頁（Vite，吃 /resources/scss/index.scss）
+├── preview-static/                  ☆ 開發預覽頁（Vite，吃 /resources/scss/index.scss）
 │   ├── index.html            #   殼層：左目錄 + 右 iframe
 │   ├── color/type/shadow/tokens/icons.html        # foundation 對照頁
 │   └── button/form/alert/callout/content-switcher/ # 元件對照頁（拆自舊 components）
@@ -64,8 +64,8 @@ Pi-Design-System/
 | 目的 | 動哪裡 | 連帶要做 / 注意 |
 |---|---|---|
 | 改 token（色/字/間距/圓角…） | `resources/scss/tokens/_*.scss` | 牽動所有引用該 token 的元件；**只改既有 token 值，禁自創新 token** |
-| 改 / 新增元件樣式 | `resources/scss/components/_<元件>.scss` | **規則區必須包在 `@layer pi { }` 內**（見下方「分層規則」）；新元件要在 `components/index.scss` 加 `@forward`；同步 `preview/<元件>.html` 與 `docs/ai-guide.md` |
-| 依 Figma 重做元件 | 同上 | 走 skill **figma-to-pi-ds** 流程（讀 Figma→映射既有 token→確認範圍→改 SCSS→同步 preview/docs→build） |
+| 改 / 新增元件樣式 | `resources/scss/components/_<元件>.scss` | **規則區必須包在 `@layer pi { }` 內**（見下方「分層規則」）；新元件要在 `components/index.scss` 加 `@forward`；同步 `preview-static/<元件>.html` 與 `docs/ai-guide.md` |
+| 依 Figma 重做元件 | 同上 | 走 skill **figma-to-pi-ds** 流程（讀 Figma→映射既有 token→確認範圍→改 SCSS→同步 preview-static/docs→build） |
 | 改文字字型 | `fonts/` + `resources/scss/base/_fonts.scss` | 詳見 README「字型管理」章節 |
 | 改 icon 字型 | `fonts/symicon-X.s.*` + `assets/symicon.css` | 該檔內容整包在 `@layer pi { }` 內，新增規則要放進去；詳見 README「icon 字型（symicon）維護」章節 |
 | 看視覺預覽 | 改完直接 `npm run dev` | 預覽吃 `resources/scss/preview-all.scss`（= reset + index），HMR 即時；不用先 build |

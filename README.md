@@ -81,7 +81,7 @@
 
 **顏色。** Icon 透過 `currentColor` 繼承。**永遠不要** 在 icon 上寫死 hex —— 跟父層文字色繼承才會跟著主題切換。
 
-完整 class 清單見 `assets/symicon.css`，視覺索引見 `preview/icons.html`。
+完整 class 清單見 `assets/symicon.css`，視覺索引見 `preview-static/icons.html`。
 
 ---
 
@@ -181,8 +181,8 @@ npm test                  # 檢查產出 css 含關鍵 token / class
 ### 編輯規則
 
 - 只改 `resources/scss/` 內檔案；CSS 一律由 `npm run build` 從 SCSS 產出，不手寫 CSS。
-- 加新元件 → `resources/scss/components/_xxx.scss` + `resources/scss/components/index.scss` 加一行 `@forward` + `preview/` 加對照頁並在 `preview/index.html` 左目錄登記。
-- 改 token → 先看 `preview/tokens.html` 評估衝擊面，CHANGELOG 寫清楚。
+- 加新元件 → `resources/scss/components/_xxx.scss` + `resources/scss/components/index.scss` 加一行 `@forward` + `preview-static/` 加對照頁並在 `preview-static/index.html` 左目錄登記。
+- 改 token → 先看 `preview-static/tokens.html` 評估衝擊面，CHANGELOG 寫清楚。
 - **禁自創 token / class**：不確定先 `grep resources/scss/` 或讀 `resources/scss/tokens`、`resources/scss/components` 確認，絕不憑記憶發明。
 - rename / 移除 token、改 class 名屬 breaking change → CHANGELOG 寫清楚並同步所有引用處（preview、docs、README）。
 
@@ -222,7 +222,7 @@ $font-path: "../../fonts" !default;
 |---|---|
 | 字型版本升級（family / 檔名不變，只換內容） | 把新檔覆蓋進 `fonts/`，`npm run dev` 確認還能載 |
 | 加新字型檔（例如升級 symicon 版本） | `fonts/` 加檔 → 更新對應 `@font-face` 的檔名與版本號 |
-| 替換字型（改 family / token） | `fonts/` 換檔 → 改 `resources/scss/base/_fonts.scss` 的 `@font-face` → 改 `resources/scss/tokens/_typography.scss` 的 `--font-sans` → `preview/` 對照視覺有無走鐘（中文寬度可能不同）|
+| 替換字型（改 family / token） | `fonts/` 換檔 → 改 `resources/scss/base/_fonts.scss` 的 `@font-face` → 改 `resources/scss/tokens/_typography.scss` 的 `--font-sans` → `preview-static/` 對照視覺有無走鐘（中文寬度可能不同）|
 
 改完一律 `npm run dev` 在預覽頁確認字型載入（DevTools Network 看字型 200），並寫 CHANGELOG。
 

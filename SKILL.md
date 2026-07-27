@@ -11,7 +11,7 @@
 ```
 Pi-Design-System/         ← token 與 component 的唯一真相來源
 ├── resources/scss/       ← 你寫的 SCSS（唯一可改的地方）
-├── preview/              ← 視覺對照頁（Vite，npm run dev 即時看）
+├── preview-static/              ← 視覺對照頁（Vite，npm run dev 即時看）
 ├── assets/symicon.css    ← icon 字型 @font-face + class + codepoint
 └── fonts/                ← 字型檔（含 icon 字型 symicon-X.s）
 ```
@@ -143,7 +143,7 @@ Pi-Design-System/         ← token 與 component 的唯一真相來源
    - 第一行 `@use "../tokens" as *;`
    - class 用 `.gl_breadcrumb` 開頭
 2. ✅ `resources/scss/components/index.scss` 加一行 `@forward "breadcrumb";`
-3. ✅ `preview/` 加對照頁（給人類看視覺），並在 `preview/index.html` 左目錄登記
+3. ✅ `preview-static/` 加對照頁（給人類看視覺），並在 `preview-static/index.html` 左目錄登記
 
 只做 1 沒做 2，`npm run dev` 預覽會載不到新元件。
 
@@ -165,7 +165,7 @@ repo 不發布 npm，version 僅作內部標記；改動前先 `npm run dev` 在
 
 ### 可以改的
 - `resources/scss/**/*.scss` — DS 主程式
-- `preview/*.html` — 視覺對照頁
+- `preview-static/*.html` — 視覺對照頁
 - `README.md`、`SKILL.md`、`CHANGELOG.md`、`STRUCTURE.md` — 文件
 - `package.json` 的 metadata、dependencies、scripts
 

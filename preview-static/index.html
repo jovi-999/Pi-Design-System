@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Pi DS — 預覽</title>
     <link rel="stylesheet" href="/resources/scss/preview-all.scss" />
-    <link rel="stylesheet" href="/preview/preview.scss" />
+    <link rel="stylesheet" href="/preview-static/preview.scss" />
     <style>
       /* ============================================================
      預覽殼層：左側固定目錄 + 右側 iframe 內容區
@@ -322,7 +322,7 @@
         const key = location.hash.replace("#", "");
         const page =
           PAGES.find((p) => p.file.replace(".html", "") === key) || PAGES[0];
-        frameEl.src = "/preview/" + page.file;
+        frameEl.src = "/preview-static/" + page.file;
         document.querySelectorAll(".nav-link").forEach((a) => {
           const on = a.dataset.file === page.file;
           a.classList.toggle("active", on);

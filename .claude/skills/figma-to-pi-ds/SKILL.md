@@ -34,7 +34,7 @@ description: 將 Figma 設計樣式落地成 Pi Design System 的 SCSS 元件 / 
    - 顏色一律 token（`$cl-*`），尺寸 px 字面值可接受（對齊既有檔風格）
 
 5. **同步更新**（缺一不可）
-   - `preview/<元件>.html`：markup + `.usage` 的 `<pre>` 範例 + notes（尺寸/色彩/規則）
+   - `preview-static/<元件>.html`：markup + `.usage` 的 `<pre>` 範例 + notes（尺寸/色彩/規則）
    - `docs/ai-guide.md`：Figma 名稱 ↔ class 對照表那一列
    - README / SKILL.md 若有引用該 class 也要改
 
@@ -54,4 +54,4 @@ description: 將 Figma 設計樣式落地成 Pi Design System 的 SCSS 元件 / 
 
 ## 參考實例
 
-`resources/scss/components/_pagination.scss` + `preview/pagination.html`：2026-06 依 Figma 重做的範例（`gl_pagination-outer > gl_pagination`、透明無底、md 40 / sm 32、≤768px 自動縮、box-sizing 修溢出）。
+`resources/scss/components/_pagination.scss` + `preview-static/pagination.html`：2026-06 依 Figma 重做的範例（`gl_pagination-outer > gl_pagination`、透明無底、md 40 / sm 32、≤768px 自動縮、box-sizing 修溢出）。
