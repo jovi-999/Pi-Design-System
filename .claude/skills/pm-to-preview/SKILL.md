@@ -7,7 +7,7 @@ description: 從 PM 的自然語言／口述需求，用 Pi Design System 既有
 
 把 PM 的一段文字需求，變成「一個可跑的 HTML preview」＋「前後端各一份交棒規格」。
 
-**最高原則（來自專案 `CLAUDE.md`）：只用 `src/tokens/`、`src/components/` 實際存在的 token / class，嚴禁自創。** 不確定就先 `grep` 或讀 `src/` 確認；需要的東西不存在時走缺件流程（第 2 步），不要自己編一個。
+**最高原則（來自專案 `CLAUDE.md`）：只用 `resources/scss/tokens/`、`resources/scss/components/` 實際存在的 token / class，嚴禁自創。** 不確定就先 `grep` 或讀 `resources/scss/` 確認；需要的東西不存在時走缺件流程（第 2 步），不要自己編一個。
 
 ## 何時用這條、何時不用
 
@@ -33,7 +33,7 @@ PM 用自由文字／口述隨意描述，**不給模板、不要 PM 填欄位**
 
 ### 3. 產出可跑 preview
 
-照 `preview/button.html` 範本建 `preview/<name>.html`，只引 `/src/index.scss`（設計系統唯一真相源），只用現有 `gl_*` class + 現有 CSS var。新頁需**兩處註冊**（`preview/index.html` 的 PAGES 陣列 + `src/components/index.scss`）。目錄、引用方式、class 慣例、`npm run dev` 跑法**全部照 [references/preview-setup.md](references/preview-setup.md)**。收尾用 `npm run dev` 開該頁確認回 **200**、`/src/index.scss` 編譯無 error。
+照 `preview/button.html` 範本建 `preview/<name>.html`，只引 `/resources/scss/index.scss`（設計系統唯一真相源），只用現有 `gl_*` class + 現有 CSS var。新頁需**兩處註冊**（`preview/index.html` 的 PAGES 陣列 + `resources/scss/components/index.scss`）。目錄、引用方式、class 慣例、`npm run dev` 跑法**全部照 [references/preview-setup.md](references/preview-setup.md)**。收尾用 `npm run dev` 開該頁確認回 **200**、`/resources/scss/index.scss` 編譯無 error。
 
 ### 4. 產出兩份交棒規格（前端 + 後端各一）
 

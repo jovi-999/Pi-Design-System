@@ -9,25 +9,25 @@
 ## 一、心智模型：這個 repo 是什麼
 
 ```
-Pi-Design-System/     ← token 與 component 的唯一真相來源
-├── src/              ← 你寫的 SCSS（唯一可改的地方）
-├── preview/          ← 視覺對照頁（Vite，npm run dev 即時看）
-├── assets/symicon.css ← icon 字型 @font-face + class + codepoint
-└── fonts/            ← 字型檔（含 icon 字型 symicon-X.s）
+Pi-Design-System/         ← token 與 component 的唯一真相來源
+├── resources/scss/       ← 你寫的 SCSS（唯一可改的地方）
+├── preview/              ← 視覺對照頁（Vite，npm run dev 即時看）
+├── assets/symicon.css    ← icon 字型 @font-face + class + codepoint
+└── fonts/                ← 字型檔（含 icon 字型 symicon-X.s）
 ```
 
-**這個 repo 不發布 npm。** 用途：給前端切版時對照目前的元件樣式與 class，`npm run dev` 本機跑預覽即可。下游專案實際使用時用 vendored 方式（複製需要的 `src/*.scss` / `assets/symicon.css` / `fonts/` 進自己專案），以本 repo 為唯一真相。
+**這個 repo 不發布 npm。** 用途：給前端切版時對照目前的元件樣式與 class，`npm run dev` 本機跑預覽即可。下游專案實際使用時用 vendored 方式（複製需要的 `resources/scss/*.scss` / `assets/symicon.css` / `fonts/` 進自己專案），以本 repo 為唯一真相。
 
 ---
 
 ## 二、Class 命名規則（最重要）
 
-### 1. `src/components/_*.scss` 是**唯一真相**
+### 1. `resources/scss/components/_*.scss` 是**唯一真相**
 
-所有 `.gl_*` class 必須在 `src/components/_xxx.scss` 裡看到定義。
+所有 `.gl_*` class 必須在 `resources/scss/components/_xxx.scss` 裡看到定義。
 - ❌ 不要在 preview 自己發明 class（例如 `.gl_field`、`.gl_input`）
-- ✅ 改 demo 前先 `grep -r "\.gl_xxx" src/components/` 確認 class 存在
-- ✅ 找不到對應 class → 那是 DS 缺的，去 `src/components/_*.scss` 補上
+- ✅ 改 demo 前先 `grep -r "\.gl_xxx" resources/scss/components/` 確認 class 存在
+- ✅ 找不到對應 class → 那是 DS 缺的，去 `resources/scss/components/_*.scss` 補上
 
 ### 2. 已存在的 class 結構（**不要記錯**）
 
@@ -122,7 +122,7 @@ Pi-Design-System/     ← token 與 component 的唯一真相來源
 ### 應該做的
 
 ```scss
-// ✅ 字型只在 src/base/_fonts.scss 一個地方宣告
+// ✅ 字型只在 resources/scss/base/_fonts.scss 一個地方宣告
 // ✅ 引用一律用變數
 .title { font-family: $font-sans; }
 .price { font-family: $font-display; }
@@ -139,10 +139,10 @@ Pi-Design-System/     ← token 與 component 的唯一真相來源
 
 加一個新 component（例如 `_breadcrumb.scss`）時，**3 個地方都要動到**，缺一不可：
 
-1. ✅ 建立 `src/components/_breadcrumb.scss`
+1. ✅ 建立 `resources/scss/components/_breadcrumb.scss`
    - 第一行 `@use "../tokens" as *;`
    - class 用 `.gl_breadcrumb` 開頭
-2. ✅ `src/components/index.scss` 加一行 `@forward "breadcrumb";`
+2. ✅ `resources/scss/components/index.scss` 加一行 `@forward "breadcrumb";`
 3. ✅ `preview/` 加對照頁（給人類看視覺），並在 `preview/index.html` 左目錄登記
 
 只做 1 沒做 2，`npm run dev` 預覽會載不到新元件。
@@ -164,7 +164,7 @@ repo 不發布 npm，version 僅作內部標記；改動前先 `npm run dev` 在
 ## 七、檔案編輯規則
 
 ### 可以改的
-- `src/**/*.scss` — DS 主程式
+- `resources/scss/**/*.scss` — DS 主程式
 - `preview/*.html` — 視覺對照頁
 - `README.md`、`SKILL.md`、`CHANGELOG.md`、`STRUCTURE.md` — 文件
 - `package.json` 的 metadata、dependencies、scripts
@@ -207,9 +207,9 @@ repo 不發布 npm，version 僅作內部標記；改動前先 `npm run dev` 在
 
 | 症狀 | 看哪裡 |
 |---|---|
-| `Undefined variable $xxx` | `src/tokens/index.scss` 是否 `@forward` 了該檔 |
-| `.gl_xxx` 沒套到樣式 | `src/components/_xxx.scss` 確認 class 真的存在 |
-| 預覽元件載不到 | `src/components/index.scss` 是否 `@forward` 了新元件 |
+| `Undefined variable $xxx` | `resources/scss/tokens/index.scss` 是否 `@forward` 了該檔 |
+| `.gl_xxx` 沒套到樣式 | `resources/scss/components/_xxx.scss` 確認 class 真的存在 |
+| 預覽元件載不到 | `resources/scss/components/index.scss` 是否 `@forward` 了新元件 |
 | 文字字型 404 | `vite.config` 的 `publicDir` / `server.fs.allow`、`$font-path` 路徑 |
 | icon 不顯示 / 變方框 | `assets/symicon.css` 的 `@font-face` url 是否指到 `fonts/` 既有檔、codepoint 是否對 |
 
@@ -218,6 +218,6 @@ repo 不發布 npm，version 僅作內部標記；改動前先 `npm run dev` 在
 ## 十、最後 — 行為準則
 
 - **改之前先讀**：碰到一個檔案前，先把它讀完；碰到一個 class 前，先 `grep` 確認它存在。
-- **不要憑記憶寫 class 名**：永遠去 `src/components/_*.scss` 確認結構。
+- **不要憑記憶寫 class 名**：永遠去 `resources/scss/components/_*.scss` 確認結構。
 - **小步提交**：一次 commit 一件事，CHANGELOG 寫清楚。
 - **不確定就問**：寧可問人類「這個 component 應該怎麼命名」，不要自己發明。

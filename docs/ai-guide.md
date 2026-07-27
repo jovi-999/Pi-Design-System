@@ -18,7 +18,7 @@
 每個新頁面開工前，按順序做：
 
 1. `cat preview/tokens.html` — 知道有哪些 token
-2. `ls src/components/` — 知道有哪些現成 component
+2. `ls resources/scss/components/` — 知道有哪些現成 component
 3. 看 Figma 設計 → 對照下方「Figma ↔ DS 對照表」把元件名對起來
 4. 寫 markup（用 `.gl_*` + utility class）
 5. 真的需要自訂樣式時，**import tokens 再寫**：
@@ -192,7 +192,7 @@ font-family: $font-icon;       // 圖示
 @import url("https://fonts.googleapis.com/...");
 ```
 
-字型 **只在 `src/base/_fonts.scss` 一個地方** 宣告。如果你看到要載新的字型，先去問 DS owner，不要在自己的檔案裡偷加。
+字型 **只在 `resources/scss/base/_fonts.scss` 一個地方** 宣告。如果你看到要載新的字型，先去問 DS owner，不要在自己的檔案裡偷加。
 
 ### Figma 標的字型 → DS 對照
 
@@ -212,7 +212,7 @@ font-family: $font-icon;       // 圖示
 
 1. **先暫停**，這是設計變更，不是工程任務
 2. 確認設計師確實要換字型而不是工具自動填的 fallback
-3. 確定要換 → 去 `src/base/_fonts.scss` 走 [README 「替換字型」場景 B] 流程
+3. 確定要換 → 去 `resources/scss/base/_fonts.scss` 走 [README 「替換字型」場景 B] 流程
 4. 不要在頁面層偷偷塞新字型
 
 ### 字型路徑問題（FOUT / 404）
@@ -271,7 +271,7 @@ padding: 1rem;
 
 1. 在 repo 開 issue：`[Proposal] New component: XXX`
 2. 附上 Figma 連結 + 使用情境 + 建議 class name（沿用 `.gl_` 前綴）
-3. 等 DS owner review 再動手；合併後會進 `src/components/`
+3. 等 DS owner review 再動手；合併後會進 `resources/scss/components/`
 4. 在原專案先用 **臨時 class**（例如 `.local_xxx`）標示，合併後再替換
 
 ---

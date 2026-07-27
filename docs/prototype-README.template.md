@@ -15,7 +15,7 @@ Pi DS 不發 npm，採 vendored（複製檔案進本 repo 一起 commit）。
 
 | 從 guideline repo | 複製到本 repo | 用途 |
 |---|---|---|
-| `src/`（tokens/base/components/index.scss） | `resources/pi-ds/src/` | token 與 `.gl_*` 元件（@use 來源） |
+| `resources/scss/`（tokens/base/components/index.scss） | `resources/pi-ds/resources/scss/` | token 與 `.gl_*` 元件（@use 來源） |
 | `docs/ai-guide.md` | `resources/pi-ds/docs/ai-guide.md` | agent 的產頁規則書 |
 
 ### 選用：要 icon 顯示才加
@@ -61,7 +61,7 @@ npm run dev      # 開發伺服器 + HMR，即時看原型
 page scss 引 DS token 範例：
 
 ```scss
-@use "../pi-ds/src/tokens" as *;   // 路徑依實際擺放調整
+@use "../pi-ds/resources/scss/tokens" as *;   // 路徑依實際擺放調整
 
 .prototype-hero {
   padding: $sp-4;

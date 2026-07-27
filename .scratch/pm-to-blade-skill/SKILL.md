@@ -11,7 +11,7 @@ description: 從 PM 的自然語言／口述需求，用 vendored 的 Pi Design 
 
 ## 前置假設（新專案需先備妥；路徑不同時改本段 + blade-setup.md）
 
-- **Vendored Pi DS**：Pi DS 的 `src/` 已複製進 `resources/sass/pi-ds/`（tokens + base + components + index.scss）。
+- **Vendored Pi DS**：Pi DS 的 `resources/scss/` 已複製進 `resources/sass/pi-ds/`（tokens + base + components + index.scss）。
 - **Sass 解析**：Vite 的 `css.preprocessorOptions` 有 `loadPaths: ['resources/sass']`，故各 scss 內 `@use 'pi-ds/index' as *;` 直接解得到（免 alias）。若無此 loadPath，改用相對路徑 `@use 'pi-ds/index'`。
 - **建置慣例**：本專案是**一頁一支 scss**，各入口列在 `vite.config.*` 的 `input`。**不使用共用 app.scss** —— 每個 prototype 產自己的 `preview-<name>.scss`，避免與專案既有檔撞名。
 - **跑法**：Laradock 內 `docker-compose exec workspace` → `npm run watch`（= `vite`）。

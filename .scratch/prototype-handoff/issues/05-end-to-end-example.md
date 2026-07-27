@@ -21,7 +21,7 @@ Blocked by: 01, 02, 03, 04
    - handoff（02 兩份分開）：`.scratch/prototype-handoff/example/{frontend,backend}-handoff.md`。
 
 ### 驗證結果
-- `npm run dev` → `/preview/example-signup.html` 回 **200**；`/src/index.scss` 編譯 **200** 無 error。
+- `npm run dev` → `/preview/example-signup.html` 回 **200**；`/resources/scss/index.scss` 編譯 **200** 無 error。
 - **零自創**：全用現有 `gl_*` class + 現有 CSS var，無新 token/class/SCSS。
 
 ### 暴露的格式缺口（可接受，記錄不阻塞）

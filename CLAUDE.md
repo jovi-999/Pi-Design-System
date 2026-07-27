@@ -5,7 +5,7 @@
 
 ## 變數 / Token 規則（最高優先）
 - **嚴格禁止自創任何變數、token、class 內容。** 只能使用設計系統中**實際存在**的 token / class。
-- 不確定某個 token / class 是否存在時，先 `grep` 或讀 `src/tokens/` 、`src/components/` 確認，**絕不憑記憶或推測發明**。
+- 不確定某個 token / class 是否存在時，先 `grep` 或讀 `resources/scss/tokens/` 、`resources/scss/components/` 確認，**絕不憑記憶或推測發明**。
 - 需要新的值時，先問使用者、或請使用者提供來源（Figma、原始 SCSS），不要自己編一個。
 - 反例（過去發生過的錯誤）：自創 `$shadow-ring` —— 設計系統並沒有這個變數。「Ring」是 `.gl_shadow-*` 疊加 `.gl_border-outer` / `.gl_border-inner` 的組合。
 

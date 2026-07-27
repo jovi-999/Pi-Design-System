@@ -3,12 +3,12 @@
 # pm-to-blade —— host 端 vendor 複製腳本
 # ------------------------------------------------------------
 # 在 host（macOS，看得到 Pi DS repo + 目標專案）執行，一次把 3 樣
-# 放到目標 Laravel 專案：① skill ② Pi DS src ③ symicon 字型。
+# 放到目標 Laravel 專案：① skill ② Pi DS resources/scss ③ symicon 字型。
 # 之後進 Laradock 容器跑 setup.sh 接線即可。
 #
 # 用法：
 #   bash vendor-copy.sh <PI_DS_REPO_PATH> <TARGET_PROJECT_PATH>
-#     PI_DS_REPO_PATH     = Pi-Design-System repo 根（含 src/ fonts/ assets/）
+#     PI_DS_REPO_PATH     = Pi-Design-System repo 根（含 resources/scss/ fonts/ assets/）
 #     TARGET_PROJECT_PATH = 目標 Laravel 專案根
 #
 # 特性：idempotent、不覆蓋既有目錄/檔（已存在則跳過）、fail-fast。
@@ -27,7 +27,7 @@ fi
 PI_SRC="${PI_SRC%/}"; TARGET="${TARGET%/}"
 
 # 驗來源
-for d in src fonts assets; do
+for d in resources/scss fonts assets; do
   [[ -d "$PI_SRC/$d" ]] || { echo "❌ 來源缺 $PI_SRC/$d，Pi DS 路徑可能錯" >&2; exit 1; }
 done
 [[ -f "$SKILL_SRC/SKILL.md" ]] || { echo "❌ 找不到 $SKILL_SRC/SKILL.md" >&2; exit 1; }
@@ -47,14 +47,14 @@ else
   say "skill → $SKILL_DST"
 fi
 
-# ---------- ② Pi DS src → resources/sass/pi-ds ----------
+# ---------- ② Pi DS resources/scss → resources/sass/pi-ds ----------
 DS_DST="$TARGET/resources/sass/pi-ds"
 if [[ -d "$DS_DST" ]]; then
   skip "$DS_DST"
 else
   mkdir -p "$TARGET/resources/sass"
-  cp -R "$PI_SRC/src" "$DS_DST"
-  say "Pi DS src → $DS_DST"
+  cp -R "$PI_SRC/resources/scss" "$DS_DST"
+  say "Pi DS resources/scss → $DS_DST"
 fi
 
 # ---------- ③ symicon 字型 → public/fonts ----------
@@ -83,5 +83,5 @@ say "host 複製完成。下一步（進 Laradock 容器接線）："
 cat <<MANUAL
   cd laradock
   docker-compose exec workspace bash -c "cd /var/www && bash .claude/skills/pm-to-blade/setup.sh"
-  # /var/www 換成容器內你專案根路徑；省略 PI_SRC = 手動模式（src 已放好）
+  # /var/www 換成容器內你專案根路徑；省略 PI_SRC = 手動模式（resources/scss 已放好）
 MANUAL

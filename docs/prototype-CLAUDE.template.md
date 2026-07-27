@@ -9,10 +9,10 @@
 
 ## 最高原則：先讀 DS 指南（產任何畫面前）
 - 產任何頁面 / 元件前，**先讀 `resources/pi-ds/docs/ai-guide.md`**（vendored 進來的 DS 指南）。規則照抄，不要自由發揮。
-- 樣式只能用 vendored Pi DS **實際存在**的 token / class。不確定就 `grep resources/pi-ds/src/` 或讀 `resources/pi-ds/src/tokens/`、`resources/pi-ds/src/components/` 確認，**絕不憑記憶或推測發明**。
+- 樣式只能用 vendored Pi DS **實際存在**的 token / class。不確定就 `grep resources/pi-ds/resources/scss/` 或讀 `resources/pi-ds/resources/scss/tokens/`、`resources/pi-ds/resources/scss/components/` 確認，**絕不憑記憶或推測發明**。
 - 需要 DS 沒有的值 / 元件時，**先問使用者**，不要自己編一個（不自創 token、不自創 class）。
 
-> vendored DS 路徑：`resources/pi-ds/`（= 從 guideline repo 複製的 `src/` + `docs/ai-guide.md`）。若實際放別的路徑，改這份文件對應即可。
+> vendored DS 路徑：`resources/pi-ds/`（= 從 guideline repo 複製的 `resources/scss/` + `docs/ai-guide.md`）。若實際放別的路徑，改這份文件對應即可。
 
 ## 樣式產出規則
 - **優先用現成 class**：`.gl_*` 元件 class（如 `.gl_btn .gl_btn-success .gl_btn-md`）+ utility（`.fz-*`、`.flex-*` 等）拼 markup，盡量不自己寫樣式。

@@ -32,7 +32,7 @@
 - 用最接近的現有件當殼（純 HTML + 現有 class）。
 - 外層包 `gl_border-outer`（現有 solid 描邊）框出範圍。
 - 可見文字標籤「🆕 xxx（待確認）」+ 內嵌註解「暫用 X 頂替，正式件待前端做」。
-- **無 dashed border token**（查 `src/` 已確認）；禁自創，故用現有 solid `gl_border-outer`。
+- **無 dashed border token**（查 `resources/scss/` 已確認）；禁自創，故用現有 solid `gl_border-outer`。
 
 ## handoff 呈現（承接標記約定）
 

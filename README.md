@@ -3,7 +3,7 @@
 這個 repo 是 **token 與 component 的唯一真相來源**，用途：
 
 1. **前端切版對照**：本機跑預覽頁，對照元件內容與樣式。
-2. **原型專案的樣式基準**：PM 與 AI agent 討論功能產出原型時，vendored 本 repo 的 `src/` 作為元件 guideline（見 [docs/prototype-README.template.md](docs/prototype-README.template.md)）。
+2. **原型專案的樣式基準**：PM 與 AI agent 討論功能產出原型時，vendored 本 repo 的 `resources/scss/` 作為元件 guideline（見 [docs/prototype-README.template.md](docs/prototype-README.template.md)）。
 
 不發布 npm；下游一律採 **vendored**（複製需要的檔案進自己專案）。
 
@@ -49,7 +49,7 @@
 **Display（僅數字用）：** `.ft-semicondensed` / `.ft-condensed` —— 只用於統計、價格、面試次數、薪資範圍。**永遠不要** 用 display 設定內文。
 **圖示：** `symicon`（自家 icon font，172 個 glyph，見 [圖示](#圖示)）。
 
-**Scale。** 詳見 `src/tokens/_typography.scss`、預覽 `type` 對照頁。三大家族：
+**Scale。** 詳見 `resources/scss/tokens/_typography.scss`、預覽 `type` 對照頁。三大家族：
 
 - **Headline**（`fz-headline-*`，xxl→xs）：主視覺標題、區塊主標。搭配 `.fz-tit`；xl / xxl 微負字距。
 - **Title**（`fz-title-*`，lg/md/sm）：卡片標題、表單標籤、行內強調。搭配 `.fz-tit`。
@@ -114,18 +114,18 @@ npm install            # 只裝 sass / vite 等 build 工具
 npm run dev            # 啟動預覽，開瀏覽器看左側目錄 + 各元件對照頁
 ```
 
-預覽頁吃 `src/index.scss`，改 SCSS 後 HMR 即時更新，不用先 build。
+預覽頁吃 `resources/scss/index.scss`，改 SCSS 後 HMR 即時更新，不用先 build。
 
 ### 2. 切版怎麼對照
 
 - **看元件樣式**：`npm run dev` 後，左側目錄點各元件（button / form / alert…），右側 iframe 即是該元件實際樣式。
-- **查 class 名稱**：class 前綴 `gl_`，真相在 `src/components/_<元件>.scss`；Figma 名稱 ↔ class 對照見 [docs/ai-guide.md](docs/ai-guide.md)。
+- **查 class 名稱**：class 前綴 `gl_`，真相在 `resources/scss/components/_<元件>.scss`；Figma 名稱 ↔ class 對照見 [docs/ai-guide.md](docs/ai-guide.md)。
 - **查 token / 色票 / 圖示**：foundation 對照頁（color / type / shadow / tokens / icons）同樣在預覽左側目錄。
-- **禁自創 token / class**：切版只能用設計系統已存在的 token / class，不確定先 `grep src/` 或讀 `src/tokens`、`src/components` 確認。
+- **禁自創 token / class**：切版只能用設計系統已存在的 token / class，不確定先 `grep resources/scss/` 或讀 `resources/scss/tokens`、`resources/scss/components` 確認。
 
 ### 3. 給原型專案使用（vendored）
 
-PM + AI agent 的原型專案把本 repo 的 `src/` 與 `docs/ai-guide.md` 複製（vendored）進去，agent 依 guideline 產出畫面。完整複製清單、指令與規則範本：
+PM + AI agent 的原型專案把本 repo 的 `resources/scss/` 與 `docs/ai-guide.md` 複製（vendored）進去，agent 依 guideline 產出畫面。完整複製清單、指令與規則範本：
 
 - [docs/prototype-README.template.md](docs/prototype-README.template.md) —— 原型 repo 的 README 範本
 - [docs/prototype-CLAUDE.template.md](docs/prototype-CLAUDE.template.md) —— 原型 repo 的 CLAUDE.md 範本
@@ -153,10 +153,10 @@ npm test                  # 檢查產出 css 含關鍵 token / class
 
 ### 編輯規則
 
-- 只改 `src/` 內檔案；CSS 一律由 `npm run build` 從 SCSS 產出，不手寫 CSS。
-- 加新元件 → `src/components/_xxx.scss` + `src/components/index.scss` 加一行 `@forward` + `preview/` 加對照頁並在 `preview/index.html` 左目錄登記。
+- 只改 `resources/scss/` 內檔案；CSS 一律由 `npm run build` 從 SCSS 產出，不手寫 CSS。
+- 加新元件 → `resources/scss/components/_xxx.scss` + `resources/scss/components/index.scss` 加一行 `@forward` + `preview/` 加對照頁並在 `preview/index.html` 左目錄登記。
 - 改 token → 先看 `preview/tokens.html` 評估衝擊面，CHANGELOG 寫清楚。
-- **禁自創 token / class**：不確定先 `grep src/` 或讀 `src/tokens`、`src/components` 確認，絕不憑記憶發明。
+- **禁自創 token / class**：不確定先 `grep resources/scss/` 或讀 `resources/scss/tokens`、`resources/scss/components` 確認，絕不憑記憶發明。
 - rename / 移除 token、改 class 名屬 breaking change → CHANGELOG 寫清楚並同步所有引用處（preview、docs、README）。
 
 ---
@@ -169,8 +169,8 @@ npm test                  # 檢查產出 css 含關鍵 token / class
 
 ```
 fonts/                     ← 字型原始檔（woff / woff2）
-src/base/_fonts.scss       ← @font-face 宣告，路徑由 $font-path 控制
-src/tokens/_typography.scss ← --font-sans / --font-display CSS variable
+resources/scss/base/_fonts.scss       ← @font-face 宣告，路徑由 $font-path 控制
+resources/scss/tokens/_typography.scss ← --font-sans / --font-display CSS variable
 ```
 
 `_fonts.scss` 用 `$font-path !default` 留了**覆寫鉤子**：
@@ -185,7 +185,9 @@ $font-path: "../../fonts" !default;
 }
 ```
 
-預設 `"../../fonts"`（相對 `src/base/`），預覽頁吃這個預設值即可，不用改；下游 vendored 時依自己的字型存放位置覆寫 `$font-path`。
+預設 `"/fonts"`（web root 起算的絕對路徑）。預覽頁與下游專案（字型放 `public/fonts/`）都吃這個預設值即可，不用改；只有字型放 CDN 時才需覆寫 `$font-path`。
+
+> 為什麼用絕對路徑：Sass 不會 rebase `url()`，會原樣輸出；Vite 是相對於「entry CSS 檔的目錄」去解，不是相對於 `_fonts.scss` 這支 partial。因此任何相對路徑都只能對其中一個消費端正確（`sass` CLI 輸出到 `dist/`、Vite entry 在 `resources/scss/`、專案端 entry 在 `resources/sass/`，三者位置各不相同）。
 
 ### 換 / 升級字型怎麼做
 
@@ -193,7 +195,7 @@ $font-path: "../../fonts" !default;
 |---|---|
 | 字型版本升級（family / 檔名不變，只換內容） | 把新檔覆蓋進 `fonts/`，`npm run dev` 確認還能載 |
 | 加新字型檔（例如升級 symicon 版本） | `fonts/` 加檔 → 更新對應 `@font-face` 的檔名與版本號 |
-| 替換字型（改 family / token） | `fonts/` 換檔 → 改 `src/base/_fonts.scss` 的 `@font-face` → 改 `src/tokens/_typography.scss` 的 `--font-sans` → `preview/` 對照視覺有無走鐘（中文寬度可能不同）|
+| 替換字型（改 family / token） | `fonts/` 換檔 → 改 `resources/scss/base/_fonts.scss` 的 `@font-face` → 改 `resources/scss/tokens/_typography.scss` 的 `--font-sans` → `preview/` 對照視覺有無走鐘（中文寬度可能不同）|
 
 改完一律 `npm run dev` 在預覽頁確認字型載入（DevTools Network 看字型 200），並寫 CHANGELOG。
 
@@ -201,14 +203,14 @@ $font-path: "../../fonts" !default;
 
 - ❌ **不要** 在 component 檔裡寫 `@import url('https://fonts.googleapis.com/...')`
 - ❌ **不要** 在 component 檔裡再加 `@font-face`
-- ✅ 字型只在 `src/base/_fonts.scss` 一個地方宣告
+- ✅ 字型只在 `resources/scss/base/_fonts.scss` 一個地方宣告
 - ✅ 引用字型一律用 `$font-sans` / `$font-display` / `$font-icon` 變數，不要寫死 `font-family: "symicon"`
 
 ---
 
 ## icon 字型（symicon）維護
 
-icon 字型跟文字字型機制不同：它**不走 `src/base/_fonts.scss`**，而是獨立在 `assets/symicon.css` —— 一個檔同時管 `@font-face` 與每個 `.icon-*` 的 codepoint（`content: "\eXXX"`）。版本號直接寫進**檔名**（`symicon-6.4s.woff2`）當作 cache-bust，升級時連檔名一起換。
+icon 字型跟文字字型機制不同：它**不走 `resources/scss/base/_fonts.scss`**，而是獨立在 `assets/symicon.css` —— 一個檔同時管 `@font-face` 與每個 `.icon-*` 的 codepoint（`content: "\eXXX"`）。版本號直接寫進**檔名**（`symicon-6.4s.woff2`）當作 cache-bust，升級時連檔名一起換。
 
 ```
 fonts/symicon-6.4s.woff2 / .woff   ← icon 字型本體（檔名帶版本號）

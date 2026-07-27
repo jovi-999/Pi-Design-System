@@ -12,7 +12,7 @@
 ## Notes
 
 - 領域：Pi Design System（SCSS component + token + preview）。
-- **變數/token 鐵則**：只能用 `src/tokens/`、`src/components/` 實際存在的 token/class，禁自創（見 `CLAUDE.md`）。缺件走「AI 提議 → PM 同意 → 標記待確認」流程。
+- **變數/token 鐵則**：只能用 `resources/scss/tokens/`、`resources/scss/components/` 實際存在的 token/class，禁自創（見 `CLAUDE.md`）。缺件走「AI 提議 → PM 同意 → 標記待確認」流程。
 - 每個 ticket 用 `/grilling` + `/domain-modeling`；research 用 `/research`；prototype 用 `/prototype`。
 - 回覆繁體中文。
 
@@ -20,7 +20,7 @@
 
 <!-- 一行一個已關閉 ticket；細節在該 ticket，這裡只給 gist + 連結 -->
 
-- [03 現有 preview 機制盤點](issues/03-preview-mechanism.md) — prototype HTML 放 `preview/`，`npm run dev`（vite:5173）跑；照抄 `preview/button.html` 範本，引 `/src/index.scss`；新元件頁需在 `preview/index.html` PAGES + `src/components/index.scss` 兩處註冊。
+- [03 現有 preview 機制盤點](issues/03-preview-mechanism.md) — prototype HTML 放 `preview/`，`npm run dev`（vite:5173）跑；照抄 `preview/button.html` 範本，引 `/resources/scss/index.scss`；新元件頁需在 `preview/index.html` PAGES + `resources/scss/components/index.scss` 兩處註冊。
 - [01 輸入格式](issues/01-input-format.md) — 採「自由文字輸入 + AI 回述結構化摘要確認」（非填表）；摘要只含元件 + 版面兩類給 PM 確認，狀態/資料行為標「待前後端補」不問 PM。回述結構與 `02` 輸出欄位共用。
 - [02 Handoff 規格格式](issues/02-handoff-spec-format.md) — 前端/後端**兩份分開 markdown**。前端：版面+元件class+狀態互動(⚠️待確認)+preview+🆕待確認新件；後端：資料欄位+選項來源+送出目標+驗證規則(🔧待補)。標記約定 `⚠️待確認`/`🔧待補`/`🆕待確認` 三種。含兩份模板。（05 收尾補前端模板：歧義收斂段／組合件段／狀態拆頁面級+欄位級）
 - [04 缺件流程](issues/04-missing-component-flow.md) — **三層門檻**（現成命中／現有 token 疊得出=組合件走⚠️不提議／皆不能=真缺件進 loop；component 與 token 共用）→ **提議 4 欄**（名+用途/最近現有件/為何組不出/頂替物）→ **PM 審批 3 種**（同意新件／否決改現有／擱置，無回應停等）→ **prototype placeholder**（最近現有件殼 + `gl_border-outer` 框 + 文字標籤「🆕（待確認）」+ 內嵌註解；無 dashed token 禁自創）→ **handoff**（前端「待確認新件」段列全 4 欄；後端有資料意涵才列欄帶🆕；擱置項兩份底部）。

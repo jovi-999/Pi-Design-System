@@ -11,7 +11,7 @@
 
 三支 CSS link：
 
-- `/src/index.scss` ← **設計系統唯一真相源**（tokens + base + components）
+- `/resources/scss/index.scss` ← **設計系統唯一真相源**（tokens + base + components）
 - `/preview/preview.scss` ← preview 專用排版（`.wrap` / `.panel` / `.row` / `.dek`）
 - `/assets/symicon.css` ← icon 字型（需要才引）
 
@@ -26,10 +26,10 @@
 ## 新增元件頁：兩處註冊
 
 1. `preview/index.html` 的 PAGES 陣列（sidebar + iframe 頁殼）。
-2. `src/components/index.scss`（`@forward`）—— 若新增了元件 SCSS 才需要；純用現有 class 的 prototype 頁通常只需第 1 處。
+2. `resources/scss/components/index.scss`（`@forward`）—— 若新增了元件 SCSS 才需要；純用現有 class 的 prototype 頁通常只需第 1 處。
 
 ## 原始碼位置
 
-- 元件 `src/components/_<name>.scss`；token `src/tokens/_*.scss`；總入口 `src/index.scss`。
+- 元件 `resources/scss/components/_<name>.scss`；token `resources/scss/tokens/_*.scss`；總入口 `resources/scss/index.scss`。
 - 相關文件：`STRUCTURE.md`、`docs/ai-guide.md`（Figma 名稱 ↔ class 對照）、`SKILL.md`。
 - 原則：禁自創 token / class；改元件須同步 preview HTML + `docs/ai-guide.md`。

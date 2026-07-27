@@ -5,13 +5,12 @@
 
 ## 一次性前置（新專案設定，只做一次）
 
-1. **Vendor Pi DS**：Pi DS `src/` → `resources/sass/pi-ds/`（用 host 端 `vendor-copy.sh` 自動做）。
-2. **字型**：只有 symicon 是本地檔（`symicon-6.4s.woff*` → `public/fonts/`）；Google Sans Flex 內嵌 CDN、Noto Sans TC `@import` CDN。若某支 preview scss 引到 symicon 且 `$font-path` 需覆寫，在該 scss 頂端：
+1. **Vendor Pi DS**：Pi DS `resources/scss/` → `resources/sass/pi-ds/`（用 host 端 `vendor-copy.sh` 自動做）。
+2. **字型**：只有 symicon 是本地檔（`symicon-6.4s.woff*` → `public/fonts/`）；Google Sans Flex 內嵌 CDN、Noto Sans TC `@import` CDN。`$font-path` 預設已是 `'/fonts'`，正好對上 `vendor-copy.sh` 放字型的位置 → **一般不需覆寫**，`@use 'pi-ds/index' as *;` 即可。字型改放 CDN 才需要：
    ```scss
-   @use 'pi-ds/base/fonts' with ($font-path: '/fonts');
+   @use 'pi-ds/base/fonts' with ($font-path: 'https://cdn.example.com/fonts');
    @use 'pi-ds/index' as *;
    ```
-   （多數情況 `@use 'pi-ds/index'` 即可；字型路徑對就不必覆寫）
 3. **Sass 解析**：確認 `vite.config.*` 的 `css.preprocessorOptions.{scss,sass}.loadPaths` 含 `'resources/sass'` → `@use 'pi-ds/index'` 直接解得到。無則用相對路徑。
 4. **`resources/views/prototypes/` 目錄**存在（`setup.sh` 會建）。
 - `setup.sh`（容器內跑）只做「建 prototypes 目錄 + 印慣例提示」，**不碰 app.scss、不裝 sass**（本專案已具備）。
