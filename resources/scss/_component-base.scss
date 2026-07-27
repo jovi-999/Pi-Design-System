@@ -1,0 +1,62 @@
+// ============================================================
+// Pi DS — 元件契約（不是 reset）
+//
+// 這支檔案只放「元件正確顯示所必需、但沒有任何專案的 reset 會提供」的宣告。
+// 它跟著元件一起出貨，專案載不載 reset.scss 都會生效。
+//
+// 為什麼需要它 —— reset.scss 裡混了兩種性質不同的東西：
+//
+//   ① 頁面級意見：html/body 字體底色、h1..h6 級距、p / code 樣式
+//      → 各專案本來就有自己的一套，不該塞給人家。留在 reset.scss。
+//
+//   ② 元件契約：元件實際依賴、但標準 reset 不會給的宣告
+//      → 沒有它元件就長歪，必須跟著元件走。放這裡。
+//
+// 屬於 ② 的只有兩項：
+//
+//   corner-shape  CSS 新屬性（2024 才進規格）。normalize.css / Tailwind
+//                 preflight / Bootstrap reboot 都沒有。元件內 20 處
+//                 border-radius 全靠它才有超橢圓角（squircle）外觀，
+//                 少了就變成普通正圓角。
+//
+//   font-weight   Pi DS 元件的基準字重是 500。標準 reset 一律給 400 或
+//                 inherit，元件內只有 1 處自己宣告過 font-weight。
+//
+// 為什麼用聚合 attribute selector 而不是逐處補在 20 個元件規則裡：
+// 那 20 處 border-radius 有一半的擁有者不帶 gl_ 前綴（input[type=checkbox]、
+// &::before / &::after、.layer、.knobs、.form-feedback、.iw_pagination-outer-v3），
+// 逐處補要動 20 個地方且容易漏；一條規則涵蓋且日後新增元件自動適用。
+//
+// corner-shape 廣泛套用是安全的：border-radius 為 0 時它沒有視覺效果。
+// font-weight 只套在元件根與工具 class 上，靠元件內繼承往下傳，不用逐元素。
+// ============================================================
+
+@use "layers";
+@use "tokens" as *;
+
+// 兩條規則都用 :where() 包住 —— :where() 不貢獻特異度，整條規則為 0,0,0。
+// 這是必要的：這裡是「基準值」，任何明確宣告都必須能蓋過它。若寫成裸的
+// attribute selector（0,1,0），會蓋掉同為 0,1,0 但宣告位置更早的規則 ——
+// 實測 `.fz-tit { font-weight: 700 }` 會被這裡的 500 蓋掉，全站粗體失效。
+//
+// 特異度為 0 仍能勝過 reset 的 `*`（同為 0,0,0）：reset 在 pi-reset 層，
+// 本檔在 pi 層，pi 較高，靠 layer 決勝而非特異度。
+@layer pi {
+  // corner-shape 需要涵蓋元件內的後代與 pseudo element ——
+  // 那些帶 border-radius 但不帶 gl_ 前綴的節點都在這裡被涵蓋。
+  :where(
+    [class*="gl_"], [class*="gl_"] *,
+    [class*="gl_"]::before, [class*="gl_"]::after,
+    [class*="gl_"] *::before, [class*="gl_"] *::after,
+    [class*="iw_"], [class*="iw_"] *
+  ) {
+    corner-shape: $corner-shape;
+  }
+
+  // font-weight 只套元件根與字級工具 class，其餘靠繼承。
+  // 不套後代（`[class*="gl_"] *`）—— 那會把 500 硬塞給塞進元件 slot 的
+  // 專案內容（例如 .gl_modal 裡的 <strong>），不是元件該管的範圍。
+  :where([class*="gl_"], [class*="iw_"], [class^="fz-"], [class*=" fz-"]) {
+    font-weight: 500;
+  }
+}

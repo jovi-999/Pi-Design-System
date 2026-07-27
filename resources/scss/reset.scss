@@ -1,19 +1,38 @@
 // ============================================================
-// Pi DS — Base resets / body defaults
+// Pi DS — Reset / 頁面級預設（獨立檔，需明確載入）
+//
+// **既有專案不要載這支。** 它不在 index.scss 的 @forward 內，必須明確：
+//
+//   @use "pi-design-system/resources/scss/reset";
+//
+// 為什麼獨立出來：這裡面全是「頁面級意見」—— html/body 的字體與底色、
+// h1..h6 的級距、p / small / code 的樣式。既有專案一定已經有自己的一套
+// （normalize.css、Tailwind preflight、Bootstrap reboot…），再蓋一層
+// 只會打架，而且會影響專案所有既有頁面，不只是用到 DS 元件的地方。
+//
+// 誰該載：從零開始的新專案、以及本 repo 的 preview（見 preview-all.scss）。
+//
+// 注意：元件不依賴這支檔案就能長對。元件自己需要的 corner-shape 與
+// font-weight 由 _component-base.scss 提供（不論專案載不載 reset 都成立）。
 // ============================================================
 
 // @layer 順序必須在任何 @layer 區塊之前宣告，因此放最前面。
 // reset 若被單獨載入（不經 index.scss），這行就是唯一的順序來源。
-@use "../layers";
-@use "../tokens" as *;
+@use "layers";
+@use "tokens" as *;
 
 // reset 進 pi-reset layer（排在 pi 之前）而非未分層 —— 未分層樣式優先權
 // 高於任何分層樣式，若 reset 未分層，`<h2 class="fz-headline-xs">` 會吃到
 // reset 給 h2 的 32px 而非 .fz-headline-xs 的 20px。詳見 _layers.scss。
 @layer pi-reset {
-  // 圓角恆伴隨超橢圓角形：套在所有元素，border-radius 為 0 時 corner-shape 無視覺效果，
+  // box-sizing：對齊目標專案的現實 —— Tailwind preflight、Bootstrap reboot
+  // 等主流 reset 都設全域 border-box，而本檔原本沒設，導致 preview 用
+  // content-box、專案用 border-box，有 padding + 固定尺寸處會對不上。
+  //
+  // 圓角恆伴隨超橢圓角形：border-radius 為 0 時 corner-shape 無視覺效果，
   // 故只要有圓角就自動套用 superellipse(1.05)，無需逐元件重複宣告。
   *, *::before, *::after {
+    box-sizing: border-box;
     corner-shape: $corner-shape;
     font-weight: 500;
   }

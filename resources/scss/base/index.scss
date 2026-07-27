@@ -1,3 +1,6 @@
+// 注意：reset 刻意不在此 @forward。
+// reset 是頁面級意見（html/body、h1..h6、p、code），既有專案已有自己的
+// 一套，硬塞會跟專案打架。它被移到 resources/scss/reset.scss 當獨立檔，
+// 由使用端自行決定要不要載（見該檔說明）。
 @forward "fonts";
-@forward "reset";
 @forward "utilities";

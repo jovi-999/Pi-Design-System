@@ -1,0 +1,16 @@
+// ============================================================
+// Pi DS — preview 專用入口（reset + 全部）
+//
+// 只給本 repo 的 preview 對照頁用，不是給下游專案的入口。
+//
+// 為什麼需要它：index.scss 刻意不含 reset（既有專案有自己的一套，見
+// reset.scss 說明），但 preview 對照頁需要 reset 提供的頁面級預設
+// （html/body 字體底色、h1..h6 級距）才能維持現有外觀。
+//
+// 下游專案該用哪支：
+//   既有專案      @use "…/resources/scss/index";              ← 不含 reset
+//   全新專案      @use "…/resources/scss/reset";  + index     ← 自行決定
+// ============================================================
+
+@use "reset";
+@use "index";

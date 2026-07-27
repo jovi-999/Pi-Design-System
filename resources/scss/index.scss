@@ -25,4 +25,7 @@
 
 @forward "tokens";
 @forward "base";
+// 元件契約（corner-shape / font-weight）必須在 components 之前，
+// 讓元件自己的宣告能在同層內以特異度覆寫掉這裡的基準值。
+@forward "component-base";
 @forward "components";

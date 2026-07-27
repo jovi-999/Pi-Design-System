@@ -11,7 +11,11 @@
 Pi-Design-System/
 ├── resources/                ★ 套件資產（會隨 composer 套件出貨）
 │   └── scss/                 #   真實設計系統原始碼（SCSS，單一真相源）
-│       ├── index.scss        #     總入口：@forward tokens + base + components
+│       ├── index.scss        #     ★ 既有專案的入口：tokens + base + 元件契約 + components（不含 reset）
+│       ├── reset.scss        #     ☆ 頁面級 reset，獨立檔，既有專案不要載（見檔內說明）
+│       ├── preview-all.scss  #     ☆ preview 專用入口 = reset + index
+│       ├── _layers.scss      #     ⚠ @layer 順序宣告（pi-reset < pi），必須最先載入
+│       ├── _component-base.scss #  ⚠ 元件契約：corner-shape / font-weight（標準 reset 不提供）
 │       ├── tokens/           #     設計 token（值的來源，禁自創）
 │       │   ├── index.scss
 │       │   ├── _colors.scss      #  顏色（$cl-* / --cl-* + 語意 alias $fg/$bg/$border）
@@ -21,8 +25,7 @@ Pi-Design-System/
 │       │   ├── _shadow.scss      #  陰影（$shadow-*）
 │       │   ├── _motion.scss      #  動態（時長 / 緩動）
 │       │   └── _breakpoints.scss #  RWD 斷點
-│       ├── base/             #     全域基礎
-│       │   ├── _reset.scss   #       CSS reset
+│       ├── base/             #     全域基礎（reset 已移到上層獨立檔）
 │       │   ├── _fonts.scss   #       @font-face（對應 fonts/，路徑由 $font-path 控制）
 │       │   └── _utilities.scss #     文字顏色工具 class（.text-*）
 │       └── components/       #     元件：每元件一檔，class 前綴 gl_
@@ -61,12 +64,39 @@ Pi-Design-System/
 | 目的 | 動哪裡 | 連帶要做 / 注意 |
 |---|---|---|
 | 改 token（色/字/間距/圓角…） | `resources/scss/tokens/_*.scss` | 牽動所有引用該 token 的元件；**只改既有 token 值，禁自創新 token** |
-| 改 / 新增元件樣式 | `resources/scss/components/_<元件>.scss` | 新元件要在 `components/index.scss` 加 `@forward`；同步 `preview/<元件>.html` 與 `docs/ai-guide.md` |
+| 改 / 新增元件樣式 | `resources/scss/components/_<元件>.scss` | **規則區必須包在 `@layer pi { }` 內**（見下方「分層規則」）；新元件要在 `components/index.scss` 加 `@forward`；同步 `preview/<元件>.html` 與 `docs/ai-guide.md` |
 | 依 Figma 重做元件 | 同上 | 走 skill **figma-to-pi-ds** 流程（讀 Figma→映射既有 token→確認範圍→改 SCSS→同步 preview/docs→build） |
 | 改文字字型 | `fonts/` + `resources/scss/base/_fonts.scss` | 詳見 README「字型管理」章節 |
-| 改 icon 字型 | `fonts/symicon-X.s.*` + `assets/symicon.css` | 詳見 README「icon 字型（symicon）維護」章節 |
-| 看視覺預覽 | 改完直接 `npm run dev` | 預覽吃 `resources/scss/index.scss`，HMR 即時；不用先 build |
+| 改 icon 字型 | `fonts/symicon-X.s.*` + `assets/symicon.css` | 該檔內容整包在 `@layer pi { }` 內，新增規則要放進去；詳見 README「icon 字型（symicon）維護」章節 |
+| 看視覺預覽 | 改完直接 `npm run dev` | 預覽吃 `resources/scss/preview-all.scss`（= reset + index），HMR 即時；不用先 build |
 | 產 CSS 產物 | `npm run build` / `build:min` / `build:tokens` | 產物進 `dist/`（gitignore） |
+
+### 分層規則（`@layer`）
+
+三層優先權，後者勝：
+
+| 層 | 內容 | 誰寫的 |
+|---|---|---|
+| ① `pi-reset` | `reset.scss` —— html/body、h1..h6、p、code 等頁面級意見 | Pi DS |
+| ② `pi` | tokens 的 `:root`、`.fz-*` / `.text-*`、元件契約、`.gl_*` 元件、`assets/symicon.css` | Pi DS |
+| ③ 未分層 | 專案自己的既有樣式 | 下游專案 |
+
+**未分層樣式的優先權高於任何分層樣式**，所以專案既有 code 一行都不用改，衝突時專案永遠勝出，也不必煩惱 import 順序。
+
+改 SCSS 時三件事要記住：
+
+1. **元件規則一律包在 `@layer pi { }` 內。** 漏了就變成未分層，反而蓋掉專案樣式 —— 隔離失效。
+2. **`@mixin` / `@function` 定義必須放在 `@layer` 之外。** Sass 的 mixin 有區塊作用域，寫在 `@layer` 內不會被 `@forward` 匯出，其他檔案 `@include` 會得到 `Undefined mixin`。
+3. **不要用 `@extend`，用 `@include`。** `@extend` 會把宣告輸出在「被 extend 的原始規則位置」，若那個位置在 `@layer` 之外，樣式就逃出 layer 了。
+
+### 元件契約 vs reset
+
+`resources/scss/reset.scss` 與 `_component-base.scss` 的分工：
+
+- **`reset.scss`（頁面級意見）**：各專案本來就有自己的一套（normalize.css / Tailwind preflight / Bootstrap reboot），**既有專案不要載**。不在 `index.scss` 內。
+- **`_component-base.scss`（元件契約）**：`corner-shape` 與 `font-weight: 500` —— 沒有任何標準 reset 會提供這兩項，少了元件就長歪（圓角變正圓、字重掉回 400）。跟著元件出貨，永遠生效。
+
+已用瀏覽器實測：不載 reset 時，元件的 `corner-shape` / `border-radius` / `font-weight` / 顏色**零差異**；唯一依賴 reset 的是 `box-sizing: border-box`（各專案的 reset 都有提供）。
 
 ### 最高原則
 - **禁自創 token / class**：不確定先 `grep resources/scss/` 或讀 `resources/scss/tokens`、`resources/scss/components` 確認，絕不憑記憶發明。
