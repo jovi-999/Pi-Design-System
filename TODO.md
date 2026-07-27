@@ -19,7 +19,7 @@
 | 套件名 | `company/design-guideline` | **`company/pi-design-system`（placeholder）** | 等公司 GitHub org 名 |
 | 排除討論區 | `archive.exclude` | **`.gitattributes` `export-ignore`** | Composer 從 VCS 抓 GitHub zipball（`git archive` 產生），只認 export-ignore |
 | 現有 preview | — | **`preview/` → `preview-static/`**，Laravel app 進 `preview/` | 終態對齊 spec；過渡期兩套並存 |
-| 容器 | 未提 | **對齊公司 Laradock** | 工程師環境一致、與 pm-to-blade 流程一致 |
+| 容器 | 未提 | **`preview/` 內輕量 docker-compose（單一 php-cli container），不用 Laradock** | 本 repo 是 Composer library，出貨 SCSS 原始碼 + blade，無 build step、無 DB、無 queue。專案端只 `composer require`，永不執行本 repo。Laradock 那套 nginx/mysql/redis 全都用不到 |
 
 ### 元件契約 vs reset 的切分（本次核心設計）
 
@@ -34,6 +34,19 @@
 
 用聚合 attribute selector 一條規則覆蓋（而非灑進 20 處），因為半數 `border-radius` 的擁有者不是 `gl_` 前綴（`input[type=checkbox]`、`&::before`、`.layer`、`.knobs`、`.form-feedback`、`.iw_pagination-outer-v3`）。
 
+### 容器邊界（本次新增決策）
+
+```
+Pi-Design-System/          ← 套件本體：無 framework、無 build、無 DB、不進容器
+└── preview/               ← 唯一需要 PHP 的地方（render blade），dev tool，容器只包這層
+```
+
+- **PHP 在 container**（統一版本、附帶 composer；host 目前 `which composer` → not found）
+- **Vite 在 host**（`node_modules/` 已在 host，省一個 node container；hot file 走 bind mount 共享，瀏覽器直連 host 的 5173）
+- **掛載整個 repo root，不是只掛 `preview/`** —— composer path repository 的 symlink（`preview/vendor/company/pi-design-system` → `../../`）指回上層，只掛 `preview/` 會斷鏈
+
+真正需要 Docker 的時機（不是現在）：Phase 4 CI 跑 visual regression（需 PHP + headless browser image）、`scripts/fetch-host.php` 要連內網 staging。
+
 ### spec 未涵蓋、本次補上
 - `fonts/` + `assets/symicon.css` 納入套件出貨清單（元件吃 `icon-*` class，漏了 icon 全空）
 - `@extend .fz-tit` → mixin（**實測** `@extend` 會讓樣式逃出 `@layer`，破壞 D5 保證）
@@ -42,12 +55,13 @@
 
 ### 待使用者提供
 - [ ] **公司 GitHub org 名稱 + repo 名** → composer 套件名與 `repositories.pi` URL（Phase 1.6 前）
-- [ ] **Laradock 路徑 + `APP_CODE_PATH_HOST`** → Pi DS repo 目前不在 Laradock mount 範圍內（`vendor-copy.sh` 的成因）（Phase 2.2 前）
+- [x] ~~**Laradock 路徑 + `APP_CODE_PATH_HOST`**~~ → 已不需要，改用 `preview/` 自帶 compose
+- [ ] **8000 / 5173 port 是否與現有 Laradock 服務衝突** → 衝突就改 mapping（Phase 2.2 前，`docker ps` 可自查）
 
 ### 已知風險
 - `.is-invalid` / `.is-valid` 與 Bootstrap 完全撞名（`@layer pi` 解 specificity，語意仍衝突）→ Phase 3 再議
 - reset 加全域 `border-box` 會改變現有 preview 排版（content-box → border-box），有 padding + 固定尺寸處會變小 → **1.5 需目視比對，跑版就報告**
-- Phase 4 Composer 私有套件在 Laradock 內認證：建議 GitHub token + HTTPS（`auth.json` gitignore 或 `COMPOSER_AUTH` env），不要 SSH key（container 常重建要重掛）
+- Phase 4 Composer 私有套件在**專案端容器**（各專案的 Laradock）內認證：建議 GitHub token + HTTPS（`auth.json` gitignore 或 `COMPOSER_AUTH` env），不要 SSH key（container 常重建要重掛）。本 repo 的 `preview/` 走 path repository symlink，不碰網路、不需認證
 - Phase 4 專案端 `@use` 路徑：Sass 不吃 Vite alias，只吃 `loadPaths`。建議專案端放 shim `resources/sass/_pi-ds.scss` → `@forward '../../vendor/company/pi-design-system/resources/scss/index';`，既有 `@use 'pi-ds' as *` 幾乎不用改
 
 ---
@@ -107,33 +121,45 @@
 - [x] `npm run dev` → 20 支 preview 頁視覺與改動前一致（差異需可解釋）
 - [x] `npm run test`（build smoke，新增 `@layer pi` 檢查項）
 - [x] `dist/pi-ds.css` 內所有 `.gl_*` / `.fz-*` / `.text-*` 都在 `@layer pi` 內，無漏網
-- [ ] `git commit`
+- [x] `git commit`
 
 ---
 
-## Phase 2：Blade 元件與 Laradock preview
+## Phase 2：Blade 元件與 preview Laravel app
 
 ### 2.1 現有 preview 讓位
 - [ ] `git mv preview preview-static`
 - [ ] `vite.config.js` input、`package.json`、文件同步
+- [ ] `.gitattributes` 的 export-ignore 確認已含 `/preview` 與 `/preview-static`（1.6 已加，複查）
 
-### 2.2 Laradock 接線（**需使用者提供 Laradock 路徑**）
-- [ ] Pi DS repo 進 Laradock `APP_CODE_PATH_HOST` 範圍（搬移或加 volume mount）
-- [ ] `preview/` 建 Laravel 12 app（容器內 `composer create-project`）
-- [ ] `preview/composer.json` path repository symlink `../`（`symlink: true`）→ 不走網路，不需認證
-- [ ] `laradock/nginx/sites/pi-preview.conf`（root 指 `preview/public`）
-- [ ] `preview/vite.config.js`：`server.host: '0.0.0.0'`、`hmr.host`、`watch.usePolling: true`（macOS bind mount inotify 不可靠）
-- [ ] **`server.watch.ignored` 排除 `preview/vendor/company/pi-design-system`**（symlink 指回 repo 根，會遞迴）
-- [ ] `css.preprocessorOptions.scss.loadPaths` 指到套件 SCSS
-- [ ] fonts / symicon 靜態資源解法（symlink 到 `preview/public/` 或 vite `publicDir`）
-- [ ] 瀏覽器開 `http://<laradock-host>/` 確認 render
+### 2.2 容器與 Laravel app
+- [ ] `preview/Dockerfile`
+  - `FROM php:8.2-cli`
+  - `apt-get install git unzip libonig-dev libzip-dev` → `docker-php-ext-install mbstring zip`（官方 php image 未內建 mbstring；composer 需 zip/unzip）
+  - `COPY --from=composer:2 /usr/bin/composer /usr/bin/composer`
+- [ ] `preview/docker-compose.yml`
+  - `volumes: ../:/var/www` —— **掛 repo root，不是只掛 `preview/`**（symlink 斷鏈的成因）
+  - `working_dir: /var/www/preview`
+  - `ports: "8000:8000"`
+  - `command: php artisan serve --host=0.0.0.0 --port=8000`
+- [ ] `docker compose run --rm app composer create-project laravel/laravel:^12.0 .`（容器內建 Laravel app）
+- [ ] `preview/composer.json` 加 path repository `../` + `symlink: true` → `require company/pi-design-system: "*"`
+- [ ] `docker compose run --rm app composer update` → 確認 `preview/vendor/company/pi-design-system` 是 symlink（`ls -l`）
+- [ ] `preview/.gitignore` 排除 `vendor/`、`node_modules/`、`.env`、`public/hot`、`public/build`、`storage/`（Laravel 預設已多數含）
+- [ ] `preview/vite.config.js`（**跑在 host，不在 container**）
+  - `server.host: '127.0.0.1'`、port 5173
+  - `server.watch.ignored` 排除 `vendor/company/pi-design-system`（symlink 指回 repo root，會遞迴掃）
+  - `css.preprocessorOptions.scss.loadPaths` → `../resources/scss`
+- [ ] fonts / `assets/symicon.css` 靜態資源：symlink 進 `preview/public/` 或 vite `publicDir`（二擇一，實作時決定）
+- [ ] `preview/README.md`：起動兩步（`docker compose up -d` + host `npm run dev`）、port、常見問題
+- [ ] 驗證：`http://localhost:8000` render 出 blade；改根目錄 SCSS → 瀏覽器即時反映（symlink + HMR 都通）
 
 ### 2.3 前 3 支元件轉 Blade（驗證模式）
 - [ ] `resources/views/components/button.blade.php` + `button.meta.php`
 - [ ] `resources/views/components/form-control.blade.php` + meta
 - [ ] `resources/views/components/callout.blade.php` + meta
 - [ ] `resources/views/layouts/preview.blade.php`
-- [ ] 驗證 `<x-pi::button>` 解析、`@layer pi` 在 Laravel + Laradock 環境行為一致
+- [ ] 驗證 `<x-pi::button>` 解析、`@layer pi` 在 Laravel preview 環境與 `preview-static/` 行為一致
 
 ### 2.4 批次轉剩餘元件
 - [ ] checkbox / radio / toggle
@@ -154,7 +180,7 @@
 - [ ] 執行一次並確認清單與實際元件一致
 
 ### 2.7 Phase 2 驗收
-- [ ] 16 支元件全可在 Laradock preview 檢視
+- [ ] 16 支元件全可在 `preview/` Laravel app 檢視
 - [ ] `preview-static/` 可廢除的判定（markup 是否已由 blade + meta 完全覆蓋）
 - [ ] `CHANGELOG.md` 記錄
 - [ ] `git commit`
