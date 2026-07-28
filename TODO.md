@@ -56,7 +56,7 @@ Pi-Design-System/          ← 套件本體：無 framework、無 build、無 DB
 ### 待使用者提供
 - [ ] **公司 GitHub org 名稱 + repo 名** → composer 套件名與 `repositories.pi` URL（Phase 1.6 前）
 - [x] ~~**Laradock 路徑 + `APP_CODE_PATH_HOST`**~~ → 已不需要，改用 `preview/` 自帶 compose
-- [ ] **8000 / 5173 port 是否與現有 Laradock 服務衝突** → 衝突就改 mapping（Phase 2.2 前，`docker ps` 可自查）
+- [x] ~~**8000 / 5173 port 衝突確認**~~ → 已查：8000 被 `stock-tssco-quote-web` 佔用 → preview 改用 **8100**；5173 free
 
 ### 已知風險
 - `.is-invalid` / `.is-valid` 與 Bootstrap 完全撞名（`@layer pi` 解 specificity，語意仍衝突）→ Phase 3 再議
@@ -128,31 +128,44 @@ Pi-Design-System/          ← 套件本體：無 framework、無 build、無 DB
 ## Phase 2：Blade 元件與 preview Laravel app
 
 ### 2.1 現有 preview 讓位
-- [ ] `git mv preview preview-static`
-- [ ] `vite.config.js` input、`package.json`、文件同步
-- [ ] `.gitattributes` 的 export-ignore 確認已含 `/preview` 與 `/preview-static`（1.6 已加，複查）
+- [x] `git mv preview preview-static`（21 檔，history 保留）
+- [x] `vite.config.js`（`server.open` + `rollupOptions.input` 16 支）
+- [x] `preview-static/*.html`：`/preview/preview.scss` link ×20、`index.html` 的 iframe `src`
+- [x] 文件同步：README / STRUCTURE / SKILL / docs/ai-guide / .claude/skills / .scratch
+      （`CHANGELOG.md` 舊條目與 `design-guideline-spec.md` 刻意不動 —— 歷史記錄 / spec 原文）
+- [x] `.gitattributes` 的 export-ignore 確認已含 `/preview` 與 `/preview-static`（1.6 已加）
+- [x] `.gitignore` 的 `preview/_shot_*.png` → `preview-static/_shot_*.png`
+      （**rename 讓 pattern 失效，7 張 debug 截圖一度被誤 commit，已 `git rm --cached`**）
+- [x] `npm run preview:build` 通過
 
 ### 2.2 容器與 Laravel app
-- [ ] `preview/Dockerfile`
-  - `FROM php:8.2-cli`
-  - `apt-get install git unzip libonig-dev libzip-dev` → `docker-php-ext-install mbstring zip`（官方 php image 未內建 mbstring；composer 需 zip/unzip）
-  - `COPY --from=composer:2 /usr/bin/composer /usr/bin/composer`
-- [ ] `preview/docker-compose.yml`
+- [x] `preview/Dockerfile`（`php:8.2-cli` + `docker-php-ext-install mbstring zip` + composer:2；`.dockerignore` 只留 Dockerfile，build context 最小）
+- [x] `preview/docker-compose.yml`
   - `volumes: ../:/var/www` —— **掛 repo root，不是只掛 `preview/`**（symlink 斷鏈的成因）
   - `working_dir: /var/www/preview`
-  - `ports: "8000:8000"`
-  - `command: php artisan serve --host=0.0.0.0 --port=8000`
-- [ ] `docker compose run --rm app composer create-project laravel/laravel:^12.0 .`（容器內建 Laravel app）
-- [ ] `preview/composer.json` 加 path repository `../` + `symlink: true` → `require company/pi-design-system: "*"`
-- [ ] `docker compose run --rm app composer update` → 確認 `preview/vendor/company/pi-design-system` 是 symlink（`ls -l`）
-- [ ] `preview/.gitignore` 排除 `vendor/`、`node_modules/`、`.env`、`public/hot`、`public/build`、`storage/`（Laravel 預設已多數含）
-- [ ] `preview/vite.config.js`（**跑在 host，不在 container**）
-  - `server.host: '127.0.0.1'`、port 5173
-  - `server.watch.ignored` 排除 `vendor/company/pi-design-system`（symlink 指回 repo root，會遞迴掃）
-  - `css.preprocessorOptions.scss.loadPaths` → `../resources/scss`
-- [ ] fonts / `assets/symicon.css` 靜態資源：symlink 進 `preview/public/` 或 vite `publicDir`（二擇一，實作時決定）
-- [ ] `preview/README.md`：起動兩步（`docker compose up -d` + host `npm run dev`）、port、常見問題
-- [ ] 驗證：`http://localhost:8000` render 出 blade；改根目錄 SCSS → 瀏覽器即時反映（symlink + HMR 都通）
+  - **port 8100 而非 8000** —— 8000 已被本機 `stock-tssco-quote-web` 佔用
+- [x] 容器內建 Laravel 12.64.0（`create-project` 到 `/tmp/app` 再 `cp -a` 回來 —— 直接指向 `preview/` 會被「目錄非空」擋掉，docker 檔已在裡面）
+- [x] `preview/composer.json` path repository `../` + `symlink: true`
+- [x] `composer update` 通過；`vendor/company/pi-design-system -> ../../..`，ServiceProvider 已被 package discover
+- [x] `preview/.gitignore` 補 `/database/*.sqlite*`（其餘 Laravel 預設已含）
+- [x] `preview/vite.config.js`（跑在 host）
+- [x] fonts / symicon：`public/fonts` → `../../fonts`、`public/assets` → `../../assets` symlink
+- [x] `preview/README.md`（起動兩步、port、5 項設計取捨）
+- [x] `STRUCTURE.md` 加 `preview/` 目錄說明
+- [x] 驗證全通：`/` 200、`/assets/symicon.css` 200、`/fonts/*.woff2` 200、CSS 32 kB；
+      `npm run dev` 寫的 `public/hot` 被容器內 PHP 讀到，頁面吐出 `127.0.0.1:5173` 的 dev URL
+
+**實作中的三個偏離（與原計畫不同）**
+
+1. **移除 Laravel 12 skeleton 的 Tailwind 4**（連帶 `resources/js/bootstrap.js` 的 axios）。
+   Tailwind preflight 會跟 `reset.scss` / `@layer pi` 打架，而 preview 的唯一價值是
+   忠實反映 Pi DS 本身 —— 引進 Tailwind 等於自己製造「preview 對、貼進專案走鐘」。
+2. **SCSS 走實體相對路徑 `../../../resources/scss/preview-all`，不走 `loadPaths`、也不走 `vendor/` symlink。**
+   `vendor/company/pi-design-system` 指回 repo 根，repo 根底下又有 `preview/`，Vite watcher
+   走進去會無限遞迴；`server.watch.ignored` 排除 `**/vendor/**` 後，若 SCSS 還走 vendor 路徑
+   就換成 HMR 不觸發。PHP 讀 blade 走 symlink 無此問題（不涉及 file watcher）。
+3. **套件約束 `@dev` 而非 `*`** —— path repository 版本來自分支名（`dev-main`），撞
+   `minimum-stability: stable`。專案端 Phase 4 走 VCS + tag，是 `^1.0`，不受影響。
 
 ### 2.3 前 3 支元件轉 Blade（驗證模式）
 - [ ] `resources/views/components/button.blade.php` + `button.meta.php`

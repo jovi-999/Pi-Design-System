@@ -1,0 +1,4 @@
+# Dockerfile 沒有任何 COPY（程式碼靠 bind mount 進容器），
+# 所以 build context 只要能被讀到就好，越小越快。
+*
+!Dockerfile

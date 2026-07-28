@@ -16,7 +16,7 @@ auth.json
 *.log
 .vscode/
 .idea/
-preview/_shot_*.png
+preview-static/_shot_*.png
 sandbox/node_modules/
 sandbox/dist/
 sandbox/*.css

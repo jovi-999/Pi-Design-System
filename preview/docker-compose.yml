@@ -1,0 +1,33 @@
+# ============================================================
+# Pi DS preview —— 本機開發用（不是部署設定）
+#
+# 起動兩步：
+#   1. cd preview && docker compose up -d     # PHP，http://localhost:8100
+#   2. cd preview && npm run dev              # Vite（跑在 host），port 5173
+#
+# port 8100 而非 8000：8000 已被本機 stock-tssco-quote-web 佔用。
+# ============================================================
+name: pi-ds-preview
+
+services:
+  app:
+    build: .
+
+    volumes:
+      # 掛「整個 repo」而不是只掛 preview/。
+      #
+      # 原因：preview/composer.json 用 path repository 裝套件本體，
+      # composer 產生的 symlink 是
+      #   preview/vendor/company/pi-design-system → ../../../..
+      # 指回 repo 根目錄。只掛 preview/ 的話這條 symlink 在容器內斷鏈，
+      # blade 元件與 SCSS 全部讀不到。
+      - ../:/var/www
+
+    working_dir: /var/www/preview
+
+    ports:
+      - "8100:8100"
+
+    # artisan serve 而非 nginx + php-fpm：preview 是單人開發工具，
+    # 不需要 process manager，也不需要多一個 container。
+    command: php artisan serve --host=0.0.0.0 --port=8100

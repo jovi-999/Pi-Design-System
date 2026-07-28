@@ -39,11 +39,16 @@ Pi-Design-System/
 │   ├── icon-names.json / icon-cp-map.json / icons-preview.html
 │   └── noise.svg
 ├── fonts/                    ★ 字型檔（woff/woff2，含 symicon-X.s icon 字型）
-├── preview-static/                  ☆ 開發預覽頁（Vite，吃 /resources/scss/index.scss）
+├── preview-static/           ☆ 靜態預覽頁（Vite，吃 /resources/scss/preview-all.scss）
 │   ├── index.html            #   殼層：左目錄 + 右 iframe
 │   ├── color/type/shadow/tokens/icons.html        # foundation 對照頁
 │   └── button/form/alert/callout/content-switcher/ # 元件對照頁（拆自舊 components）
 │       dropdown/pagination/notification/loading/modal.html
+├── preview/                  ☆ blade 預覽用 Laravel app（開發工具，不出貨）
+│   ├── Dockerfile  docker-compose.yml  # PHP 在容器（8100）；Vite 跑在 host（5173）
+│   ├── composer.json         #   path repository symlink 到 repo 根，裝套件本體
+│   ├── resources/scss/app.scss  #  @use ../../../resources/scss/preview-all
+│   └── README.md             #   起動方式與設計取捨（先讀這支）
 ├── docs/ai-guide.md          ☆ 給 AI：Figma 名稱 ↔ class 對照表
 ├── scripts/check-build.mjs   ☆ build 後 smoke 檢查
 ├── vite.config.js            ☆ 預覽用 Vite 設定

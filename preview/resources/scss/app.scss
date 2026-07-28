@@ -1,0 +1,13 @@
+// ============================================================
+// Pi DS preview —— 唯一的樣式進入點
+//
+// 吃 repo 根目錄的 preview-all.scss（= reset.scss + index.scss），
+// 跟 preview-static/*.html 完全同一份來源，確保兩套 preview 視覺一致。
+//
+// 為什麼走 ../../../resources/scss 而非 vendor/ 的 symlink：
+//   vendor/company/pi-design-system 是指回 repo 根的 symlink，
+//   讓 Vite watcher 走進去會遞迴（repo 根底下又有 preview/）。
+//   PHP 端讀 blade 走 symlink 沒問題（不涉及 file watcher），
+//   SCSS 這邊直接走實體路徑，HMR 才會正常觸發。
+// ============================================================
+@use "../../../resources/scss/preview-all";
