@@ -14,7 +14,10 @@ export default {
   root: ".",
 
   server: {
-    port: 5173,
+    // 5177 而非 5173：公司其他專案的 Vite 都跑 5173，避免撞號。
+    // preview/ 的 Laravel app 用 5178，兩邊可以同時開。
+    port: 5177,
+    strictPort: true, // 撞號就報錯，不要靜默跳號（跳號會讓下面的 open 開錯）
     open: "/preview-static/index.html", // 啟動預設開預覽目錄頁
   },
 

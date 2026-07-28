@@ -34,7 +34,11 @@ export default defineConfig({
 
     server: {
         host: '127.0.0.1',
-        port: 5173,
+        // 5178：公司其他專案的 Vite 走 5173，repo 根的 preview-static 走 5177。
+        // strictPort 讓撞號直接報錯 —— 靜默跳號會寫錯 public/hot，
+        // 容器內的 PHP 就會指向一個沒東西的 port，症狀是「頁面沒樣式」。
+        port: 5178,
+        strictPort: true,
         watch: {
             ignored: [
                 '**/storage/framework/views/**',

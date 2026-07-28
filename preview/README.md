@@ -25,7 +25,7 @@ Pi Design System 的 **blade preview 開發工具**。
 cd preview
 
 docker compose up -d      # 1. PHP（container）→ http://localhost:8100
-npm run dev               # 2. Vite（host）    → port 5173
+npm run dev               # 2. Vite（host）    → port 5178
 ```
 
 第一次要先裝依賴：
@@ -45,8 +45,15 @@ docker compose down
 
 | Port | 服務 | 備註 |
 |---|---|---|
-| 8100 | PHP（`artisan serve`，container） | 不用 8000 —— 本機已被 `stock-tssco-quote-web` 佔用 |
-| 5173 | Vite（host） | |
+| 8100 | PHP（`artisan serve`，container） | |
+| 5178 | Vite（host），本目錄 | `strictPort` —— 撞號直接報錯，不靜默跳號 |
+| 5177 | Vite（host），repo 根的 `preview-static/` | 兩者可同時開 |
+
+公司其他專案的 Vite 都跑 5173，這裡刻意避開。
+
+**為什麼 `strictPort`**：Vite 靜默跳號會把新 port 寫進 `public/hot`，
+但容器內的 PHP 讀到的是那份檔，指向一個沒東西的 port —— 症狀是
+「頁面完全沒有樣式」，而且不會有任何錯誤訊息，很難查。
 
 ---
 
