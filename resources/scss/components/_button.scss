@@ -20,7 +20,6 @@
     transition: background $dur-fast $ease-standard;
     text-decoration: none;
     white-space: nowrap;
-    min-width: 200px;
 
     &:focus-visible {
       outline: 2px solid $cl-green-500;
