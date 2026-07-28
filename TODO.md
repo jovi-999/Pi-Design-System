@@ -168,35 +168,94 @@ Pi-Design-System/          ← 套件本體：無 framework、無 build、無 DB
    `minimum-stability: stable`。專案端 Phase 4 走 VCS + tag，是 `^1.0`，不受影響。
 
 ### 2.3 前 3 支元件轉 Blade（驗證模式）
-- [ ] `resources/views/components/button.blade.php` + `button.meta.php`
-- [ ] `resources/views/components/form-control.blade.php` + meta
-- [ ] `resources/views/components/callout.blade.php` + meta
-- [ ] `resources/views/layouts/preview.blade.php`
-- [ ] 驗證 `<x-pi::button>` 解析、`@layer pi` 在 Laravel preview 環境與 `preview-static/` 行為一致
+- [x] `button.blade.php` + meta（5 variant × 8 tone × 5 size + 純 icon）
+- [x] `form-control.blade.php` + meta（整個 `.gl_form-group` 群組）
+- [x] `callout.blade.php` + meta
+- [x] `resources/views/layouts/preview.blade.php`
+- [x] 驗證 `<x-pi::*>` 解析、輸出的 class 全部比對過 SCSS 實際存在
+- [x] **prop 守衛**：不存在的組合丟例外而非輸出死 class（`.gl_btn-outline-dark`、`.gl_callout-orange` 都被擋下）
 
 ### 2.4 批次轉剩餘元件
-- [ ] checkbox / radio / toggle
-- [ ] alert / notification / loading
-- [ ] content-switcher / dropdown / pagination
-- [ ] modal
-- [ ] 各配 `.meta.php`
+- [x] checkbox / radio / toggle
+- [x] alert / notification / loading
+- [x] content-switcher / dropdown-item / pagination
+- [x] modal
+- [x] 各配 `.meta.php`
+- [x] **`border` / `radius` / `shadow` 不轉元件** —— 是 utility class，套在別的元素上用，沒有自己的結構
+- [x] 各元件 tone 清單不一致，守衛逐支照 SCSS 收斂（button 8 / callout·alert·notification 6 / toggle 5 / checkbox·radio 4 / content-switcher 3）
 
 ### 2.5 Preview 自動生成
-- [ ] `PreviewIndexController`（掃 `resources/views/components/*.meta.php`）
-- [ ] `ComponentPreviewController`（render meta 的 examples）
-- [ ] `routes/web.php`
-- [ ] 驗證新增元件不用手改 preview 頁
+- [x] `App\Support\ComponentCatalog`（掃 `vendor/` 內的 `*.meta.php`，與專案端同一條路徑）
+- [x] `ComponentController`（目錄頁 + 單一元件頁，`Blade::render()` 跑 examples）
+- [x] `gallery/` 三支 view（不放 `resources/views/components/`，那是匿名元件目錄）
+- [x] `_chrome.scss`（preview 自己的版面樣式，前綴 `pv-`，不進 `@layer pi`）
+- [x] 驗證新增元件不用手改 preview 頁
 
 ### 2.6 `scripts/sync-component-list.php`
-- [ ] meta → `CLAUDE.md` 的 `<!-- COMPONENTS:START/END -->` 區段
-- [ ] `CLAUDE.md` 加硬性規則段（spec 5.6，layer/前綴改成 `pi` / `gl_`）
-- [ ] 執行一次並確認清單與實際元件一致
+- [x] meta → `CLAUDE.md` 的 `<!-- COMPONENTS:START/END -->` 區段
+- [x] `--check` 模式（CI 用，不一致回 exit 1）
+- [x] `notes` 中以 ⚠️ 開頭者抽成獨立的「已知元件缺口」段落
+- [x] `CLAUDE.md` 加 prototype 六條硬性規則
+- [x] 執行一次：13 支元件、2 個缺口
 
 ### 2.7 Phase 2 驗收
-- [ ] 16 支元件全可在 `preview/` Laravel app 檢視
-- [ ] `preview-static/` 可廢除的判定（markup 是否已由 blade + meta 完全覆蓋）
-- [ ] `CHANGELOG.md` 記錄
-- [ ] `git commit`
+- [x] 13 支元件全可在 `preview/` Laravel app 檢視（**不是 16** —— border/radius/shadow 是 utility）
+- [x] 142 個實際輸出的 class 全部存在於 `dist/pi-ds.css` + `symicon.css`
+- [x] `CHANGELOG.md` 記錄
+- [x] `git commit`
+- [ ] **`preview-static/` 可廢除的判定** —— 尚未達成。blade 元件已覆蓋 markup，但 `preview-static/` 還有 blade 沒有的東西：`tokens.html`（token 對照表）、`color.html`、`type.html`、`radius.html`、`icons.html`（foundation 頁），以及 `modal.html` 的 `gl_gs-modal`（preview 專用 CSS）。**要等 foundation 頁也搬進 preview 才能廢除**
+
+---
+
+## Phase 3：Prototype 系統
+
+### 3.1 Preview 路由與 controller
+- [x] `PrototypeCatalog`（掃 `prototypes/`、靜態解析 manifest、數 page-scoped SCSS 行數）
+- [x] `PrototypeController`：page 直接 render；fragment 注入 host 快照
+- [x] 路由 `/prototypes`、`/prototypes/{project}/{name}`（**用 `/prototypes` 而非 spec 的 `/preview`** —— app 本身就叫 preview，多一層冗贅）
+- [x] 注入失敗顯示裸片段 + 寫明原因，不靜默 fallback
+- [ ] `POST /prototypes/render`（spec 5.1 的 AI 迭代用端點）—— 尚未需要，agent 目前直接改檔＋看頁面
+
+### 3.2 Prototype 目錄與範例
+- [x] `prototypes/project-a/{pages,fragments,fixtures,_hosts}/`
+- [x] `pages/member-list.blade.php`（整頁）
+- [x] `fragments/member-list.filters.blade.php`（帶 manifest）
+- [x] `fixtures/{member-list,member-status}.php`
+- [x] `_hosts/members-index.html`（宿主快照示範）
+- [x] `.gitattributes` 加 `/prototypes` export-ignore（1.6 已加）
+
+### 3.3 Fixture 載入（**spec 有缺陷，已修正**）
+- [x] `@piFixture($x, 'name')` directive + `src/Prototype/FixtureLoader.php`
+- [x] spec 5.2 的 `@php($x = include __DIR__.'/…')` 不可能運作：Blade 編譯成 `storage/framework/views/` 快取檔後，`__DIR__` 指向快取目錄
+- [x] 路徑由 render 端設定，render 後清空（避免跨 request 讀到別的專案的 fixture）
+
+### 3.4 Slot marker（**spec 有缺陷，已修正**）
+- [x] 改用 HTML 註解 `<!-- @pi-slot: name -->`
+- [x] spec 6.3 的 blade 註解 render 後會消失 → 宿主快照裡沒有錨點 → fragment 無處可插
+- [x] 同一個 marker 同時服務 `apply.php`（改 blade 原始碼）與 fragment 注入（改 rendered HTML）
+
+### 3.5 `scripts/fetch-host.php`
+- [x] 抓 URL 存進 `_hosts/`
+- [x] 站根相對路徑改寫為絕對 URL（**刻意不下載 CSS**，讓快照樣式跟著專案走）
+- [x] 找不到 slot 錨點時警告並 exit 1
+- [x] 需要登入的頁面給明確指引（改用瀏覽器另存）
+- [x] 快照不寫時間戳（避免每次重抓都產生 diff）
+
+### 3.6 `scripts/apply.php`
+- [x] 讀 manifest 取 target / slot
+- [x] 移除 `@piFragment` 與 `@piFixture`，並驗證無殘留
+- [x] `--output=blade`（可貼上的片段）
+- [x] `--output=patch --target=…`（unified diff，依 marker 縮排對齊）
+- [x] **不直接寫入專案檔** —— 跨 repo 自動改檔風險太高，交 patch 讓前端 review
+- [x] patch 的 `a/` `b/` 標籤依 target 的 git root 推導，`git apply` 對得上
+- [x] 實測 `git apply --check` 與實際 apply 都通過
+
+### 3.7 Phase 3 驗收
+- [x] 完整跑過一次 fragment 流程（manifest → 宿主注入 → apply → git apply）
+- [x] `CHANGELOG.md` 記錄
+- [x] `git commit`
+- [ ] **`pm-to-preview` skill 改產 blade** —— 目前 skill 還在產 `preview-static/*.html`，是舊路線。這是 blade 路線真正被用起來的最後一步
+- [ ] page-scoped SCSS 門檻進 CI（目前只在 preview 清單頁顯示行數）
 
 ---
 

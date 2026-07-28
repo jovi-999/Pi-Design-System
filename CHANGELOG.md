@@ -38,6 +38,50 @@ repo 從「vendored SCSS 對照用」轉為 **Composer 套件**。下游已 vend
   symicon `@font-face`。新預設值對 `sass` CLI / Vite dev / Vite build / 專案
   `public/fonts/` 四者皆成立；下游原本手動覆寫成 `'/fonts'` 的可以移除覆寫。
 
+### Added — 平台化 Phase 2 + 3（Blade 元件與 prototype 系統）
+
+- **13 支 Blade 元件**（`resources/views/components/`）：`alert` / `button` /
+  `callout` / `checkbox` / `content-switcher` / `dropdown-item` /
+  `form-control` / `loading` / `modal` / `notification` / `pagination` /
+  `radio` / `toggle`。呼叫寫法 `<x-pi::button tone="success" />`。
+  SCSS 一行都沒有改 —— 只加了 markup 層。
+  `border` / `radius` / `shadow` 不轉元件（是 utility class，沒有自己的結構）。
+- 每支元件配 `.meta.php`（props / slots / notes / examples）。examples 的 code
+  是可直接 render 的合法 blade，同一份資料同時餵 preview 頁與 CLAUDE.md 清單。
+- **元件的 prop 守衛**：不存在的組合直接丟例外，而不是輸出不存在的 class。
+  各元件的 tone 清單其實不同（button 8 個、callout/alert 6 個、toggle 5 個、
+  checkbox/radio 4 個、content-switcher 3 個），守衛照 SCSS 實際定義收斂。
+- `resources/views/layouts/preview.blade.php` —— prototype 的殼。
+- **`preview/`：blade preview 的 Laravel app**（開發工具，`export-ignore`）。
+  PHP 在單一 php-cli container（port 8100），Vite 在 host（5178）。
+  不接公司 Laradock —— 本 repo 是 library，沒有 build step / DB / queue。
+  元件目錄頁與 prototype 清單都由檔案掃描生成，新增內容不必改 preview。
+- **`prototypes/`：PM & AI 的討論區**（`export-ignore`）。
+  page / fragment / fixtures / `_hosts` 四層結構，附 `project-a` 完整範例。
+- `@piFixture($x, 'name')` directive + `src/Prototype/FixtureLoader.php`。
+- `scripts/sync-component-list.php` —— meta → CLAUDE.md 元件清單（`--check`
+  給 CI）。meta 的 `notes` 中以 ⚠️ 開頭者會被抽成「已知元件缺口」段落。
+- `scripts/fetch-host.php` —— 抓專案頁面 rendered HTML 當宿主快照。
+- `scripts/apply.php` —— fragment → blade 片段或 unified diff patch。
+- CLAUDE.md 新增 prototype 六條硬性規則與自動生成的元件清單。
+
+### Fixed — Phase 2 + 3
+
+- `icon-shield-checked` 不存在（symicon 的正確名稱是 `icon-shield-check`）。
+  `preview-static/callout.html`、`modal.html`、`assets/icons-preview.html`
+  這三處的圖示原本是空的。抓出這個錯字的機制是「把 preview 實際輸出的
+  142 個 class 拿去比對編譯後的 CSS」。
+
+### Changed — 與 spec 的兩處偏離（spec 該處有缺陷）
+
+- **fixture 載入**：spec 的 `@php($x = include __DIR__.'/../fixtures/x.php')`
+  不可能運作 —— Blade 編譯成 `storage/framework/views/` 的快取檔後，`__DIR__`
+  指向快取目錄而非 prototype 原始檔。改為 `@piFixture` directive。
+- **slot marker**：spec 用 blade 註解，但 blade 註解 render 後會消失，抓回的
+  宿主快照裡就沒有錨點。改為 HTML 註解 `<!-- @pi-slot: … -->`，同一個 marker
+  同時服務 `apply.php`（改 blade 原始碼）與 fragment 注入（改 rendered HTML）。
+- `preview/` → `preview-static/`（靜態 HTML 對照頁讓位給 Laravel app）。
+
 ### Added
 - **Composer 套件本體**：`composer.json`（`company/pi-design-system`，
   依賴僅 `illuminate/support`）+ `src/PiDesignSystemServiceProvider.php`。
