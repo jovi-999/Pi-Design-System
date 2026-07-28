@@ -1,20 +1,24 @@
 <?php
 
 /**
- * 把定案的 fragment 轉成可套進專案的內容。
+ * 把定案的 prototype 轉成可套進專案的內容。fragment 與 page 都支援。
  *
  * 用法：
- *   php scripts/apply.php <project> <fragment-name> [--output=patch|blade] [--target=<專案檔絕對路徑>]
+ *   php scripts/apply.php <project> <name> [--output=blade|patch] [--target=<專案檔絕對路徑>]
  *
  * 例：
  *   php scripts/apply.php project-a member-list.filters
- *   php scripts/apply.php project-a member-list.filters --output=blade
- *   php scripts/apply.php project-a member-list.filters --target=/srv/project-a/resources/views/members/index.blade.php
+ *   php scripts/apply.php project-a member-list.filters --output=patch --target=/srv/project-a/resources/views/members/index.blade.php
+ *   php scripts/apply.php project-a salary-report
  *
  * 做三件事：
- *   1. 讀 fragment 的 @piFragment manifest 取得 target / slot
- *   2. 移除 prototype 專用的行（@piFragment、@piFixture）
- *   3. 輸出 blade 片段，或（給了 --target 時）產生 unified diff patch
+ *   1. 判定是 fragment 還是 page；fragment 讀 @piFragment manifest 取得 target / slot
+ *   2. 移除 prototype 專用的內容（@piFragment、@piFixture，以及只在 prototype
+ *      情境下才有意義的說明註解）
+ *   3. 輸出 blade，或（fragment + --target 時）產生 unified diff patch
+ *
+ * `--output=patch` 只適用 fragment：page 是整頁搬進專案的新檔案，沒有「插進既有
+ * 檔案的某個位置」這件事，產 diff 沒有意義。
  *
  * 刻意不直接寫入專案檔：跨 repo 自動改檔風險太高，交出 patch 讓前端自己
  * `git apply` 並 review。
@@ -44,27 +48,47 @@ foreach ($args as $arg) {
 
 if ($project === null || $name === null) {
     fwrite(STDERR, <<<TXT
-    用法：php scripts/apply.php <project> <fragment-name> [--output=patch|blade] [--target=<專案檔路徑>]
+    用法：php scripts/apply.php <project> <name> [--output=blade|patch] [--target=<專案檔路徑>]
 
-      --output=blade   （預設）印出可貼上的 blade 片段
-      --output=patch   產生 unified diff（需要 --target 指到專案的實體檔案）
-      --target=…       專案端目標檔的絕對路徑。不給時用 manifest 裡的 target 當提示
+      <name>           fragment 或 page 的檔名（不含 .blade.php）
+      --output=blade   （預設）印出可貼上的 blade
+      --output=patch   產生 unified diff。**只適用 fragment**，且需要 --target
+      --target=…       專案端目標檔的絕對路徑（manifest 的 target 是 project:path
+                       宣告，不是本機路徑，所以要明確給）
 
     TXT);
     exit(1);
 }
 
-$fragmentFile = "{$root}/prototypes/{$project}/fragments/{$name}.blade.php";
+// fragment 與 page 都支援。fragment 先找 —— 兩者同名時 fragment 才有 manifest，
+// 是更明確的意圖。
+$kind = null;
+$sourceFile = null;
 
-if (! is_file($fragmentFile)) {
-    fwrite(STDERR, "找不到 fragment：{$fragmentFile}\n");
+foreach (['fragments' => 'fragment', 'pages' => 'page'] as $dir => $candidateKind) {
+    $candidate = "{$root}/prototypes/{$project}/{$dir}/{$name}.blade.php";
+
+    if (is_file($candidate)) {
+        $kind = $candidateKind;
+        $sourceFile = $candidate;
+        break;
+    }
+}
+
+if ($sourceFile === null) {
+    fwrite(STDERR, <<<TXT
+    找不到 prototype [{$project}/{$name}]。找過：
+      prototypes/{$project}/fragments/{$name}.blade.php
+      prototypes/{$project}/pages/{$name}.blade.php
+
+    TXT);
     exit(1);
 }
 
-$source = file_get_contents($fragmentFile);
+$source = file_get_contents($sourceFile);
 
 if ($source === false) {
-    fwrite(STDERR, "讀不到 {$fragmentFile}\n");
+    fwrite(STDERR, "讀不到 {$sourceFile}\n");
     exit(1);
 }
 
@@ -80,36 +104,77 @@ if (preg_match('/@piFragment\s*\(\s*\[(.*?)\]\s*\)/s', $source, $m)) {
     }
 }
 
-if (empty($manifest['slot'])) {
+// slot 只有 fragment 需要 —— page 是整頁搬進專案，沒有插入點的概念。
+if ($kind === 'fragment' && empty($manifest['slot'])) {
     fwrite(STDERR, "fragment 沒有宣告 @piFragment 的 slot，無法決定插入位置。\n");
     exit(1);
 }
 
-// ---------- 2. 移除 prototype 專用的行 ----------
+// ---------- 2. 移除 prototype 專用的內容 ----------
+
+/**
+ * `preg_replace` 失敗會回傳 null（例如撞到 backtrack limit）。
+ * 這裡的每一步都是「把不該交出去的東西拿掉」，靜默變成 null 會讓後面的
+ * 殘留檢查對 null 做比對而通過 —— 正是本段要防的事，所以失敗就中止。
+ */
+$mustReplace = static function (string $pattern, string $replacement, string $subject, string $what): string {
+    $result = preg_replace($pattern, $replacement, $subject);
+
+    if ($result === null) {
+        fwrite(STDERR, "移除「{$what}」時 regex 執行失敗（" . preg_last_error_msg() . "）。未產出任何內容。\n");
+        exit(1);
+    }
+
+    return $result;
+};
 
 $body = $source;
 
 // @piFragment([...])：可能跨多行
-$body = preg_replace('/@piFragment\s*\(\s*\[.*?\]\s*\)\s*/s', '', $body);
+$body = $mustReplace('/@piFragment\s*\(\s*\[.*?\]\s*\)\s*/s', '', $body, '@piFragment manifest');
 
 // @piFixture(...)：整行刪掉。專案端資料由 controller 傳入。
-$body = preg_replace('/^[ \t]*@piFixture\s*\([^)]*\)[ \t]*\r?\n/m', '', $body);
+$body = $mustReplace('/^[ \t]*@piFixture\s*\([^)]*\)[ \t]*\r?\n/m', '', $body, '@piFixture');
+
+// 只在 prototype 情境下才有意義的說明註解也要拿掉。
+//
+// 原因：prototype 檔頭常寫「交接時刪掉下面兩行 @piFixture」。那兩行已經在上面
+// 被移除了，把這段指示原樣交給前端，會讓人去找一組不存在的行。
+// 判準：blade 註解裡提到 @piFixture 或 @piFragment 的，就是講 prototype 機制的
+// 註解；講設計決策的註解（例如組合件、元件缺口）不含這兩個字，會被保留。
+$body = $mustReplace(
+    '/\{\{--(?:(?!--\}\}).)*?@pi(?:Fixture|Fragment)(?:(?!--\}\}).)*?--\}\}\s*/s',
+    '',
+    $body,
+    'prototype 機制說明註解'
+);
 
 $body = trim($body) . "\n";
 
-// 交出去之前先確認沒有殘留 —— 漏一行就是前端貼上後直接爆掉
+// 交出去之前先確認沒有殘留 —— 漏一行就是前端貼上後直接爆掉。
+// 只認帶括號的呼叫，不認散文裡的提及。
 foreach (['@piFragment', '@piFixture'] as $leftover) {
-    if (str_contains($body, $leftover)) {
-        fwrite(STDERR, "移除 prototype 專用語法後仍有殘留：{$leftover}。請檢查 fragment 的寫法。\n");
+    if (preg_match('/' . preg_quote($leftover, '/') . '\s*\(/', $body)) {
+        fwrite(STDERR, "移除 prototype 專用語法後仍有殘留：{$leftover}。請檢查 prototype 的寫法。\n");
         exit(1);
     }
 }
 
 // ---------- 3. 輸出 ----------
 
+$relativeSource = str_replace($root . '/', '', $sourceFile);
+
 if ($options['output'] === 'blade') {
-    echo "{{-- ↓ 由 scripts/apply.php 產生，來源：prototypes/{$project}/fragments/{$name}.blade.php --}}\n";
-    echo "{{-- 插入位置：" . ($manifest['target'] ?? '（manifest 未指定）') . " 的 slot `{$manifest['slot']}` --}}\n";
+    echo "{{-- ↓ 由 scripts/apply.php 產生，來源：{$relativeSource} --}}\n";
+
+    if ($kind === 'fragment') {
+        echo "{{-- 插入位置：" . ($manifest['target'] ?? '（manifest 未指定）')
+            . " 的 slot `{$manifest['slot']}` --}}\n";
+    } else {
+        echo "{{-- 這是整頁 prototype。貼進專案後把下面的 @extends 換成專案自己的 layout； --}}\n";
+        echo "{{-- @section('content') 內的 body 一個字都不用改。 --}}\n";
+    }
+
     echo "{{-- 資料改由 controller 傳入；需要的結構見 prototypes/{$project}/fixtures/ --}}\n\n";
     echo $body;
     exit(0);
@@ -121,6 +186,21 @@ if ($options['output'] !== 'patch') {
 }
 
 // --- patch 模式 ---
+//
+// 只有 fragment 有 patch 模式：page 是整頁搬進專案的新檔案，沒有「插進既有檔案
+// 的某個位置」這件事，產 diff 沒有意義。
+if ($kind === 'page') {
+    fwrite(STDERR, <<<TXT
+    --output=patch 只支援 fragment。
+
+      [{$name}] 是 page prototype —— 整頁搬進專案是「新增一個檔案」，
+      不是插進既有檔案的某個位置，所以沒有 patch 可產。
+
+      改用：php scripts/apply.php {$project} {$name}
+
+    TXT);
+    exit(1);
+}
 
 $targetPath = $options['target'];
 

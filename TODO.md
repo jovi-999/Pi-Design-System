@@ -254,8 +254,20 @@ Pi-Design-System/          ← 套件本體：無 framework、無 build、無 DB
 - [x] 完整跑過一次 fragment 流程（manifest → 宿主注入 → apply → git apply）
 - [x] `CHANGELOG.md` 記錄
 - [x] `git commit`
-- [ ] **`pm-to-preview` skill 改產 blade** —— 目前 skill 還在產 `preview-static/*.html`，是舊路線。這是 blade 路線真正被用起來的最後一步
+- [x] **`pm-to-preview` skill 改產 blade**（見 3.8）
 - [ ] page-scoped SCSS 門檻進 CI（目前只在 preview 清單頁顯示行數）
+
+### 3.8 `pm-to-preview` skill 改走 blade 路線
+- [x] `SKILL.md`：第 3 步改產 `prototypes/<project>/`；刪掉「兩處註冊」（清單頁掃檔生成，不需註冊）
+- [x] 第 1 步新增「判定 page 還是 fragment」與「確認專案名」
+- [x] 第 2 步要求先讀 `.meta.php` 確認 props 值域（各元件 tone/size 清單不一致）
+- [x] `references/preview-setup.md` → `prototype-setup.md`（整份重寫）
+- [x] `references/handoff-templates.md`：元件清單欄位由 `Pi DS class` → `Pi DS 元件 + props`；後端「資料欄位清單」改為指向 fixture 檔；新增「套用方式」段（`apply.php` 指令）與「Page-scoped SCSS」段
+- [x] `references/missing-component.md`：placeholder 改 blade 寫法；新增「先查 CLAUDE.md 已知缺口」
+- [x] `.scratch/` 六份舊路線 handoff 加「舊路線產物，不要照抄」標記
+- [x] **端到端實跑**：`prototypes/project-a/pages/salary-report.blade.php` + 2 支 fixture + `.scratch/salary-report/` 兩份 handoff（新的回歸基準）
+- [x] **實跑抓到的 bug**：`apply.php` 只支援 fragment（只找 `fragments/`、且強制要 slot），但 skill 文件寫了 page 也能用 → 已加 page 支援
+- [x] **實跑抓到的 bug**：殘留檢查誤判 —— prototype 的 blade 註解提到 `@piFixture` 就被當成殘留 → 檢查前剔除 blade 註解，且只認帶括號的呼叫
 
 ---
 

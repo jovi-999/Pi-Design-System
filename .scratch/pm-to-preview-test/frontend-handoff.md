@@ -1,5 +1,8 @@
 # 三段式版面（AD banner + sidebar + 註冊表單 + footer） — 前端 Handoff
 
+> ⚠️ **舊路線產物**（blade 化之前）。產出的是 `preview-static/*.html`、元件清單列 `gl_` class。
+> 結構可參考，但**不要照抄** —— 現行流程見 `.claude/skills/pm-to-preview/`，範例見 `.scratch/salary-report/`。
+
 > pm-to-preview skill 實戰驗證產出。輸入描述：「1/(1+1)/1 版面：上 AD banner、中左 sidebar 右表單、下 footer；sidebar 窄 1 內容寬 3；AD 純色條；sidebar 導覽連結清單；表單含 name/email/同意隱私 checkbox/送出鈕；footer 版權連結條」。
 
 ## 版面結構

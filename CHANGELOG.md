@@ -65,6 +65,46 @@ repo 從「vendored SCSS 對照用」轉為 **Composer 套件**。下游已 vend
 - `scripts/apply.php` —— fragment → blade 片段或 unified diff patch。
 - CLAUDE.md 新增 prototype 六條硬性規則與自動生成的元件清單。
 
+### Changed — `pm-to-preview` skill 改走 blade 路線
+
+Skill 原本產 `preview-static/<name>.html`（裸 HTML）。blade 路線做好後若不改 skill，
+PM 討論流程仍走舊路線，Phase 2 + 3 等於沒被用到。
+
+- 產物改為 `prototypes/<project>/{pages,fragments}/<name>.blade.php` + `fixtures/*.php`
+- 流程第 1 步新增「判定 page 還是 fragment」與「確認專案名」
+- 第 2 步要求先讀 `.meta.php` 確認 props 值域（各元件 tone / size 清單不一致）
+- 刪掉「新頁需兩處註冊」—— prototype 清單頁是掃檔生成的
+- `references/preview-setup.md` → `prototype-setup.md`（整份重寫）
+- 前端 handoff 的元件清單由「`gl_` class 表」改為「元件 + props 表」，並新增
+  `apply.php` 的套用指令；後端 handoff 的資料欄位表改為指向 fixture 檔
+- 新的回歸基準：`prototypes/project-a/pages/salary-report.blade.php`
+  + `.scratch/salary-report/{frontend,backend}-handoff.md`
+- `.scratch/` 六份舊路線 handoff 加標記，避免被照抄
+
+### Added — `form-control` / `toggle` 的 `id` prop
+
+兩支元件原本**無法被外部 `<label for>` 關聯**：`id` 若當一般 attribute 傳，會跟著
+`$attributes` 落在外層的 `div` / `label` 上，`for` 指過去是無效的。新增 `id` prop，
+落在真正的 control（`input` / `select` / `textarea`、toggle 的內層 checkbox）。
+
+`checkbox` / `radio` 不需要 —— 它們的 `<label>` 已包住 input，是隱式關聯。
+
+### Fixed — `scripts/apply.php`（端到端實跑與 code review 抓到）
+
+- **只支援 fragment** —— 只找 `prototypes/<project>/fragments/`，且無條件要求
+  manifest 有 `slot`。page prototype 完全無法交接。已加 page 支援：
+  `--output=blade` 印出可貼的整頁 blade；`--output=patch` 對 page 明確擋掉並說明
+  原因（整頁搬進專案是新增檔案，沒有插入點，產 diff 無意義）。
+- **殘留檢查誤判** —— prototype 的說明註解提到 `@piFixture` 這個字串就被判定為
+  「移除後仍有殘留」而中止。改為只認帶括號的呼叫。
+- **交出的 blade 含已失效的指示** —— prototype 檔頭常寫「交接時刪掉下面兩行
+  `@piFixture`」，但那兩行已被腳本移除，前端會照指示去找不存在的行。現在會一併
+  移除「提到 `@piFixture` / `@piFragment` 的 blade 註解」；講設計決策的註解
+  （組合件、元件缺口）不含這兩個字，會保留。
+- **`preg_replace` 回傳 null 未處理** —— 失敗時後續的殘留檢查會對 null 比對而
+  靜默通過，正是該段要防的事。改為失敗即中止並印出 `preg_last_error_msg()`。
+- 檔頭 docblock 與 `--help` 仍寫 `<fragment-name>`、只描述 fragment 流程，已同步。
+
 ### Fixed — Phase 2 + 3
 
 - `icon-shield-checked` 不存在（symicon 的正確名稱是 `icon-shield-check`）。

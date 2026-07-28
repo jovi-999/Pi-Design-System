@@ -29,6 +29,8 @@
     'feedbackIcon' => null, // 不給就依 state 自動選
     'disabled' => false,    // 需要獨立 prop：$attributes 會落在外層 div，
                             // 但 _form.scss 的停用樣式是 .gl_form-control[disabled]
+    'id' => null,           // 同理：id 要落在真正的 control 上，<label for> 才綁得到。
+                            // 若跟著 $attributes 走會綁到外層 div，關聯無效。
 ])
 
 @php
@@ -73,7 +75,7 @@
     @endif
 
     @if ($type === 'select')
-        <select class="gl_form-control" @if ($name) name="{{ $name }}" @endif @disabled($disabled)>
+        <select class="gl_form-control" @if ($id) id="{{ $id }}" @endif @if ($name) name="{{ $name }}" @endif @disabled($disabled)>
             @if ($placeholder)
                 <option value="">{{ $placeholder }}</option>
             @endif
@@ -86,6 +88,7 @@
     @elseif ($type === 'textarea')
         <textarea
             class="gl_form-control"
+            @if ($id) id="{{ $id }}" @endif
             @if ($name) name="{{ $name }}" @endif
             @if ($placeholder) placeholder="{{ $placeholder }}" @endif
             @disabled($disabled)
@@ -93,6 +96,7 @@
     @else
         <input
             class="gl_form-control"
+            @if ($id) id="{{ $id }}" @endif
             type="{{ $type }}"
             @if ($name) name="{{ $name }}" @endif
             @if ($value !== null) value="{{ $value }}" @endif

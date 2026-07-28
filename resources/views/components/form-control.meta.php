@@ -23,10 +23,12 @@ return [
         'feedback' => '驗證訊息（要有 state 才有顏色）',
         'feedbackIcon' => '不給就依 state 自動選 icon-checked / icon-alert-triangle',
         'disabled' => 'bool',
+        'id' => '落在真正的 control 上（不是外層 div），給外部 <label for> 綁定用',
     ],
 
     'notes' => [
         '.gl_form-control 的樣式定義在 .gl_form-group 底下，所以這支元件一定輸出完整群組結構，不提供單獨的 control。',
+        '這支元件沒有標籤 —— 設計系統沒有欄位標籤元件（已確認 _form.scss 內無 label 相關 class）。要標籤請自己放 <label for> 並用 id prop 綁定；已提報 field-label 元件缺口。',
         'is-valid / is-invalid 掛在 group 上（SCSS 是 `.is-valid .form-feedback`），不是掛在 feedback 上。',
         '.is-valid / .is-invalid 與 Bootstrap 撞名。@layer pi 解得掉 specificity，語意衝突待 Phase 3 再議。',
     ],

@@ -21,6 +21,8 @@
     'value' => null,
     'checked' => false,
     'disabled' => false,
+    'id' => null,       // 要落在內層 checkbox 上。.gl_toggle 本身是 <label>，
+                        // id 掛在它身上的話外部 <label for> 會指向一個 label，無效。
 ])
 
 @php
@@ -45,6 +47,7 @@
     <input
         type="checkbox"
         class="toggle-checkbox"
+        @if ($id) id="{{ $id }}" @endif
         @if ($name) name="{{ $name }}" @endif
         @if ($value !== null) value="{{ $value }}" @endif
         @checked($checked)

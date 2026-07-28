@@ -1,5 +1,8 @@
 # 會員註冊頁 — 後端 Handoff
 
+> ⚠️ **舊路線產物**（blade 化之前）。產出的是 `preview-static/*.html`、元件清單列 `gl_` class。
+> 結構可參考，但**不要照抄** —— 現行流程見 `.claude/skills/pm-to-preview/`，範例見 `.scratch/salary-report/`。
+
 > 端到端範例（05 驗證用）。對應前端 `frontend-handoff.md`。
 
 ## 資料欄位清單

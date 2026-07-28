@@ -1,5 +1,8 @@
 # 會員註冊頁 — 前端 Handoff
 
+> ⚠️ **舊路線產物**（blade 化之前）。產出的是 `preview-static/*.html`、元件清單列 `gl_` class。
+> 結構可參考，但**不要照抄** —— 現行流程見 `.claude/skills/pm-to-preview/`，範例見 `.scratch/salary-report/`。
+
 > 端到端範例（05 驗證用）。輸入描述：「頁面最上一條 navbar，下面一個表單，2 個 input（姓名 / Email）+ 1 個下拉選單（產業別）+ 送出鈕」。
 
 ## 版面結構
