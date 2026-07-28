@@ -29,7 +29,7 @@ return [
         [
             'label' => '各色系',
             'code' => <<<'BLADE'
-            <x-pi::callout tone="success" icon="icon-shield-checked" title="你的資料會匿名處理">
+            <x-pi::callout tone="success" icon="icon-shield-check" title="你的資料會匿名處理">
                 公司看不到你的姓名、Email，只能看到整體薪資分佈。
             </x-pi::callout>
 
