@@ -16,7 +16,7 @@
     },
     "require": {
         "php": "^8.2",
-        "company/pi-design-system": "@dev",
+        "pi-tw/pi-design-system": "@dev",
         "laravel/framework": "^12.0",
         "laravel/tinker": "^2.10.1"
     },

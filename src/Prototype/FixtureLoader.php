@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Company\PiDesignSystem\Prototype;
+namespace PiTw\PiDesignSystem\Prototype;
 
 use RuntimeException;
 

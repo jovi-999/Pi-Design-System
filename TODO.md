@@ -16,7 +16,7 @@
 | Blade 命名空間 | `<x-dg::*>` | **`<x-pi::*>`** | 同上 |
 | reset | 拆出 + 元件全面自給自足 | **拆出；元件只補 2 項契約** | 各專案都有 reset，通用部分不必重複；但 `corner-shape` / `font-weight: 500` 沒有任何標準 reset 提供 |
 | box-sizing | — | **`reset.scss` 補全域 `border-box`** | 專案 reset 幾乎都有；補上讓 preview 對齊專案現實 |
-| 套件名 | `company/design-guideline` | **`company/pi-design-system`（placeholder）** | 等公司 GitHub org 名 |
+| 套件名 | `company/design-guideline` | **`pi-tw/pi-design-system`** | `pi-tw` = 公司 GitHub org（Symmetry Information Co., Ltd.）。PSR-4 namespace `PiTw\PiDesignSystem\` 對齊 vendor |
 | 排除討論區 | `archive.exclude` | **`.gitattributes` `export-ignore`** | Composer 從 VCS 抓 GitHub zipball（`git archive` 產生），只認 export-ignore |
 | 現有 preview | — | **`preview/` → `preview-static/`**，Laravel app 進 `preview/` | 終態對齊 spec；過渡期兩套並存 |
 | 容器 | 未提 | **`preview/` 內輕量 docker-compose（單一 php-cli container），不用 Laradock** | 本 repo 是 Composer library，出貨 SCSS 原始碼 + blade，無 build step、無 DB、無 queue。專案端只 `composer require`，永不執行本 repo。Laradock 那套 nginx/mysql/redis 全都用不到 |
@@ -43,7 +43,7 @@ Pi-Design-System/          ← 套件本體：無 framework、無 build、無 DB
 
 - **PHP 在 container**（統一版本、附帶 composer；host 目前 `which composer` → not found）
 - **Vite 在 host**（`node_modules/` 已在 host，省一個 node container；hot file 走 bind mount 共享，瀏覽器直連 host 的 5173）
-- **掛載整個 repo root，不是只掛 `preview/`** —— composer path repository 的 symlink（`preview/vendor/company/pi-design-system` → `../../`）指回上層，只掛 `preview/` 會斷鏈
+- **掛載整個 repo root，不是只掛 `preview/`** —— composer path repository 的 symlink（`preview/vendor/pi-tw/pi-design-system` → `../../`）指回上層，只掛 `preview/` 會斷鏈
 
 真正需要 Docker 的時機（不是現在）：Phase 4 CI 跑 visual regression（需 PHP + headless browser image）、`scripts/fetch-host.php` 要連內網 staging。
 
@@ -54,7 +54,10 @@ Pi-Design-System/          ← 套件本體：無 framework、無 build、無 DB
 - 無前綴 class 清單（撞名風險）：`.fz-*`、`.text-*`、`.form-feedback`、`.form-prompt-text`、`.is-invalid`、`.is-valid`、`.iw_pagination-outer-v3`
 
 ### 待使用者提供
-- [ ] **公司 GitHub org 名稱 + repo 名** → composer 套件名與 `repositories.pi` URL（Phase 1.6 前）
+- [x] ~~**公司 GitHub org 名稱**~~ → `pi-tw`（Symmetry Information Co., Ltd.）。套件名已定為 `pi-tw/pi-design-system`、namespace `PiTw\PiDesignSystem\`
+- [ ] **repo 推到 `pi-tw` org** —— 目前在個人帳號 `jovi-999/Pi-Design-System-`（結尾多一個 hyphen，是打錯）。使用者要在本機實測沒問題後才推。
+      推上去之後只有一件事要改：各專案執行的 `composer config repositories.pi vcs git@github.com:pi-tw/<repo>.git`。
+      **套件名與 namespace 不需要再動** —— composer 的 vendor 名與 repo 放在哪無關，所以現在先定名，之後搬家零成本。
 - [x] ~~**Laradock 路徑 + `APP_CODE_PATH_HOST`**~~ → 已不需要，改用 `preview/` 自帶 compose
 - [x] ~~**8000 / 5173 port 衝突確認**~~ → 已查：8000 被 `stock-tssco-quote-web` 佔用 → preview 改用 **8100**；5173 free
 
@@ -62,7 +65,7 @@ Pi-Design-System/          ← 套件本體：無 framework、無 build、無 DB
 - `.is-invalid` / `.is-valid` 與 Bootstrap 完全撞名（`@layer pi` 解 specificity，語意仍衝突）→ Phase 3 再議
 - reset 加全域 `border-box` 會改變現有 preview 排版（content-box → border-box），有 padding + 固定尺寸處會變小 → **1.5 需目視比對，跑版就報告**
 - Phase 4 Composer 私有套件在**專案端容器**（各專案的 Laradock）內認證：建議 GitHub token + HTTPS（`auth.json` gitignore 或 `COMPOSER_AUTH` env），不要 SSH key（container 常重建要重掛）。本 repo 的 `preview/` 走 path repository symlink，不碰網路、不需認證
-- Phase 4 專案端 `@use` 路徑：Sass 不吃 Vite alias，只吃 `loadPaths`。建議專案端放 shim `resources/sass/_pi-ds.scss` → `@forward '../../vendor/company/pi-design-system/resources/scss/index';`，既有 `@use 'pi-ds' as *` 幾乎不用改
+- Phase 4 專案端 `@use` 路徑：Sass 不吃 Vite alias，只吃 `loadPaths`。建議專案端放 shim `resources/sass/_pi-ds.scss` → `@forward '../../vendor/pi-tw/pi-design-system/resources/scss/index';`，既有 `@use 'pi-ds' as *` 幾乎不用改
 
 ---
 
@@ -108,14 +111,16 @@ Pi-Design-System/          ← 套件本體：無 framework、無 build、無 DB
 - [x] **不載 reset 的驗證頁**：`preview/_no-reset.html` 只載 `index.scss`，逐元件與載 reset 版對照，確認圓角形狀與字重一致
 
 ### 1.6 Composer 套件本體
-- [x] `composer.json`（`company/pi-design-system`、PSR-4 `Company\PiDesignSystem\` → `src/`、依賴僅 `illuminate/support`、laravel provider extra）
+- [x] `composer.json`（`pi-tw/pi-design-system`、PSR-4 `PiTw\PiDesignSystem\` → `src/`、依賴僅 `illuminate/support`、laravel provider extra）
 - [x] `src/PiDesignSystemServiceProvider.php`
   - `loadViewsFrom(resources/views, 'pi')`
   - `Blade::anonymousComponentPath(resources/views/components, 'pi')`
   - `Blade::directive('piFragment', ...)` → render 空字串（Phase 3 才消費 manifest）
 - [x] `.gitattributes` 加 `export-ignore`：`/prototypes`、`/preview`、`/preview-static`、`/scripts`、`/.scratch`、`/docs`、`/dist*`、`/node_modules`
 - [x] 確認出貨含 `fonts/` 與 `assets/symicon.css`（不可 export-ignore）
-- [ ] `composer validate` —— **待辦**：host 未安裝 composer（`which composer` → not found）
+- [x] `composer validate` —— 通過（`./composer.json is valid`）。host 沒裝 composer，走容器：
+      `cd preview && docker compose run --rm app sh -lc 'cd /var/www && composer validate --no-check-publish'`
+      （`--no-check-publish` 因為這是私有套件，不上 Packagist）
 
 ### 1.7 Phase 1 驗收
 - [x] `npm run dev` → 20 支 preview 頁視覺與改動前一致（差異需可解釋）
@@ -146,7 +151,7 @@ Pi-Design-System/          ← 套件本體：無 framework、無 build、無 DB
   - **port 8100 而非 8000** —— 8000 已被本機 `stock-tssco-quote-web` 佔用
 - [x] 容器內建 Laravel 12.64.0（`create-project` 到 `/tmp/app` 再 `cp -a` 回來 —— 直接指向 `preview/` 會被「目錄非空」擋掉，docker 檔已在裡面）
 - [x] `preview/composer.json` path repository `../` + `symlink: true`
-- [x] `composer update` 通過；`vendor/company/pi-design-system -> ../../..`，ServiceProvider 已被 package discover
+- [x] `composer update` 通過；`vendor/pi-tw/pi-design-system -> ../../..`，ServiceProvider 已被 package discover
 - [x] `preview/.gitignore` 補 `/database/*.sqlite*`（其餘 Laravel 預設已含）
 - [x] `preview/vite.config.js`（跑在 host）
 - [x] fonts / symicon：`public/fonts` → `../../fonts`、`public/assets` → `../../assets` symlink
@@ -161,7 +166,7 @@ Pi-Design-System/          ← 套件本體：無 framework、無 build、無 DB
    Tailwind preflight 會跟 `reset.scss` / `@layer pi` 打架，而 preview 的唯一價值是
    忠實反映 Pi DS 本身 —— 引進 Tailwind 等於自己製造「preview 對、貼進專案走鐘」。
 2. **SCSS 走實體相對路徑 `../../../resources/scss/preview-all`，不走 `loadPaths`、也不走 `vendor/` symlink。**
-   `vendor/company/pi-design-system` 指回 repo 根，repo 根底下又有 `preview/`，Vite watcher
+   `vendor/pi-tw/pi-design-system` 指回 repo 根，repo 根底下又有 `preview/`，Vite watcher
    走進去會無限遞迴；`server.watch.ignored` 排除 `**/vendor/**` 後，若 SCSS 還走 vendor 路徑
    就換成 HMR 不觸發。PHP 讀 blade 走 symlink 無此問題（不涉及 file watcher）。
 3. **套件約束 `@dev` 而非 `*`** —— path repository 版本來自分支名（`dev-main`），撞

@@ -48,8 +48,8 @@
         <h2 class="fz-title-lg fz-tit">3. 環境</h2>
         <ul class="fz-body-md">
             <li>Laravel {{ app()->version() }}</li>
-            <li>套件版本：{{ \Composer\InstalledVersions::getPrettyVersion('company/pi-design-system') }}</li>
-            <li>套件實體路徑：<code>{{ realpath(base_path('vendor/company/pi-design-system')) }}</code></li>
+            <li>套件版本：{{ \Composer\InstalledVersions::getPrettyVersion('pi-tw/pi-design-system') }}</li>
+            <li>套件實體路徑：<code>{{ realpath(base_path('vendor/pi-tw/pi-design-system')) }}</code></li>
         </ul>
     </main>
 </body>

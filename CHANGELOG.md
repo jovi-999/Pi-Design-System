@@ -65,6 +65,22 @@ repo 從「vendored SCSS 對照用」轉為 **Composer 套件**。下游已 vend
 - `scripts/apply.php` —— fragment → blade 片段或 unified diff patch。
 - CLAUDE.md 新增 prototype 六條硬性規則與自動生成的元件清單。
 
+### ⚠ Breaking — 套件名與 namespace 定案
+
+Placeholder 換成正式名稱。**現在改的成本是零** —— 還沒有任何專案依賴這個套件；
+等 Phase 4 接上第一個專案之後才改，就變成使用端也要同步的 breaking change。
+
+| | 之前 | 之後 |
+|---|---|---|
+| Composer 套件名 | `company/pi-design-system` | `pi-tw/pi-design-system` |
+| PSR-4 namespace | `Company\PiDesignSystem\` | `PiTw\PiDesignSystem\` |
+
+`pi-tw` 是公司的 GitHub org（Symmetry Information Co., Ltd.）。
+
+Repo 目前仍在個人帳號下，尚未推到 `pi-tw` org。這不影響套件名 —— composer 的
+vendor 名與 repo 放在哪無關（VCS repository 是拿 URL 去抓、再核對 `composer.json`
+的 `name`）。搬到 org 之後要改的只有各專案的 `composer config repositories.pi vcs <URL>`。
+
 ### Changed — `pm-to-preview` skill 改走 blade 路線
 
 Skill 原本產 `preview-static/<name>.html`（裸 HTML）。blade 路線做好後若不改 skill，
@@ -123,7 +139,7 @@ PM 討論流程仍走舊路線，Phase 2 + 3 等於沒被用到。
 - `preview/` → `preview-static/`（靜態 HTML 對照頁讓位給 Laravel app）。
 
 ### Added
-- **Composer 套件本體**：`composer.json`（`company/pi-design-system`，
+- **Composer 套件本體**：`composer.json`（`pi-tw/pi-design-system`，
   依賴僅 `illuminate/support`）+ `src/PiDesignSystemServiceProvider.php`。
   提供 Blade 命名空間 `pi`（`<x-pi::button />`）與 `@piFragment` directive。
   元件 blade 本身是 Phase 2。

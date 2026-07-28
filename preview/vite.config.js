@@ -42,7 +42,7 @@ export default defineConfig({
         watch: {
             ignored: [
                 '**/storage/framework/views/**',
-                // vendor/company/pi-design-system 是指回 repo 根的 symlink，
+                // vendor/pi-tw/pi-design-system 是指回 repo 根的 symlink，
                 // repo 根底下又有 preview/ —— 不排除會讓 watcher 無限遞迴
                 '**/vendor/**',
             ],

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Company\PiDesignSystem;
+namespace PiTw\PiDesignSystem;
 
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
@@ -102,7 +102,7 @@ class PiDesignSystemServiceProvider extends ServiceProvider
             $variable = trim($parts[0]);
             $name = trim($parts[1]);
 
-            return "<?php {$variable} = \\Company\\PiDesignSystem\\Prototype\\FixtureLoader::load({$name}); ?>";
+            return "<?php {$variable} = \\PiTw\\PiDesignSystem\\Prototype\\FixtureLoader::load({$name}); ?>";
         });
     }
 }

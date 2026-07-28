@@ -22,7 +22,7 @@ class ComponentCatalog
      */
     public static function path(): string
     {
-        $path = realpath(base_path('vendor/company/pi-design-system/resources/views/components'));
+        $path = realpath(base_path('vendor/pi-tw/pi-design-system/resources/views/components'));
 
         if ($path === false) {
             throw new RuntimeException(

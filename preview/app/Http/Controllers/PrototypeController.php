@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Support\PrototypeCatalog;
-use Company\PiDesignSystem\Prototype\FixtureLoader;
+use PiTw\PiDesignSystem\Prototype\FixtureLoader;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\View as ViewFactory;
 use Illuminate\View\View;

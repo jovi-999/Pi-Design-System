@@ -87,4 +87,4 @@ php scripts/apply.php project-a salary-report
 
 `@section('content')` 內的 body 一個字都不用改 —— 專案與 preview 吃同一版元件套件。
 
-前置條件：專案要先 `composer require company/pi-design-system` 並在 `app.scss` `@use` 套件的 SCSS（見 `design-guideline-spec.md` 的 Phase 4 / 6.1）。
+前置條件：專案要先 `composer require pi-tw/pi-design-system` 並在 `app.scss` `@use` 套件的 SCSS（見 `design-guideline-spec.md` 的 Phase 4 / 6.1）。

@@ -67,7 +67,7 @@ Pi-Design-System/            ← 整個 repo 掛進容器的 /var/www
     ├── public/hot           ← host 的 Vite 寫、容器內的 PHP 讀（bind mount 共享）
     ├── public/fonts   → ../../fonts
     ├── public/assets  → ../../assets
-    └── vendor/company/pi-design-system → ../../..（composer path repository）
+    └── vendor/pi-tw/pi-design-system → ../../..（composer path repository）
 ```
 
 - **PHP 在容器**：統一 PHP 版本、附帶 composer（host 沒裝）
@@ -96,7 +96,7 @@ Preview 必須只反映 Pi DS 本身的樣式，否則會引進整套流程最�
 @use "../../../resources/scss/preview-all";
 ```
 
-`vendor/company/pi-design-system` 是指回 repo 根的 symlink，而 repo 根底下
+`vendor/pi-tw/pi-design-system` 是指回 repo 根的 symlink，而 repo 根底下
 又有 `preview/` —— 讓 Vite 的 file watcher 走進去會無限遞迴。
 所以 `vite.config.js` 的 `server.watch.ignored` 排除 `**/vendor/**`，
 SCSS 這邊直接走實體路徑，HMR 才會正常觸發。
