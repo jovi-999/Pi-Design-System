@@ -1,0 +1,128 @@
+// ============================================================
+// Preview 自己的版面樣式（不是設計系統的一部分）
+//
+// 前綴 pv- 而非 gl-：這些 class 只存在於 preview app，不會出貨、
+// 不能被 prototype 使用。刻意用不同前綴，讓「誤用 preview 的 class」
+// 在 code review 時一眼看得出來。
+//
+// 不包進 @layer pi —— 這裡是 preview 的頁面殼，不需要讓專案樣式蓋掉。
+// ============================================================
+
+.pv-layout {
+  display: grid;
+  grid-template-columns: 240px minmax(0, 1fr);
+  min-height: 100vh;
+}
+
+.pv-sidebar {
+  border-right: 1px solid var(--cl-basic-alpha-100);
+  padding: 24px 0;
+  position: sticky;
+  top: 0;
+  align-self: start;
+  max-height: 100vh;
+  overflow-y: auto;
+}
+
+.pv-sidebar__title {
+  padding: 0 20px 12px;
+  color: var(--fg-2);
+}
+
+.pv-nav a {
+  display: block;
+  padding: 8px 20px;
+  color: var(--fg);
+  text-decoration: none;
+
+  &:hover { background: var(--cl-basic-alpha-50); }
+  &[aria-current="page"] {
+    background: var(--cl-basic-alpha-100);
+    font-weight: 700;
+  }
+}
+
+.pv-main {
+  padding: 32px 40px 96px;
+  min-width: 0;
+}
+
+.pv-header { margin-bottom: 32px; }
+
+.pv-tag {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: var(--radius-xs);
+  background: var(--cl-basic-alpha-100);
+  color: var(--fg-2);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+.pv-section { margin-bottom: 40px; }
+
+.pv-section__head {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+// 範例的實際畫面。用 dashed 邊界標示「這是渲染結果」而非 preview 版面。
+.pv-demo {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 24px;
+  border: 1px dashed var(--cl-basic-alpha-200);
+  border-radius: var(--radius-md);
+}
+
+// 表單類元件橫排會擠在一起，改直排
+.pv-demo--stack {
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.pv-code {
+  margin: 8px 0 0;
+  padding: 16px;
+  border-radius: var(--radius-md);
+  background: var(--cl-basic-alpha-50);
+  overflow-x: auto;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12px;
+  line-height: 20px;
+  white-space: pre;
+}
+
+.pv-error {
+  padding: 12px 16px;
+  border-radius: var(--radius-md);
+  background: var(--cl-red-100);
+  color: var(--cl-red-700);
+}
+
+.pv-notes {
+  padding-left: 20px;
+  color: var(--fg-2);
+}
+
+.pv-props {
+  border-collapse: collapse;
+  width: 100%;
+
+  th, td {
+    text-align: left;
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--cl-basic-alpha-100);
+    vertical-align: top;
+  }
+
+  th { color: var(--fg-2); }
+
+  td:first-child {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    white-space: nowrap;
+  }
+}
