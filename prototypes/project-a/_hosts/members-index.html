@@ -1,0 +1,70 @@
+<!--
+    宿主快照：project-a 的 members/index 頁面 rendered HTML。
+
+    正常情況由 `php scripts/fetch-host.php` 從 staging 抓回來。這一份是
+    手寫的示範檔（專案還不存在），結構刻意保留真實快照的三個特徵：
+
+      1. CSS 用專案自己的 compiled CSS URL（不下載，讓它跟著專案走）
+      2. 保留 <!-- @pi-slot: … --> 錨點（HTML 註解才會留在 rendered HTML 裡）
+      3. 上下都有真實內容，fragment 才能被判斷「跟上方標題的間距、跟下方
+         列表的視覺重量搭不搭」，而不是懸在空白頁上
+
+    ⚠️ 快照會過期。專案改版後要重抓，不要手改這個檔。
+-->
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="utf-8">
+    <title>會員管理 — project-a</title>
+
+    <!--
+        專案自己的 compiled CSS。真實快照裡這裡會是 staging 的絕對 URL，
+        例如 https://staging.project-a.example.com/build/assets/app-abc123.css
+        —— 刻意不下載，這樣專案改樣式時快照會跟著變。
+
+        這份示範檔沒有真的專案可指，改吃 preview 的 CSS 讓畫面看得出來。
+    -->
+    <link rel="stylesheet" href="/build/assets/app.css">
+    <link rel="stylesheet" href="/assets/symicon.css">
+</head>
+<body>
+    <div style="max-width: 960px; margin: 0 auto; padding: 24px;">
+        <nav style="display: flex; gap: 16px; padding: 12px 0; border-bottom: 1px solid rgba(31,33,35,.08);">
+            <strong>project-a 後台</strong>
+            <span style="color: rgba(31,33,35,.5);">會員管理</span>
+        </nav>
+
+        <h1 class="fz-headline-sm fz-tit" style="margin: 24px 0 8px;">會員管理</h1>
+        <p class="fz-body-sm" style="color: rgba(31,33,35,.7); margin: 0 0 8px;">
+            共 1,284 位會員
+        </p>
+
+        <!-- @pi-slot: member-list.filters -->
+
+        <table style="width: 100%; border-collapse: collapse; margin-top: 8px;">
+            <thead>
+                <tr style="text-align: left; border-bottom: 1px solid rgba(31,33,35,.08);">
+                    <th style="padding: 12px 8px;" class="fz-title-sm fz-tit">姓名</th>
+                    <th style="padding: 12px 8px;" class="fz-title-sm fz-tit">Email</th>
+                    <th style="padding: 12px 8px;" class="fz-title-sm fz-tit">狀態</th>
+                    <th style="padding: 12px 8px;" class="fz-title-sm fz-tit">加入日期</th>
+                </tr>
+            </thead>
+            <tbody class="fz-body-sm">
+                <tr style="border-bottom: 1px solid rgba(31,33,35,.06);">
+                    <td style="padding: 12px 8px;">王大明</td>
+                    <td style="padding: 12px 8px;">daming.wang@example.com</td>
+                    <td style="padding: 12px 8px;">啟用中</td>
+                    <td style="padding: 12px 8px;">2025-08-01</td>
+                </tr>
+                <tr style="border-bottom: 1px solid rgba(31,33,35,.06);">
+                    <td style="padding: 12px 8px;">李小華</td>
+                    <td style="padding: 12px 8px;">xiaohua.li@example.com</td>
+                    <td style="padding: 12px 8px;">已停權</td>
+                    <td style="padding: 12px 8px;">2025-09-19</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

@@ -46,6 +46,7 @@ class PiDesignSystemServiceProvider extends ServiceProvider
         }
 
         $this->registerFragmentDirective();
+        $this->registerFixtureDirective();
     }
 
     /**
@@ -70,5 +71,38 @@ class PiDesignSystemServiceProvider extends ServiceProvider
     private function registerFragmentDirective(): void
     {
         Blade::directive('piFragment', static fn (string $expression): string => '');
+    }
+
+    /**
+     * `@piFixture($members, 'member-list')` —— 載入 prototype 的假資料。
+     *
+     *   @piFixture($statuses, 'member-status')
+     *   → <?php $statuses = FixtureLoader::load('member-status'); ?>
+     *
+     * 為什麼不照 spec 用 `@php($x = include __DIR__.'/../fixtures/x.php')`：
+     * Blade 會編譯成 storage/framework/views/ 的快取檔再執行，編譯後的
+     * `__DIR__` 指向快取目錄而不是 prototype 原始檔，spec 那個寫法必定失敗。
+     *
+     * 交接進專案時這一行整行刪掉（資料改由 controller 傳入），
+     * 與 spec 的意圖相同 —— 而且比 raw include 更明顯是 prototype 專用。
+     */
+    private function registerFixtureDirective(): void
+    {
+        Blade::directive('piFixture', static function (string $expression): string {
+            // $expression 形如：$statuses, 'member-status'
+            $parts = explode(',', $expression, 2);
+
+            if (count($parts) !== 2) {
+                throw new \InvalidArgumentException(
+                    "@piFixture 需要兩個參數：變數與 fixture 名稱，例如 @piFixture(\$statuses, 'member-status')。"
+                    . "收到：[{$expression}]"
+                );
+            }
+
+            $variable = trim($parts[0]);
+            $name = trim($parts[1]);
+
+            return "<?php {$variable} = \\Company\\PiDesignSystem\\Prototype\\FixtureLoader::load({$name}); ?>";
+        });
     }
 }
