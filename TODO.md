@@ -1,7 +1,20 @@
-# TODO — Design Guideline 平台化（Phase 1 + 2）
+# TODO — Design Guideline 平台化（Phase 1–6）
 
-> 依 `design-guideline-spec.md` 執行，含針對本 repo 現況與公司 Docker 環境的偏離修正。
+> 依 `design-guideline-spec.md` 執行，含針對本 repo 現況的偏離修正。
 > 進度勾選：`[ ]` 未開始 · `[x]` 完成
+
+**目前狀態：Phase 1–3 完成（設計系統這一側），Phase 4–6 未開始（專案端一個都還沒接）。**
+
+| Phase | 內容 | 狀態 |
+|---|---|---|
+| 1 | 套件化與 SCSS 分層 | ✅ |
+| 2 | Blade 元件與 preview Laravel app | ✅ 13 支元件 |
+| 3 | Prototype 系統（page / fragment / host / apply）+ CI | ✅ |
+| **4** | **第一個專案 `composer require`，零差異驗證** | ❌ **最關鍵的未驗證項** |
+| 5 | 既有專案逐個遷移 | ❌ |
+| 6 | 觀察是否需要平台 UI | ❌ 刻意不做，見 D6 |
+
+Phase 4 之前，「blade 貼進專案就能跑」只在 preview 環境與檔案層面驗過。
 
 ---
 
@@ -371,6 +384,140 @@ Pi-Design-System/          ← 套件本體：無 framework、無 build、無 DB
 
 ---
 
+## Phase 4：第一個專案導入（**最關鍵的未驗證項**）
+
+> spec §6 + §9。**建議挑一個新專案當白老鼠跑完整流程，順了再回頭遷移既有專案。**
+
+到 Phase 3 結束為止，「blade 貼進專案就能跑」這句話**只在 preview 環境與檔案層面驗過**：
+`apply.php` 產的 patch 能 `git apply` 進一個模擬的專案目錄。真正沒驗到的是專案**執行時**的三件事。
+
+### 4.0 前置（做不到就別開始）
+- [ ] repo 推上遠端，且決定最終位置（見「待使用者提供」）—— `composer config repositories.pi vcs` 需要真實 URL
+- [ ] **打第一個 tag**（`v1.0.0`）—— 專案端 `^1.0` 需要有版本可解析。目前 repo 沒有任何 tag，
+      preview 是靠 path repository 的 `@dev` 繞過這件事
+- [ ] **選定白老鼠專案**（誰？）
+- [ ] **Composer 私有套件的認證** —— spec 6.4 明講「**這是最常卡住的一步**」。
+      建議 GitHub token + HTTPS（`auth.json` gitignore 或 `COMPOSER_AUTH` env），不要 SSH key
+      （專案端 container 常重建，SSH key 要重掛）
+
+### 4.1 一次性設定（spec 6.1）
+- [ ] `composer config repositories.pi vcs <URL>` + `composer require pi-tw/pi-design-system:^1.0`
+- [ ] **驗證 `<x-pi::button>` 真的解析得出來** —— ServiceProvider 由 Laravel auto-discovery 註冊，
+      但那條路在真實專案裡從未跑過（preview 走的是 path repository symlink）
+- [ ] SCSS 接線：專案放 shim `resources/sass/_pi-ds.scss` → `@forward '../../vendor/pi-tw/pi-design-system/resources/scss/index';`
+      **Sass 不吃 Vite alias，只吃 `loadPaths`** —— 這是已知風險，實測會不會踩到還不知道
+- [ ] `app.scss` 順序：`@use "pi-ds";`（進 `@layer pi`）在前、`@use "legacy/main";`（未分層）在後
+- [ ] 字型：`public/fonts` 接到 vendor 內的 `fonts/`，或覆寫 `$font-path`
+- [ ] icon：載 vendor 內的 `assets/symicon.css`
+- [ ] 專案 `CLAUDE.md` 加一行指向 `vendor/pi-tw/pi-design-system/`，agent 就讀得到元件定義，不需要複製一份
+
+### 4.2 導入驗證（spec 6.2，**必做**）
+- [ ] 接上套件但**先不掛任何新頁面**，把既有主要頁面前後截圖比對
+- [ ] **理論上應該零差異。** 有差異就是套件漏了裸元素選擇器或 reset 汙染 —— 趁這時候抓出來
+- [ ] **這是唯一能證明 `@layer pi` 隔離真的有效的測試。** D5 的整個論證都押在這一步
+
+### 4.3 跑完整 prototype 流程
+- [ ] 專案端埋 slot marker（**HTML 註解**，不是 blade 註解）
+- [ ] `php scripts/fetch-host.php <project> <name> <staging-url>` 抓真實宿主快照
+      —— 目前只用手寫的示範檔驗過。真實抓取會遇到登入、內網、個資（見下方風險）
+- [ ] `apply.php --output=patch` → `git apply` 進真實專案 → **頁面真的跑起來**
+- [ ] 後端照 fixture 的結構傳資料，確認前端 blade 一個字都不用改
+
+### 4.4 Phase 4 驗收
+- [ ] 零差異截圖驗證通過
+- [ ] `CHANGELOG.md` 記錄第一個正式版本
+- [ ] 把踩到的坑寫回本檔與 skill（Phase 5 要靠這份記錄）
+
+### Phase 4 的已知風險
+- **宿主快照會帶進真實個資**：`prototypes/` 是追蹤的目錄，快照 commit 上去。
+  抓 production 頁面等於把使用者姓名 / Email 寫進版控。優先抓 staging；抓完先掃一遍再 commit
+- **`.is-invalid` / `.is-valid` 與 Bootstrap 撞名**：`@layer pi` 解得掉 specificity，語意仍衝突。
+  若白老鼠專案有 Bootstrap，這裡會第一次真的爆
+- **`preview-all.scss` 不可載進專案** —— 那是 preview 專用入口（含 reset）
+
+---
+
+## Phase 5：既有專案逐個遷移
+
+- [ ] **一次一個**，每個都先做 4.2 的零差異驗證
+- [ ] 每個專案的升級時機自行決定 —— 半年前上線、目前沒在維護的專案鎖在 `^1.8` 完全沒問題。
+      **這是版本化最大的好處，不需要「所有專案都跟到最新」**（spec 8.3）
+- [ ] 遷移完成後，該專案原本 vendored 的 DS 檔案要刪掉（否則兩份並存，drift 從這裡開始）
+
+---
+
+## Phase 6：觀察是否需要平台 UI
+
+**現在不做**（spec D6）。要包 UI 就得維護 render service、併發、逾時、沙箱隔離，
+加上登入、權限、版本管理、產出物回 git —— 等於多養一個內部產品。
+
+本 repo 的 fragment manifest（target / slot / host）**就是未來平台的資料模型**。
+先讓它被真實需求打磨幾個月，之後要包 UI 是加一層，不是重做。
+
+**值得做的訊號**（可觀察，不用現在猜）：
+- [ ] PM 反覆卡在環境設定（起 docker、跑 npm）
+- [ ] 同時有 **5 個以上**專案在跑 prototype
+- [ ] 非技術角色也要參與討論
+
+三個都出現再議。目前一個都沒有。
+
+---
+
+## 尚未排入 Phase 的維護機制
+
+- [ ] **Visual regression 跑在 preview 的元件頁**（spec 8.1）—— guideline 改動如果弄壞既有元件，
+      PR 階段就會被擋下來，不用等專案端發現。需要 CI 裝 headless browser，是目前 CI 沒有的一塊
+- [ ] **`sync-component-list.php` 自動更新而非只 `--check`**（spec 5.6）—— 需給 CI 寫入權限
+- [ ] `design-guideline-spec.md` §5.6 的規則原文仍寫「page-scoped **SCSS** 上限 30 行」，
+      但 `CLAUDE.md` 已改為「page-scoped **樣式**」並計入 inline —— **兩份文件不一致**，要改 spec 原文需確認
+- [ ] `preview/.env.example` 仍寫著 `SESSION_DRIVER=database` 等舊 driver（hook 保護，需手動改）。
+      因 config 已寫死 driver，不影響運作，只剩文件不一致
+
+---
+
 ## Review
 
-（實作完成後填寫：變更摘要、遇到的問題與解法、Phase 3 待辦）
+### Phase 1–3 的變更摘要
+
+見 `CHANGELOG.md` 的 `[Unreleased]`（依 Added / Changed / Fixed / Removed 分段），
+以及 `git log`。這裡只記**當初沒預料到、值得下次先想到的事**。
+
+### spec 的三個缺陷（實作時才發現，已修正）
+
+1. **spec 5.2 的 fixture 寫法不可能運作** —— `@php($x = include __DIR__.'/../fixtures/x.php')`。
+   Blade 編譯成 `storage/framework/views/` 的快取檔後，`__DIR__` 指向快取目錄而非原始檔。
+   改為 `@piFixture($x, 'name')` directive。
+2. **spec 6.3 的 slot marker 用 blade 註解** —— render 後會消失，抓回的宿主快照裡就沒有錨點，
+   fragment 無處可插。改為 HTML 註解 `<!-- @pi-slot: … -->`，同一個 marker 同時服務
+   `apply.php`（改原始碼）與 fragment 注入（改 rendered HTML）。
+3. **spec 3.4 說 tokens「`@use` 不產生 CSS」** —— 實際上 7 支 token 檔會輸出 `:root {}`
+   與 `.fz-*` class。
+
+### 三個反覆出現的教訓
+
+1. **同一份判斷分兩處實作，一定會分岔。** 踩過兩次：manifest 解析（preview 與 CI 各一份，
+   CI 那份的 regex scope 錯誤導致誤判通過）、樣式行數（同樣兩份）。兩次都是抽成
+   `src/Prototype/` 的共用類別才解決。
+2. **`git add -A` 會掃進使用者的工作目錄變更。** 踩過三次：`.gl_btn` 的 `min-width`
+   被掃進 vite port 的 commit、`design-guideline-spec.md`、`docs/prototype-flow.md`。
+   commit 前應該逐檔確認，或用 `git add <path>`。
+3. **「數字寫在註解裡」一定會過時。** 踩過兩次（自訂樣式 8 行實際 6 行、12 行實際 11 行）。
+   能算出來的東西就不要手寫。
+
+### 品質閥門的完整鏈路（這是整套設計的核心）
+
+```
+prototype 自訂樣式超過 30 行
+  → CI 擋下（scripts/check-prototypes.php）
+  → 訊息指向缺件流程的三層門檻
+  → 提報成新增元件的工單
+  → 元件進套件，發 minor 版
+  → 各專案 composer update 時取得
+```
+
+**每一環都要在，缺一環缺口就會被藏起來。** 目前 CI 那一環剛完成；最後兩環要等 Phase 4。
+
+### Phase 4 待辦
+
+見上方 Phase 4 段落。**最關鍵的一項是 4.2 的零差異截圖驗證** —— D5（`@layer` 樣式隔離）
+的整個論證都押在那一步，而它到現在一次都沒被真正驗證過。
