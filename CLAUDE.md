@@ -66,6 +66,7 @@ Local markdown — issue 存為 `.scratch/<feature>/` 下的 markdown 檔。See 
 
 五個 canonical 預設 label（label 字串 = 角色名）。See `docs/agents/triage-labels.md`.
 
-### Domain docs
-
-Single-context — 根目錄 `CONTEXT.md` + `docs/adr/`。See `docs/agents/domain.md`.
+> **本專案不採 domain docs 慣例**（`CONTEXT.md` + `docs/adr/`）。架構決策記錄在
+> `design-guideline-spec.md` 的 D1–D6，偏離與理由記在 `TODO.md`，術語不需要獨立的
+> glossary。原本的 `docs/agents/domain.md` 已移除 —— 它指向的兩個檔案從未存在，
+> 留著只會讓 agent 去找不存在的東西。

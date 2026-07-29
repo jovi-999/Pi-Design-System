@@ -36,8 +36,8 @@ Pi-Design-System/
 │           └── _border.scss  _shadow.scss  _radius.scss
 ├── assets/                   ★ 靜態資源
 │   ├── symicon.css           #   icon 字體 @font-face + class（icon-*）+ codepoint
-│   ├── icon-names.json / icon-cp-map.json / icons-preview.html
-│   └── noise.svg
+│   └── icon-names.json / icon-cp-map.json  # icon 清單與 codepoint（preview 的
+│                              #   /foundation/icons 掃這兩支生成）
 ├── fonts/                    ★ 字型檔（woff/woff2，含 symicon-X.s icon 字型）
 ├── preview/                  ☆ 預覽用 Laravel app（開發工具，不出貨）
 │   ├── Dockerfile  docker-compose.yml  # PHP 在容器（8100）；Vite 跑在 host（5178）

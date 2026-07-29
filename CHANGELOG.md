@@ -81,6 +81,37 @@ Preview 現在是三區：**Foundation** / **元件** / **Prototype**，全部�
 `dist/` 又要求先跑 build（那是 gitignore 的產物）。改成「名稱來自原始碼、值來自
 瀏覽器」—— 表格顯示的值與畫面上的色塊必然同源。
 
+### Removed — 無用與過時的檔案（39 檔）
+
+**會影響下游的一項**：`assets/logo.svg`（34 KB）與 `assets/icons-preview.html` 都在
+出貨範圍內，但前者唯一的引用者是已刪的 `preview-static/index.html`，後者已由
+`/foundation/icons` 取代。`assets/noise.svg` 查過全 git 歷史，從未被引用。
+
+其餘（不影響出貨）：
+
+- `.scratch/pm-to-blade-skill/`（7 檔）—— `pm-to-blade` 舊 skill 草稿，建立在 vendored
+  模型上，含把 DS 複製進專案的 `vendor-copy.sh`
+- `.scratch/pm-to-preview-test/`、`.scratch/prototype-handoff/`（12 檔）—— 舊路線產物
+- `docs/agents/domain.md` —— 指向的 `CONTEXT.md` 與 `docs/adr/` 從未存在
+- `preview/` 的 Laravel skeleton 殘留（16 檔）：User model、auth / mail / filesystems /
+  database config、migrations、factories、seeders、tests、phpunit.xml
+- `resources/views/components/.gitkeep`
+
+### Changed — preview 不再需要資料庫
+
+`config/{session,cache,queue}.php` 的 driver 改為 **寫死** `file` / `file` / `sync`，
+**刻意不留 `env()` 逃生口**。
+
+Laravel 12 skeleton 的預設是 `database`（sqlite），那會為了一個「只 render blade」的
+開發工具養一個資料庫與三支 migration。不留 env 的理由：`.env` 是 gitignored，改它對
+別人 clone 的環境無效；寫死在 config 是唯一能讓這個決定跟著 repo 走的方式。
+
+### Security
+
+`npm audit fix` —— `sass` 的傳遞依賴 `immutable` 有 1 個 high severity 漏洞。
+`sass` 1.77 → 1.100.0，修完 0 漏洞。`package-lock.json` 同時 prune 掉先前移除的
+`vite` 與 `gsap`。
+
 ### Removed — `preview-static/`
 
 blade 化之前的 20 支靜態 HTML 全部刪除。最後留著的理由是 token / color / icon

@@ -361,7 +361,6 @@ fonts/symicon-6.4s.woff2 / .woff   ← icon 字型本體（檔名帶版本號）
 assets/symicon.css                 ← @font-face（url 指向 ../fonts/）+ .icon-* codepoint
 assets/icon-cp-map.json            ← icon 名稱 ↔ codepoint 對應
 assets/icon-names.json             ← icon 名稱清單
-assets/icons-preview.html          ← glyph 視覺索引
 ```
 
 > ⚠️ **codepoint 對應**：icon 字型工具（IcoMoon / Fontello）匯出時附 `selection.json`（每個 icon 的 codepoint）。**glyph 順序一變，所有 `content: "\eXXX"` 都要重新對應** —— 升級前務必拿到對照表確認。
@@ -380,7 +379,8 @@ cp ~/Downloads/symicon-7.0s.woff  fonts/
 #    - 檔頭註解版本號 symicon-6.4s → symicon-7.0s
 #    - @font-face 的 src url：../fonts/symicon-7.0s.woff2 / .woff
 #    - 若 glyph 順序變了 → 依新 selection.json 重新對應所有 .icon-* 的 content
-#      （連帶更新 assets/icon-cp-map.json、icon-names.json、icons-preview.html）
+#      （連帶更新 assets/icon-cp-map.json 與 icon-names.json ——
+#       preview 的 /foundation/icons 掃這兩支，改完那頁自己就對）
 
 # 3. 啟動預覽驗證
 cd preview

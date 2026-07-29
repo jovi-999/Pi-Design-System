@@ -262,6 +262,29 @@ Pi-Design-System/          ← 套件本體：無 framework、無 build、無 DB
 - [x] **`pm-to-preview` skill 改產 blade**（見 3.8）
 - [ ] page-scoped SCSS 門檻進 CI（目前只在 preview 清單頁顯示行數）
 
+### 3.11 清掉無用與過時的檔案（共 39 檔）
+- [x] `assets/logo.svg`（34 KB）—— 唯一引用者是已刪的 `preview-static/index.html`。**`assets/` 會出貨**，等於每個專案都拿到一支沒人用的 34 KB
+- [x] `assets/icons-preview.html` —— 手維護的 glyph 索引，已由 `/foundation/icons` 取代（掃 JSON 生成）。留著就是第二個要記得同步的地方
+- [x] `assets/noise.svg` —— 查全 git 歷史，從未被任何檔案引用
+- [x] `resources/views/components/.gitkeep` —— 該目錄已有 26 檔
+- [x] `.scratch/pm-to-blade-skill/`（7 檔）—— `pm-to-blade` 舊 skill 草稿，description 開頭就寫「用 **vendored** 的 Pi DS」，含 `vendor-copy.sh`（D1 排除的做法）
+- [x] `.scratch/pm-to-preview-test/`（4 檔）、`.scratch/prototype-handoff/`（8 檔）—— 舊路線的測試輸出與 issue 記錄
+- [x] `docs/agents/domain.md` —— 指向的 `CONTEXT.md` 與 `docs/adr/` **從未存在**。CLAUDE.md 改為明講「本專案不採 domain docs 慣例」，架構決策記在 `design-guideline-spec.md` 的 D1–D6
+- [x] `preview/` 的 Laravel skeleton 殘留（16 檔）：`app/Models/User.php`、`config/{auth,mail,filesystems,database}.php`、`database/{factories,migrations,seeders}`、`tests/`、`phpunit.xml`
+
+**刪 DB 相關檔案前必須先切 driver。** 原本 session / cache / queue 全部預設 `database`（sqlite），直接刪 migration 會讓 preview 500。
+
+處理方式是**把 driver 寫進 committed 的 config（`config/{session,cache,queue}.php`），且刻意不留 `env()` 逃生口**：
+- `.env` 是 gitignored，改它對別人 clone 下來的環境無效
+- `.env.example` 仍寫著 `SESSION_DRIVER=database`，而該檔受 hook 保護無法修改
+- 寫死在 config 是唯一能讓「preview 不需要 DB」跟著 repo 走的方式
+
+- [x] `package-lock.json` prune 掉已移除的 `vite` / `gsap`
+- [x] `npm audit fix` —— `sass` 的傳遞依賴 `immutable` 有 1 個 high severity 漏洞，sass 1.77 → 1.100.0，修完 0 漏洞
+- [x] 文件同步：README / STRUCTURE / CLAUDE / handoff-templates
+
+**`.env.example` 仍過時**（寫著 `SESSION_DRIVER=database` 等），但受 hook 保護。因為 config 已寫死 driver，該檔的值不會生效，僅剩文件性的不一致 —— 要修需使用者手動處理。
+
 ### 3.10 README 過時資訊清理
 - [x] **架構描述**：「不發布 npm；下游一律採 vendored」→ Composer 版本化依賴（vendored 是 D1 明確排除的方案，README 寫的跟現況正好相反）
 - [x] 新增三節：Composer 安裝（含導入驗證與升級時機）、Blade 元件（含 tone 清單不一致與兩個已知缺口）、prototype 討論流程

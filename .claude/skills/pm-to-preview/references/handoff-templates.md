@@ -117,6 +117,12 @@ Fixture 檔就是契約 —— controller 傳出同樣結構即可，前端 blad
 產出的完整範例（薪資回報表單，page prototype）。對應的 prototype 是
 `prototypes/project-a/pages/salary-report.blade.php`。
 
-`.scratch/prototype-handoff/example/` 與 `.scratch/pm-to-preview-test/` 底下的
-是 **blade 化之前的舊路線** 產物（產已廢除的 `preview-static/*.html`、元件清單列 `gl_`
-class），檔案開頭已標記。結構可參考，**不要照抄**。
+另外兩份也是照本模板產出的（真實需求，可對照）：
+
+- `.scratch/member-list-toolbar/` —— fragment prototype（日期範圍 + 匯出），
+  含「歧義收斂」與「原生 date input 外觀差異」兩段的實例
+- `.scratch/member-register/` —— 另一個專案（`jobar`）的 page prototype
+
+blade 化之前的舊路線產物（`.scratch/prototype-handoff/`、`.scratch/pm-to-preview-test/`）
+已於清理時刪除 —— 它們產的是 `preview-static/*.html`，元件清單列 `gl_` class，
+留著只會讓人照抄舊做法。
