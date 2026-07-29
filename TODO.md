@@ -55,9 +55,12 @@ Pi-Design-System/          ← 套件本體：無 framework、無 build、無 DB
 
 ### 待使用者提供
 - [x] ~~**公司 GitHub org 名稱**~~ → `pi-tw`（Symmetry Information Co., Ltd.）。套件名已定為 `pi-tw/pi-design-system`、namespace `PiTw\PiDesignSystem\`
-- [x] **repo 推到 `pi-tw` org** —— 目前在個人帳號 `jovi-999/Pi-Design-System-`（結尾多一個 hyphen，是打錯）。使用者要在本機實測沒問題後才推。
-      推上去之後只有一件事要改：各專案執行的 `composer config repositories.pi vcs git@github.com:pi-tw/<repo>.git`。
-      **套件名與 namespace 不需要再動** —— composer 的 vendor 名與 repo 放在哪無關，所以現在先定名，之後搬家零成本。
+- [x] ~~**repo 名的多餘 hyphen**~~ → 已修，remote 現為 `git@github.com:jovi-999/Pi-Design-System.git`
+- [ ] **推上遠端** —— 使用者要在本機實測完成才推。遠端 `main` 停在 `a5bae46`，本機領先 44+ 個 commit，
+      整個平台化工作目前只存在一台機器上。
+- [ ] **repo 搬到 `pi-tw` org** —— 目前在個人帳號。**建議在第一個專案接上套件之前搬**：
+      接上之後再搬，每個專案的 `composer config repositories.pi vcs …` URL 都要改一次。
+      **套件名與 namespace 不需要動** —— composer 的 vendor 名與 repo 放在哪無關，所以現在先定名、之後搬家零成本。
 - [x] ~~**Laradock 路徑 + `APP_CODE_PATH_HOST`**~~ → 已不需要，改用 `preview/` 自帶 compose
 - [x] ~~**8000 / 5173 port 衝突確認**~~ → 已查：8000 被 `stock-tssco-quote-web` 佔用 → preview 改用 **8100**；5173 free
 
