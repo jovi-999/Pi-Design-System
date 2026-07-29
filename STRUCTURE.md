@@ -53,6 +53,8 @@ Pi-Design-System/
 ├── scripts/check-build.mjs   ☆ build 後 smoke 檢查
 ├── vite.config.js            ☆ 預覽用 Vite 設定
 ├── package.json              ☆ 預覽 / build 設定（不發布 npm）
+├── .nvmrc                    ☆ Node 版本（24 = 現行 LTS）。`cd` 進來後 `nvm use`
+│                             #  preview/ 沒有自己的 .nvmrc —— nvm 會往上找到這支
 ├── README.md  CHANGELOG.md  TODO.md
 ├── CLAUDE.md  SKILL.md       # agent 規則
 ├── docs/ai-guide.md
