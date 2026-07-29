@@ -26,10 +26,16 @@ npm run dev               # Vite（host）→ 5178
 
 | 網址 | 內容 |
 |---|---|
+| `/` | 三區入口 |
 | `/prototypes` | prototype 清單（掃檔生成，含 manifest 與自訂 SCSS 行數） |
 | `/prototypes/<project>/<name>` | 單一 prototype 預覽 |
-| `/components` | 元件目錄 |
-| `/components/<name>` | 單一元件的 props / notes / 可跑範例 |
+| `/components` · `/components/<name>` | 元件目錄、單一元件的 props / notes / 可跑範例 |
+| `/foundation` | token 與 icon 索引 |
+| `/foundation/tokens` | 全部 170 個 token 一頁列完（可搜尋、點擊複製 `var(--x)`） |
+| `/foundation/icons` | 250 個 icon（點擊複製 class 名） |
+| `/foundation/colors` 等 7 個群組 | 單一 token 群組（colors / typography / spacing / radius / shadow / motion / breakpoints） |
+
+**查 token 值請開 `/foundation/tokens`，不要憑記憶。** 那頁的「值」欄是瀏覽器解析後的實際值，不可能與畫面不一致。
 
 改 `resources/scss/**` 或 `resources/views/**` 會即時反映（Vite HMR + full reload）。
 細節與設計取捨見 `preview/README.md`。
@@ -159,7 +165,7 @@ php scripts/apply.php <project> <name> --output=patch \
 
 ## 已知不可用的東西
 
-- **`gl_gs-modal` 不是設計系統的一部分** —— 是 `preview-static/modal.html` 那一頁自帶的 inline CSS（該檔註解寫明「此 namespace 無 src CSS，preview 專用」）。不要當成可用 class。
+- **`gl_gs-modal` 不是設計系統的一部分** —— 是已廢除的 `preview-static/modal.html` 那一頁自帶的 inline CSS（該檔註解寫明「此 namespace 無 src CSS，preview 專用」）。不要當成可用 class。
 - `CLAUDE.md` 底部的「已知元件缺口」段落列的是已確認缺的東西（目前：dropdown 沒有浮出面板、modal 沒有遮罩／置中／focus trap）。遇到走缺件流程，不要自己刻。
 
 ## 原始碼位置
@@ -170,4 +176,4 @@ php scripts/apply.php <project> <name> --output=patch \
 
 ## 唯一的落檔位置
 
-Prototype 一律落在 `prototypes/<project>/`。**repo 內其他任何目錄都不是 prototype 的家** —— 特別是 `preview-static/`（那是 blade 化之前的遺留物，只剩 foundation 對照頁還在用）。
+Prototype 一律落在 `prototypes/<project>/`。**repo 內其他任何目錄都不是 prototype 的家** 。

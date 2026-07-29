@@ -3,7 +3,7 @@
 
     對應 resources/scss/components/_callout.scss。
 
-    結構（照 preview-static/callout.html 的既有 markup）：
+    結構（沿用 blade 化前的 preview-static/callout.html，該目錄已廢除）：
 
       <div class="gl_callout-wrap gl_callout-{tone}">
         <span class="gl_callout-wrap__icon-wrap"><i class="icon …"></i></span>

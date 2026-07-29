@@ -54,7 +54,7 @@
         ? "gl_btn-{$tone}"
         : "gl_btn-{$variant}-{$tone}";
 
-    // 有 icon 又有文字時，文字要包 <span>（照 preview-static/button.html 的既有 markup）
+    // 有 icon 又有文字時，文字要包 <span>（沿用 blade 化前的 preview-static/button.html，該目錄已廢除）
     $hasSideIcon = $iconLeft || $iconRight;
 @endphp
 

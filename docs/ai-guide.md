@@ -17,7 +17,7 @@
 
 每個新頁面開工前，按順序做：
 
-1. `cat preview-static/tokens.html` — 知道有哪些 token
+1. 開 preview 的 `/foundation/tokens` — 知道有哪些 token（170 個，可搜尋）
 2. `ls resources/scss/components/` — 知道有哪些現成 component
 3. 看 Figma 設計 → 對照下方「Figma ↔ DS 對照表」把元件名對起來
 4. 寫 markup（用 `.gl_*` + utility class）
@@ -163,7 +163,7 @@ Size token：`xs`(32px) / `sm`(40px) / `md`(48px, **預設**) / `lg`(56px) / `xl
 - 顏色用 `currentColor`（繼承父元素 `color`）
 - 不要用 SVG 自己畫
 - icon-only 按鈕一定要有 `aria-label`
-- 找不到合適圖示 → 開 `preview-static/icons.html` 搜尋；還是沒有 → 問人，不要自己造
+- 找不到合適圖示 → 開 preview 的 `/foundation/icons` 搜尋；還是沒有 → 問人，不要自己造
 
 ---
 
@@ -287,7 +287,7 @@ padding: 1rem;
 - [ ] 表單用 `.gl_form-group` 包住 `.gl_form-control`
 - [ ] 圖示用 `<i class="icon icon-*">` 而不是 SVG
 - [ ] 沒有漸層背景（除非設計稿明確要求且有 DS owner 核可）
-- [ ] 成對開啟 `preview-static/tokens.html` 和 `preview-static/components.html` 對照過
+- [ ] 成對開啟 preview 的 `/foundation/tokens` 與 `/components` 對照過
 
 ---
 
@@ -326,4 +326,4 @@ padding: 1rem;
 
 ---
 
-有疑問 → 先看 `preview-static/tokens.html` 找 token，再看 `preview-static/components.html` 找 pattern，都找不到再問人。
+有疑問 → 先看 preview 的 `/foundation/tokens` 找 token，再看 `/components` 找 pattern，都找不到再問人。

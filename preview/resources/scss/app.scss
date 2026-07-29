@@ -2,7 +2,7 @@
 // Pi DS preview —— 唯一的樣式進入點
 //
 // 吃 repo 根目錄的 preview-all.scss（= reset.scss + index.scss），
-// 跟 preview-static/*.html 完全同一份來源，確保兩套 preview 視覺一致。
+// 這是 preview 唯一的樣式進入點（preview-static/ 已廢除）。
 //
 // 為什麼走 ../../../resources/scss 而非 vendor/ 的 symlink：
 //   vendor/pi-tw/pi-design-system 是指回 repo 根的 symlink，

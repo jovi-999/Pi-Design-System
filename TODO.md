@@ -208,7 +208,7 @@ Pi-Design-System/          ← 套件本體：無 framework、無 build、無 DB
 - [x] 142 個實際輸出的 class 全部存在於 `dist/pi-ds.css` + `symicon.css`
 - [x] `CHANGELOG.md` 記錄
 - [x] `git commit`
-- [ ] **`preview-static/` 可廢除的判定** —— 尚未達成。blade 元件已覆蓋 markup，但 `preview-static/` 還有 blade 沒有的東西：`tokens.html`（token 對照表）、`color.html`、`type.html`、`radius.html`、`icons.html`（foundation 頁），以及 `modal.html` 的 `gl_gs-modal`（preview 專用 CSS）。**要等 foundation 頁也搬進 preview 才能廢除**
+- [x] **`preview-static/` 已廢除**（見 Phase 3.9）
 
 ---
 
@@ -261,6 +261,22 @@ Pi-Design-System/          ← 套件本體：無 framework、無 build、無 DB
 - [x] `git commit`
 - [x] **`pm-to-preview` skill 改產 blade**（見 3.8）
 - [ ] page-scoped SCSS 門檻進 CI（目前只在 preview 清單頁顯示行數）
+
+### 3.9 Foundation 頁搬進 blade preview，廢除 `preview-static/`
+- [x] `TokenCatalog`：從 `resources/scss/tokens/*.scss` 解析 **170 個 token 名稱**（與 `dist/pi-ds-tokens.css` 的集合完全一致，已比對）
+- [x] **值由瀏覽器 `getComputedStyle` 讀**，不由後端算 —— SCSS 裡的宣告是 `--cl-basic-900: #{$_cl-basic-900-raw};`，靜態解析拿到的是插值字串；解析 `dist/` 又要求先跑 build（那是 gitignore 的產物）。名稱來自原始碼、值來自瀏覽器，表格與色塊必然同源
+- [x] `IconCatalog`：`assets/icon-names.json`（250）+ `icon-cp-map.json`。缺 codepoint 會在頁面上標紅（目前 0 個）
+- [x] `FoundationController` + 6 支 view（index / tokens / group / icons / _sidebar / _token-table / _scripts）
+- [x] 路由：`/foundation`、`/foundation/tokens`、`/foundation/icons`、`/foundation/{group}`（7 個群組）。**tokens 與 icons 必須宣告在 `{group}` 之前**，否則會被當成群組名吃掉
+- [x] `/` 改成三區入口（原本 redirect 到 `/prototypes`）
+- [x] `_chrome.scss` 補色塊 / 搜尋框 / icon grid（全部 `pv-` 前綴，不進 `@layer pi`）
+- [x] **刪 `preview-static/`（20 支 HTML + preview.scss + 7 張截圖）**，含 3 支 `example-*.html`（舊路線 prototype，使用者確認可刪）
+- [x] 刪根目錄 `vite.config.js`；`package.json` 移除 `dev` / `preview:build` / `preview:serve` 與 `vite` / `gsap`（`gsap` 只有 `preview-static/modal.html` 在用）
+- [x] `.gitignore` 移除 `dist-preview/` 與 `preview-static/_shot_*.png`；刪 `dist-preview/`
+- [x] 同步 19 處引用：README / STRUCTURE / SKILL / docs/ai-guide / docs/prototype-flow / preview/README / 兩支 skill / 11 支元件的 markup 出處註解
+- [x] **結果：只剩 8100 + 5178 兩個服務**，repo 根目錄的 `npm` 只剩 SCSS build / lint
+
+**實作中修的一個自找的坑**：icons 頁的用法範例寫成 `<code>&lt;i class="icon icon-<em>name</em>"&gt;</code>` —— raw HTML 裡出現 `class="` 字面，讓 class 比對工具誤判成真的 attribute。引號也要 `&quot;` 轉義。
 
 ### 3.8 `pm-to-preview` skill 改走 blade 路線
 - [x] `SKILL.md`：第 3 步改產 `prototypes/<project>/`；刪掉「兩處註冊」（清單頁掃檔生成，不需註冊）

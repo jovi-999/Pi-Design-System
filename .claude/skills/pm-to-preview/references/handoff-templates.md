@@ -118,5 +118,5 @@ Fixture 檔就是契約 —— controller 傳出同樣結構即可，前端 blad
 `prototypes/project-a/pages/salary-report.blade.php`。
 
 `.scratch/prototype-handoff/example/` 與 `.scratch/pm-to-preview-test/` 底下的
-是 **blade 化之前的舊路線** 產物（產 `preview-static/*.html`、元件清單列 `gl_`
+是 **blade 化之前的舊路線** 產物（產已廢除的 `preview-static/*.html`、元件清單列 `gl_`
 class），檔案開頭已標記。結構可參考，**不要照抄**。

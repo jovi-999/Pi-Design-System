@@ -2,7 +2,7 @@
     Pi DS — Modal 面板
 
     對應 resources/scss/components/_modal.scss。
-    結構照 preview-static/modal.html 的 .gl_modal 範例：
+    結構沿用 blade 化前的 preview-static/modal.html（該目錄已廢除）的 .gl_modal 範例：
 
       <div class="gl_modal">
         <div class="gl_modal-header flex-column">
@@ -16,7 +16,7 @@
       </div>
 
     ⚠️ 這支只有「面板外觀」。遮罩、置中、開關行為、focus trap 都不在
-    設計系統內 —— preview-static/modal.html 用的 .gl_gs-modal 是那一頁自帶的
+    設計系統內 —— 已廢除的 preview-static/modal.html 用的 .gl_gs-modal 是那一頁自帶的
     inline CSS（該檔註解寫明「此 namespace 無 src CSS，preview 專用」），
     不是套件的一部分，所以這裡不使用它。
 

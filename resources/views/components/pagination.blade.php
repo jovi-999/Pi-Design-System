@@ -2,7 +2,7 @@
     Pi DS — Pagination v3
 
     對應 resources/scss/components/_pagination.scss。
-    結構照 preview-static/pagination.html（前綴是 iw_ 不是 gl_，這是對齊
+    結構沿用 blade 化前的 preview-static/pagination.html（該目錄已廢除）。前綴是 iw_ 不是 gl_，這是對齊
     生產環境的既有命名，不要「順手改成 gl_」——那是 breaking change）：
 
       <div class="iw_pagination-outer-v3">

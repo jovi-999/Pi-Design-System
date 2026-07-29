@@ -20,7 +20,7 @@ return [
 
     'notes' => [
         '⚠️ 這支只有「面板外觀」。遮罩、置中、開關、focus trap 都不在設計系統內 —— 需要時用原生 <dialog> 包住，或走元件缺口流程提報。',
-        'preview-static/modal.html 用的 .gl_gs-modal 是那一頁自帶的 inline CSS（該檔註解寫明「此 namespace 無 src CSS，preview 專用」），不是套件的一部分，本元件不使用它。',
+        '已廢除的 preview-static/modal.html 用的 .gl_gs-modal 是那一頁自帶的 inline CSS（該檔註解寫明「此 namespace 無 src CSS，preview 專用」），不是套件的一部分，本元件不使用它。',
         'footer 的 flex-column 會讓按鈕 width:100%；flex-row 會平分寬度；flex-row flex-end 靠右且不撐開。',
     ],
 

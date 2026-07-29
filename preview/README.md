@@ -46,10 +46,10 @@ docker compose down
 | Port | 服務 | 備註 |
 |---|---|---|
 | 8100 | PHP（`artisan serve`，container） | |
-| 5178 | Vite（host），本目錄 | `strictPort` —— 撞號直接報錯，不靜默跳號 |
-| 5177 | Vite（host），repo 根的 `preview-static/` | 兩者可同時開 |
+| 5178 | Vite（host） | `strictPort` —— 撞號直接報錯，不靜默跳號 |
 
-公司其他專案的 Vite 都跑 5173，這裡刻意避開。
+公司其他專案的 Vite 都跑 5173，這裡刻意避開。repo 根目錄已經沒有 Vite ——
+`preview-static/` 廢除後根目錄的 `npm` 只剩 SCSS 的 build / lint。
 
 **為什麼 `strictPort`**：Vite 靜默跳號會把新 port 寫進 `public/hot`，
 但容器內的 PHP 讀到的是那份檔，指向一個沒東西的 port —— 症狀是
@@ -128,11 +128,26 @@ it will remain unchanged to be resolved at runtime
 
 ---
 
-## 兩套 preview 的分工（過渡期）
+## 三區
 
-| 目錄 | 內容 | 狀態 |
+| 網址 | 內容 | 資料來源（全部掃檔生成） |
 |---|---|---|
-| `preview-static/` | 純 HTML + Vite 的視覺對照頁（20 支） | 現役 |
-| `preview/` | 本目錄，blade 元件 preview | Phase 2.3 起接手 |
+| `/foundation` | token 與 icon | `resources/scss/tokens/*.scss`、`assets/icon-*.json` |
+| `/components` | 13 支 blade 元件 | `resources/views/components/*.meta.php` |
+| `/prototypes` | PM & AI 的討論產物 | `prototypes/` |
 
-判定 `preview-static/` 可否廢除的條件見 `TODO.md` 的 Phase 2.7。
+**沒有任何手維護的清單。** 加 token / 元件 / prototype，對應的頁面自己就多一列。
+
+`preview-static/`（blade 化之前的 20 支靜態 HTML）已於 foundation 頁完成後廢除 ——
+最後留著的理由是 token / color / icon 那幾支對照頁，現在都由 `/foundation` 取代。
+
+### token 的值為什麼要靠瀏覽器讀
+
+`/foundation/tokens` 的「值」欄是 JS 用 `getComputedStyle` 讀出來的，不是後端算的。
+
+SCSS 裡的宣告是 `--cl-basic-900: #{$_cl-basic-900-raw};` —— 靜態解析拿到的是那串
+Sass 插值，不是 `#1F2123`。要拿解析後的值只有兩條路：解析 `dist/`（但那是
+gitignore 的建置產物，沒先 build 這頁就掛）或讓瀏覽器讀。
+
+選後者：**名稱**來自原始碼（永遠存在、不需 build），**值**來自瀏覽器（就是畫面上
+那個色塊的同一個值）。少掉一整類「表上寫 A、實際渲染是 B」的 bug。

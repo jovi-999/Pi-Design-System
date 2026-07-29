@@ -2,7 +2,7 @@
     Pi DS — Alert（浮出式提示條）
 
     對應 resources/scss/components/_alert.scss。
-    結構照 preview-static/alert.html：
+    結構沿用 blade 化前的 preview-static/alert.html（該目錄已廢除，見 CHANGELOG）：
 
       <div class="gl_alert-body gl_alert-{tone}">
         <span class="gl_alert-icon"><i class="icon …"></i></span>

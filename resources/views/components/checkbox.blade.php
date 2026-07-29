@@ -2,7 +2,7 @@
     Pi DS — Checkbox
 
     對應 resources/scss/components/_checkbox.scss。
-    結構照 preview-static/form.html：
+    結構沿用 blade 化前的 preview-static/form.html（該目錄已廢除，見 CHANGELOG）：
 
       <div class="gl_checkbox-layout gl_checkbox-{tone}">
         <label>

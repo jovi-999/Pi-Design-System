@@ -2,7 +2,7 @@
     Pi DS — Toggle（開關）
 
     對應 resources/scss/components/_toggle.scss。
-    結構照 preview-static/form.html：
+    結構沿用 blade 化前的 preview-static/form.html（該目錄已廢除，見 CHANGELOG）：
 
       <label class="gl_toggle gl_toggle-{size} gl_toggle-{tone}">
         <input type="checkbox" class="toggle-checkbox" />

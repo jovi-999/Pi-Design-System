@@ -65,6 +65,40 @@ repo 從「vendored SCSS 對照用」轉為 **Composer 套件**。下游已 vend
 - `scripts/apply.php` —— fragment → blade 片段或 unified diff patch。
 - CLAUDE.md 新增 prototype 六條硬性規則與自動生成的元件清單。
 
+### Added — Foundation 頁，並廢除 `preview-static/`
+
+Preview 現在是三區：**Foundation** / **元件** / **Prototype**，全部在 `localhost:8100`。
+
+| 網址 | 內容 | 資料來源 |
+|---|---|---|
+| `/foundation/tokens` | 170 個 token 一頁列完（可搜尋、點擊複製 `var(--x)`） | `resources/scss/tokens/*.scss` |
+| `/foundation/icons` | 250 個 icon | `assets/icon-names.json` + `icon-cp-map.json` |
+| `/foundation/<group>` | 7 個 token 群組 | 同上 |
+| `/` | 三區入口（原本 redirect 到 `/prototypes`） | — |
+
+**token 的值由瀏覽器 `getComputedStyle` 讀，不由後端算。** SCSS 裡的宣告是
+`--cl-basic-900: #{$_cl-basic-900-raw};`，靜態解析拿到的是那串 Sass 插值；解析
+`dist/` 又要求先跑 build（那是 gitignore 的產物）。改成「名稱來自原始碼、值來自
+瀏覽器」—— 表格顯示的值與畫面上的色塊必然同源。
+
+### Removed — `preview-static/`
+
+blade 化之前的 20 支靜態 HTML 全部刪除。最後留著的理由是 token / color / icon
+那幾支 foundation 對照頁，現在都由 `/foundation` 取代，且不再需要手維護
+（舊的 `tokens.html` 是 26 KB 手寫 HTML —— 加一個 token 要記得同步改它，
+而「記得」正是 drift 的來源）。
+
+連帶移除：
+
+- 根目錄 `vite.config.js`（`preview-static/` 是它唯一的服務對象）
+- `package.json` 的 `dev` / `preview:build` / `preview:serve`，以及 `vite`、`gsap`
+  兩個 devDependency（`gsap` 只有 `preview-static/modal.html` 在用）
+- `dist-preview/` 與 `.gitignore` 的對應項目
+- 3 支 `example-*.html`（舊 HTML 路線的 prototype，已確認失效）
+
+**結果：只剩 8100（PHP）+ 5178（Vite）兩個服務**，repo 根目錄的 `npm` 只剩 SCSS 的
+build / lint。
+
 ### ⚠ Breaking — 套件名與 namespace 定案
 
 Placeholder 換成正式名稱。**現在改的成本是零** —— 還沒有任何專案依賴這個套件；

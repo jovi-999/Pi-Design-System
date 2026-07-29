@@ -126,3 +126,121 @@
     white-space: nowrap;
   }
 }
+
+// token 表格：第一欄是預覽格而不是名稱，不要套上面的等寬字
+.pv-tokens td:first-child {
+  font-family: inherit;
+}
+
+// ============================================================
+// Foundation 頁
+// ============================================================
+
+.pv-search {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 16px;
+  max-width: 520px;
+}
+
+// 點擊複製的觸發器。看起來是文字，不要有 button 的外觀。
+.pv-copy {
+  font: inherit;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  color: inherit;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  text-align: left;
+
+  &:hover { text-decoration: underline; }
+}
+
+// getComputedStyle 讀不到值＝該 token 沒有被載入的 CSS 宣告，要醒目
+.pv-undefined {
+  color: var(--cl-red-700);
+}
+
+.pv-swatch {
+  display: block;
+  width: 64px;
+  height: 32px;
+  border-radius: var(--radius-xs);
+  // 淺色與透明色階需要底襯才看得出來
+  outline: 1px solid var(--cl-basic-alpha-100);
+  outline-offset: -1px;
+}
+
+// 圓角預覽：要看得出弧度，用實色塊
+.pv-swatch--radius {
+  background: var(--cl-basic-200);
+  width: 48px;
+  height: 48px;
+}
+
+// 陰影預覽：白底才看得出陰影，且需要留白不被裁掉
+.pv-swatch--shadow {
+  background: var(--cl-basic-0);
+  width: 48px;
+  height: 48px;
+  margin: 6px;
+  outline: none;
+}
+
+// 長度預覽（間距 / 斷點）：斷點值可達 1440px，要限寬
+.pv-bar {
+  display: block;
+  height: 12px;
+  max-width: 100%;
+  border-radius: var(--radius-pill);
+  background: var(--cl-basic-300);
+}
+
+.pv-sample {
+  font-size: 20px;
+}
+
+// Ring 示範格
+.pv-ring {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  min-width: 220px;
+  border-radius: var(--radius-md);
+  background: var(--cl-basic-0);
+}
+
+// ---------- Icon 索引 ----------
+
+.pv-icons {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(104px, 1fr));
+  gap: 4px;
+}
+
+.pv-icon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 12px 4px;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+
+  .icon { font-size: 24px; }
+
+  &:hover { background: var(--cl-basic-alpha-50); }
+}
+
+.pv-icon__name {
+  color: var(--fg-3);
+  word-break: break-all;
+  text-align: center;
+}

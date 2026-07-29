@@ -5,7 +5,7 @@
     一支元件涵蓋 .gl_form-group 這個群組的完整結構，因為 SCSS 是這樣寫的：
     .gl_form-control 的樣式定義在 .gl_form-group 底下，兩者拆開用會沒有樣式。
 
-    結構（照 preview-static/form.html 的既有 markup）：
+    結構（沿用 blade 化前的 preview-static/form.html，該目錄已廢除）：
 
       <div class="gl_form-group [gl_icon-input-wrap] [is-valid|is-invalid]">
         [<i class="icon …">]              ← icon prop

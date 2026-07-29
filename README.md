@@ -81,7 +81,7 @@
 
 **顏色。** Icon 透過 `currentColor` 繼承。**永遠不要** 在 icon 上寫死 hex —— 跟父層文字色繼承才會跟著主題切換。
 
-完整 class 清單見 `assets/symicon.css`，視覺索引見 `preview-static/icons.html`。
+完整 class 清單見 `assets/symicon.css`，視覺索引見 preview 的 `/foundation/icons`。
 
 ---
 
@@ -109,12 +109,22 @@
 
 ```bash
 git clone <repo-url>
-cd Pi-Design-System
-npm install            # 只裝 sass / vite 等 build 工具
-npm run dev            # 啟動預覽，開瀏覽器看左側目錄 + 各元件對照頁
+cd Pi-Design-System/preview
+
+docker compose run --rm app composer install   # 第一次
+npm install
+
+docker compose up -d      # PHP（container）→ http://localhost:8100
+npm run dev               # Vite（host）→ 5178
 ```
 
-預覽頁吃 `resources/scss/preview-all.scss`，改 SCSS 後 HMR 即時更新，不用先 build。
+開 http://localhost:8100 進入三區：**Foundation**（token / icon）、**元件**、**Prototype**。
+
+預覽吃 `resources/scss/preview-all.scss`，改 SCSS 後 HMR 即時更新，不用先 build。
+起動細節與設計取捨見 [preview/README.md](preview/README.md)。
+
+> repo 根目錄的 `npm` 只剩 SCSS 的 build / lint（`npm run build`、`npm run test`、
+> `npm run lint:scss`）—— preview 已全部搬進 `preview/` 的 Laravel app。
 
 ### 1b. 三個 SCSS 入口，選哪個
 
@@ -145,9 +155,9 @@ npm run dev            # 啟動預覽，開瀏覽器看左側目錄 + 各元件�
 
 ### 2. 切版怎麼對照
 
-- **看元件樣式**：`npm run dev` 後，左側目錄點各元件（button / form / alert…），右側 iframe 即是該元件實際樣式。
+- **看元件樣式**：preview 的 `/components` → 點各元件，會看到 props 值域、注意事項，以及每個範例的「渲染結果 + 可複製的 blade 原始碼」對照。
 - **查 class 名稱**：class 前綴 `gl_`，真相在 `resources/scss/components/_<元件>.scss`；Figma 名稱 ↔ class 對照見 [docs/ai-guide.md](docs/ai-guide.md)。
-- **查 token / 色票 / 圖示**：foundation 對照頁（color / type / shadow / tokens / icons）同樣在預覽左側目錄。
+- **查 token / 色票 / 圖示**：preview 的 `/foundation`。`/foundation/tokens` 是全部 170 個 token 一頁列完（可搜尋、點擊複製 `var(--x)`），`/foundation/icons` 是 250 個 icon。兩者都是掃原始碼生成，不會與實際程式碼不同步。
 - **禁自創 token / class**：切版只能用設計系統已存在的 token / class，不確定先 `grep resources/scss/` 或讀 `resources/scss/tokens`、`resources/scss/components` 確認。
 
 ### 3. 給原型專案使用（vendored）
@@ -169,7 +179,9 @@ Repo 結構與「要改什麼動哪裡」見 **[STRUCTURE.md](STRUCTURE.md)**（
 
 ```bash
 # 1. 開預覽頁即時看視覺（HMR，不用 build）
-npm run dev
+cd preview
+docker compose up -d      # PHP  → http://localhost:8100
+npm run dev               # Vite → 5178
 
 # 2. 改完跑一次 build + smoke test，確認沒語法錯
 npm run build
@@ -181,8 +193,8 @@ npm test                  # 檢查產出 css 含關鍵 token / class
 ### 編輯規則
 
 - 只改 `resources/scss/` 內檔案；CSS 一律由 `npm run build` 從 SCSS 產出，不手寫 CSS。
-- 加新元件 → `resources/scss/components/_xxx.scss` + `resources/scss/components/index.scss` 加一行 `@forward` + `preview-static/` 加對照頁並在 `preview-static/index.html` 左目錄登記。
-- 改 token → 先看 `preview-static/tokens.html` 評估衝擊面，CHANGELOG 寫清楚。
+- 加新元件 → `resources/scss/components/_xxx.scss` + `resources/scss/components/index.scss` 加一行 `@forward` + `resources/views/components/xxx.blade.php` 與 `xxx.meta.php`。**preview 不用改** —— 目錄頁是掃 `*.meta.php` 生成的。
+- 改 token → 先看 preview 的 `/foundation/tokens` 評估衝擊面，CHANGELOG 寫清楚。
 - **禁自創 token / class**：不確定先 `grep resources/scss/` 或讀 `resources/scss/tokens`、`resources/scss/components` 確認，絕不憑記憶發明。
 - rename / 移除 token、改 class 名屬 breaking change → CHANGELOG 寫清楚並同步所有引用處（preview、docs、README）。
 
@@ -220,11 +232,11 @@ $font-path: "../../fonts" !default;
 
 | 情況 | 動哪裡 |
 |---|---|
-| 字型版本升級（family / 檔名不變，只換內容） | 把新檔覆蓋進 `fonts/`，`npm run dev` 確認還能載 |
+| 字型版本升級（family / 檔名不變，只換內容） | 把新檔覆蓋進 `fonts/`，起 preview 確認還能載 |
 | 加新字型檔（例如升級 symicon 版本） | `fonts/` 加檔 → 更新對應 `@font-face` 的檔名與版本號 |
-| 替換字型（改 family / token） | `fonts/` 換檔 → 改 `resources/scss/base/_fonts.scss` 的 `@font-face` → 改 `resources/scss/tokens/_typography.scss` 的 `--font-sans` → `preview-static/` 對照視覺有無走鐘（中文寬度可能不同）|
+| 替換字型（改 family / token） | `fonts/` 換檔 → 改 `resources/scss/base/_fonts.scss` 的 `@font-face` → 改 `resources/scss/tokens/_typography.scss` 的 `--font-sans` → 開 preview 的 `/foundation/typography` 與 `/components` 對照視覺有無走鐘（中文寬度可能不同）|
 
-改完一律 `npm run dev` 在預覽頁確認字型載入（DevTools Network 看字型 200），並寫 CHANGELOG。
+改完一律起 preview 確認字型載入（DevTools Network 看字型 200），並寫 CHANGELOG。
 
 ### 給 AI agent 的提醒
 
@@ -265,7 +277,9 @@ cp ~/Downloads/symicon-7.0s.woff  fonts/
 #      （連帶更新 assets/icon-cp-map.json、icon-names.json、icons-preview.html）
 
 # 3. 啟動預覽驗證
-npm run dev
+cd preview
+docker compose up -d      # PHP  → http://localhost:8100
+npm run dev               # Vite → 5178
 #    開 icons 對照頁 / 各元件頁，確認 icon 正常顯示
 #    重點檢查有用到 icon 的元件：form 的 valid/invalid、loading、alert、callout
 

@@ -139,9 +139,17 @@ flowchart TD
 
 ## 元件與 foundation 怎麼查
 
-| 看什麼 | 網址 | 起動 |
-|---|---|---|
-| Blade 元件（props / notes / 範例） | `localhost:8100/components` | `cd preview && docker compose up -d && npm run dev` |
-| Foundation（色票 / 字級 / 圓角 / 陰影 / icon） | `localhost:5177/preview-static/index.html` | repo 根 `npm run dev` |
+全部在同一個 preview（`cd preview && docker compose up -d && npm run dev`）：
 
-`preview-static/` 底下的元件頁是 blade 化之前的遺留物 —— 元件一律看 `/components`。
+| 看什麼 | 網址 |
+|---|---|
+| 三區入口 | `localhost:8100/` |
+| Blade 元件（props / notes / 可跑範例） | `localhost:8100/components` |
+| 全部 170 個 token（可搜尋、點擊複製） | `localhost:8100/foundation/tokens` |
+| 250 個 icon | `localhost:8100/foundation/icons` |
+| 單一 token 群組（色彩 / 字體 / 間距 / 圓角 / 陰影 / 動態 / 斷點） | `localhost:8100/foundation/<group>` |
+| Prototype | `localhost:8100/prototypes` |
+
+三區的清單都是掃檔生成 —— 加 token / 元件 / prototype 不需要改 preview。
+
+> `preview-static/`（blade 化之前的 20 支靜態 HTML）已廢除，repo 根目錄也不再有 Vite。

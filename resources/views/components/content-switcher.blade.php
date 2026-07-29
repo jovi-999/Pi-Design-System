@@ -2,7 +2,7 @@
     Pi DS — Content switcher（分頁式切換導覽）
 
     對應 resources/scss/components/_content-switcher.scss。
-    結構照 preview-static/content-switcher.html：
+    結構沿用 blade 化前的 preview-static/content-switcher.html（該目錄已廢除，見 CHANGELOG）：
 
       <div class="gl_content-switcher-outer gl_content-switcher-{tone}">
         <button class="gl_content-switcher is-active">面試心得 <span>(48)</span></button>

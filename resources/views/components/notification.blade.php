@@ -2,7 +2,7 @@
     Pi DS — Notification item（通知列表的一列）
 
     對應 resources/scss/components/_notification.scss。
-    結構照 preview-static/notification.html：
+    結構沿用 blade 化前的 preview-static/notification.html（該目錄已廢除，見 CHANGELOG）：
 
       <div class="gl_notification-item gl_notification-{tone}">
         <span class="gl_icon-wrap"><i class="icon …"></i></span>

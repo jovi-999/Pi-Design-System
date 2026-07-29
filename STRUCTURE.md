@@ -39,27 +39,30 @@ Pi-Design-System/
 │   ├── icon-names.json / icon-cp-map.json / icons-preview.html
 │   └── noise.svg
 ├── fonts/                    ★ 字型檔（woff/woff2，含 symicon-X.s icon 字型）
-├── preview-static/           ☆ 靜態預覽頁（Vite，吃 /resources/scss/preview-all.scss）
-│   ├── index.html            #   殼層：左目錄 + 右 iframe
-│   ├── color/type/shadow/tokens/icons.html        # foundation 對照頁
-│   └── button/form/alert/callout/content-switcher/ # 元件對照頁（拆自舊 components）
-│       dropdown/pagination/notification/loading/modal.html
-├── preview/                  ☆ blade 預覽用 Laravel app（開發工具，不出貨）
-│   ├── Dockerfile  docker-compose.yml  # PHP 在容器（8100）；Vite 跑在 host（5173）
+├── preview/                  ☆ 預覽用 Laravel app（開發工具，不出貨）
+│   ├── Dockerfile  docker-compose.yml  # PHP 在容器（8100）；Vite 跑在 host（5178）
 │   ├── composer.json         #   path repository symlink 到 repo 根，裝套件本體
-│   ├── resources/scss/app.scss  #  @use ../../../resources/scss/preview-all
+│   ├── app/Support/          #   TokenCatalog / IconCatalog / ComponentCatalog
+│   │                         #   / PrototypeCatalog —— 三區清單全部掃檔生成
+│   ├── resources/views/foundation|gallery|prototypes/  # 三區的頁面
+│   ├── resources/scss/app.scss   # @use ../../../resources/scss/preview-all
+│   ├── resources/scss/_chrome.scss  # preview 自己的版面（前綴 pv-，不出貨）
 │   └── README.md             #   起動方式與設計取捨（先讀這支）
+├── prototypes/               ☆ PM & AI 的討論區（不出貨）
+│   └── <project>/{pages,fragments,fixtures,_hosts}/
 ├── docs/ai-guide.md          ☆ 給 AI：Figma 名稱 ↔ class 對照表
+├── docs/prototype-flow.md    ☆ PM 需求 → preview → 交接的流程圖
 ├── scripts/check-build.mjs   ☆ build 後 smoke 檢查
-├── vite.config.js            ☆ 預覽用 Vite 設定
-├── package.json              ☆ 預覽 / build 設定（不發布 npm）
+├── scripts/sync-component-list.php  ☆ meta → CLAUDE.md 元件清單
+├── scripts/fetch-host.php  scripts/apply.php  ☆ fragment 的宿主快照與交接
+├── package.json              ☆ 只剩 SCSS build / lint（不發布 npm）
 ├── .nvmrc                    ☆ Node 版本（24 = 現行 LTS）。`cd` 進來後 `nvm use`
 │                             #  preview/ 沒有自己的 .nvmrc —— nvm 會往上找到這支
 ├── README.md  CHANGELOG.md  TODO.md
 ├── CLAUDE.md  SKILL.md       # agent 規則
 ├── docs/ai-guide.md
 ├── .claude/skills/           # 專案 skill（如 figma-to-pi-ds）
-└── dist/  dist-preview/      # build 產物（gitignore，勿手改/commit）
+└── dist/                     # SCSS build 產物（gitignore，勿手改/commit）
 
 ★ 核心可改  ☆ 開發輔助  ⚠ 動到會影響下游，需謹慎
 ```
@@ -71,11 +74,11 @@ Pi-Design-System/
 | 目的 | 動哪裡 | 連帶要做 / 注意 |
 |---|---|---|
 | 改 token（色/字/間距/圓角…） | `resources/scss/tokens/_*.scss` | 牽動所有引用該 token 的元件；**只改既有 token 值，禁自創新 token** |
-| 改 / 新增元件樣式 | `resources/scss/components/_<元件>.scss` | **規則區必須包在 `@layer pi { }` 內**（見下方「分層規則」）；新元件要在 `components/index.scss` 加 `@forward`；同步 `preview-static/<元件>.html` 與 `docs/ai-guide.md` |
-| 依 Figma 重做元件 | 同上 | 走 skill **figma-to-pi-ds** 流程（讀 Figma→映射既有 token→確認範圍→改 SCSS→同步 preview-static/docs→build） |
+| 改 / 新增元件樣式 | `resources/scss/components/_<元件>.scss` | **規則區必須包在 `@layer pi { }` 內**（見下方「分層規則」）；新元件要在 `components/index.scss` 加 `@forward`；同步 `resources/views/components/<元件>.blade.php` 與 `.meta.php`、`docs/ai-guide.md` |
+| 依 Figma 重做元件 | 同上 | 走 skill **figma-to-pi-ds** 流程（讀 Figma→映射既有 token→確認範圍→改 SCSS→同步 blade 元件與 docs→build） |
 | 改文字字型 | `fonts/` + `resources/scss/base/_fonts.scss` | 詳見 README「字型管理」章節 |
 | 改 icon 字型 | `fonts/symicon-X.s.*` + `assets/symicon.css` | 該檔內容整包在 `@layer pi { }` 內，新增規則要放進去；詳見 README「icon 字型（symicon）維護」章節 |
-| 看視覺預覽 | 改完直接 `npm run dev` | 預覽吃 `resources/scss/preview-all.scss`（= reset + index），HMR 即時；不用先 build |
+| 看視覺預覽 | `cd preview && docker compose up -d && npm run dev` → http://localhost:8100 | 預覽吃 `resources/scss/preview-all.scss`（= reset + index），HMR 即時；不用先 build |
 | 產 CSS 產物 | `npm run build` / `build:min` / `build:tokens` | 產物進 `dist/`（gitignore） |
 
 ### 分層規則（`@layer`）
@@ -114,5 +117,5 @@ Pi-Design-System/
 
 ## 3. 定位
 
-這個 repo 是 **token 與 component 的唯一真相來源**，目前用途：**給前端切版時對照目前的元件內容與樣式**，本機 `npm run dev` 跑預覽即可。**不發布 npm**。
+這個 repo 是 **token 與 component 的唯一真相來源**，目前用途：**給前端切版時對照目前的元件內容與樣式**，本機起 `preview/` 跑預覽即可（見 [preview/README.md](preview/README.md)）。**不發布 npm**。
 下游專案實際使用時，採 vendored 方式：複製需要的 `resources/scss/*.scss` / `assets/symicon.css` / `fonts/` 進自己專案，以本 repo 為唯一真相（詳見 README）。
