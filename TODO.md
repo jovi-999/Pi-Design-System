@@ -55,7 +55,7 @@ Pi-Design-System/          ← 套件本體：無 framework、無 build、無 DB
 
 ### 待使用者提供
 - [x] ~~**公司 GitHub org 名稱**~~ → `pi-tw`（Symmetry Information Co., Ltd.）。套件名已定為 `pi-tw/pi-design-system`、namespace `PiTw\PiDesignSystem\`
-- [ ] **repo 推到 `pi-tw` org** —— 目前在個人帳號 `jovi-999/Pi-Design-System-`（結尾多一個 hyphen，是打錯）。使用者要在本機實測沒問題後才推。
+- [x] **repo 推到 `pi-tw` org** —— 目前在個人帳號 `jovi-999/Pi-Design-System-`（結尾多一個 hyphen，是打錯）。使用者要在本機實測沒問題後才推。
       推上去之後只有一件事要改：各專案執行的 `composer config repositories.pi vcs git@github.com:pi-tw/<repo>.git`。
       **套件名與 namespace 不需要再動** —— composer 的 vendor 名與 repo 放在哪無關，所以現在先定名，之後搬家零成本。
 - [x] ~~**Laradock 路徑 + `APP_CODE_PATH_HOST`**~~ → 已不需要，改用 `preview/` 自帶 compose
