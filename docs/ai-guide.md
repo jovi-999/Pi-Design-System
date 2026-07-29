@@ -37,12 +37,12 @@
 | `color: #10b981` | `color: $cl-green-500;` 或 `$brand` |
 | `background: white` | `background: $surface;` |
 | `border: 1px solid #eee` | `border: 1px solid $border;` |
-| `font-size: 14px` | `@extend .fz-body-sm;` 或 `font-size: $fz-body-sm;` |
+| `font-size: 14px` | `.fz-body-sm` class，或 `font-size: $fz-body-sm;`。**不要用 `@extend`** —— 會讓樣式逃出 `@layer pi`，隔離失效（已實測） |
 | `padding: 16px 20px` | `padding: $sp-4 $sp-5;` |
 | `border-radius: 8px` | `border-radius: $radius-sm;` |
 | `box-shadow: 0 2px 4px rgba(0,0,0,.1)` | `box-shadow: $shadow-sm;` |
-| 自己寫 `<button class="my-btn">` | `<button class="gl_btn gl_btn-success gl_btn-md">` |
-| 自己寫 modal / toast / checkbox | 用 `.gl_modal` / `.gl_alert-body` / `.gl_checkbox-layout` |
+| 自己寫 `<button class="my-btn">` | `<x-pi::button tone="success" size="md">`（Blade 元件），或直接用 class `gl_btn gl_btn-success gl_btn-md` |
+| 自己寫 modal / toast / checkbox | 用 `<x-pi::modal>` / `<x-pi::alert>` / `<x-pi::checkbox>`（清單見 `CLAUDE.md` 的 COMPONENTS 區段） |
 
 ---
 

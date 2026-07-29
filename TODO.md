@@ -262,6 +262,18 @@ Pi-Design-System/          ← 套件本體：無 framework、無 build、無 DB
 - [x] **`pm-to-preview` skill 改產 blade**（見 3.8）
 - [ ] page-scoped SCSS 門檻進 CI（目前只在 preview 清單頁顯示行數）
 
+### 3.10 README 過時資訊清理
+- [x] **架構描述**：「不發布 npm；下游一律採 vendored」→ Composer 版本化依賴（vendored 是 D1 明確排除的方案，README 寫的跟現況正好相反）
+- [x] 新增三節：Composer 安裝（含導入驗證與升級時機）、Blade 元件（含 tone 清單不一致與兩個已知缺口）、prototype 討論流程
+- [x] **刪 `docs/prototype-README.template.md` 與 `prototype-CLAUDE.template.md`** —— 整份建立在已排除的架構上（vendored 進獨立原型 repo、產 blade+scss 手動複製進 production），且 `cp -R "$GUIDE/src"` 已是錯路徑。硬規則已由 `docs/ai-guide.md` 與 `CLAUDE.md` 覆蓋。**留著比刪掉危險** —— agent 讀到會照著重建 drift
+- [x] 事實錯誤 7 處：symicon glyph 172 → **250**（兩處）、`$font-path` 範例 `"../../fonts"` → `"/fonts"`（與同節下方自相矛盾）、圓角漏 `--corner-shape`、「不用改 vite.config」（該檔已刪）、`type` 對照頁 → `/foundation/typography`、icons 對照頁 → `/foundation/icons`
+- [x] icon 維護「情境 2」從 vendored 改寫為「字型與 class 表隨套件出貨，專案端不複製檔案」
+- [x] 開頭加「兩種身份看不同小節」導引表
+- [x] 同步 `STRUCTURE.md` 與 `SKILL.md` 的定位段（同樣寫著 vendored）
+- [x] 驗證：9 個檔案連結全部存在、15 個錨點全部對得上標題
+
+**順手修掉 `docs/ai-guide.md` 一個會害人的規則**：硬規則表教 `@extend .fz-body-sm;` —— `@extend` 會讓樣式逃出 `@layer pi`（Phase 1.1 已實測），照做會破壞隔離。已改為 class 或 `$fz-*` 變數，並註明不要用 `@extend`。同表的「自己寫 button / modal」也改成指向 `<x-pi::*>` 元件。
+
 ### 3.9 Foundation 頁搬進 blade preview，廢除 `preview-static/`
 - [x] `TokenCatalog`：從 `resources/scss/tokens/*.scss` 解析 **170 個 token 名稱**（與 `dist/pi-ds-tokens.css` 的集合完全一致，已比對）
 - [x] **值由瀏覽器 `getComputedStyle` 讀**，不由後端算 —— SCSS 裡的宣告是 `--cl-basic-900: #{$_cl-basic-900-raw};`，靜態解析拿到的是插值字串；解析 `dist/` 又要求先跑 build（那是 gitignore 的產物）。名稱來自原始碼、值來自瀏覽器，表格與色塊必然同源

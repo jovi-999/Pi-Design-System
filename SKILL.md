@@ -17,7 +17,9 @@ Pi-Design-System/         ← token 與 component 的唯一真相來源
 └── fonts/                ← 字型檔（含 icon 字型 symicon-X.s）
 ```
 
-**這個 repo 不發布 npm。** 用途：給前端切版時對照目前的元件樣式與 class，起 `preview/`（docker compose + npm run dev）本機跑預覽即可。下游專案實際使用時用 vendored 方式（複製需要的 `resources/scss/*.scss` / `assets/symicon.css` / `fonts/` 進自己專案），以本 repo 為唯一真相。
+**這個 repo 不發布 npm**（Node 只用於本 repo 的 SCSS build 與 preview）。起 `preview/`（`docker compose up -d` + `npm run dev`）本機跑預覽，看元件樣式與 class。
+
+專案端透過 **Composer 版本化依賴**取得：`composer require pi-tw/pi-design-system`。**不採 vendored** —— 理由見 `design-guideline-spec.md` 的 D1。
 
 ---
 

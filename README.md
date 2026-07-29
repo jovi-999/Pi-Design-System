@@ -1,11 +1,23 @@
 # Pi Design System
 
-這個 repo 是 **token 與 component 的唯一真相來源**，用途：
+這個 repo 是 **token 與 component 的唯一真相來源**。出貨兩層東西：
 
-1. **前端切版對照**：本機跑預覽頁，對照元件內容與樣式。
-2. **原型專案的樣式基準**：PM 與 AI agent 討論功能產出原型時，vendored 本 repo 的 `resources/scss/` 作為元件 guideline（見 [docs/prototype-README.template.md](docs/prototype-README.template.md)）。
+| 層 | 內容 | 綁框架？ |
+|---|---|---|
+| `resources/scss/` | SCSS 原始碼（token + 元件樣式）。**沒有 build step** —— 專案用自己的 Vite / sass 去 `@use`，才吃得到專案自己的變數覆寫 | ❌ 框架中立 |
+| `resources/views/` | 13 支 Blade 元件（`<x-pi::button>` …） | ✅ Laravel |
 
-不發布 npm；下游一律採 **vendored**（複製需要的檔案進自己專案）。
+三個用途：
+
+1. **前端切版對照** —— 本機跑 preview，看元件的 props、注意事項與可跑範例。
+2. **專案透過 Composer 依賴** —— `composer require pi-tw/pi-design-system`，用版本號回答「這個專案吃哪一版」。
+3. **PM 與 AI agent 討論 prototype** —— 在本 repo 的 `prototypes/` 產出 blade，定案後用 `scripts/apply.php` 交接給前後端（流程見 [docs/prototype-flow.md](docs/prototype-flow.md)）。
+
+**不發布 npm**（Node 只用於本 repo 的 SCSS build 與 preview）。
+
+> **不採 vendored（複製檔案進專案）。** 那條路無法回答「專案 B 現在用哪一版」，且
+> 專案為趕上線就地改樣式後就再也不敢 sync。理由詳見
+> [design-guideline-spec.md](design-guideline-spec.md) 的 **D1**。
 
 ---
 
@@ -16,12 +28,14 @@
 | 文件 | 對象 | 內容 |
 |---|---|---|
 | [STRUCTURE.md](STRUCTURE.md) | 人 + agent | 檔案樹狀圖、各區用途、修改方式與注意 |
+| [preview/README.md](preview/README.md) | 人 | preview 的起動方式與設計取捨（**要跑 preview 先讀這支**） |
+| [docs/prototype-flow.md](docs/prototype-flow.md) | 人 + agent | PM 需求 → preview → 前後端交接的完整流程圖 |
 | [docs/ai-guide.md](docs/ai-guide.md) | agent | Figma 名稱 ↔ class 對照表、產頁硬規則 |
-| [docs/prototype-README.template.md](docs/prototype-README.template.md) | 原型專案 | 原型 repo 的 README 範本（vendored 清單 + 流程） |
-| [docs/prototype-CLAUDE.template.md](docs/prototype-CLAUDE.template.md) | 原型專案 | 原型 repo 的 CLAUDE.md 範本（agent 產頁規則） |
-| [CLAUDE.md](CLAUDE.md) | agent | 對話自動載入的專案規則（禁自創 token 等） |
+| [design-guideline-spec.md](design-guideline-spec.md) | 維護者 | 平台化的架構決策記錄（D1–D6）與被排除的方案 |
+| [CLAUDE.md](CLAUDE.md) | agent | 對話自動載入的專案規則（禁自創 token、prototype 六條硬規則、**自動生成的元件清單**） |
 | [SKILL.md](SKILL.md) | agent | 結構化使用規則 |
-| `.claude/skills/` | agent | 專案 skill（如 figma-to-pi-ds：Figma→Pi DS 流程） |
+| `.claude/skills/` | agent | 專案 skill（`pm-to-preview`：PM 需求→prototype；`figma-to-pi-ds`：Figma→Pi DS） |
+| [TODO.md](TODO.md) | 維護者 | 平台化各 Phase 的進度與所有偏離記錄 |
 | [CHANGELOG.md](CHANGELOG.md) | 全體 | 版本變更記錄 |
 
 > 想快速定位「要改什麼動哪裡」→ 直接看 **[STRUCTURE.md](STRUCTURE.md)**。
@@ -34,7 +48,7 @@
 2. [色彩](#色彩)
 3. [圖示](#圖示)
 4. [間距、圓角與層次](#間距圓角與層次)
-5. [安裝與使用](#安裝與使用)
+5. [安裝與使用](#安裝與使用) —— 跑 preview、SCSS 入口、`@layer`、Composer 安裝、Blade 元件、prototype 流程
 6. [開發本系統](#開發本系統)
 7. [字型管理（Fonts）](#字型管理fonts)
 8. [icon 字型（symicon）維護](#icon-字型symicon維護)
@@ -47,9 +61,9 @@
 **主字體：** Noto Sans TC（400 / 500 / 600 / 700）。
 **英數字體：** Google Sans Flex（variable，400–700 / stretch 48%–150%）。
 **Display（僅數字用）：** `.ft-semicondensed` / `.ft-condensed` —— 只用於統計、價格、面試次數、薪資範圍。**永遠不要** 用 display 設定內文。
-**圖示：** `symicon`（自家 icon font，172 個 glyph，見 [圖示](#圖示)）。
+**圖示：** `symicon`（自家 icon font，250 個 glyph，見 [圖示](#圖示)）。
 
-**Scale。** 詳見 `resources/scss/tokens/_typography.scss`、預覽 `type` 對照頁。三大家族：
+**Scale。** 詳見 `resources/scss/tokens/_typography.scss`、preview 的 `/foundation/typography`。三大家族：
 
 - **Headline**（`fz-headline-*`，xxl→xs）：主視覺標題、區塊主標。搭配 `.fz-tit`；xl / xxl 微負字距。
 - **Title**（`fz-title-*`，lg/md/sm）：卡片標題、表單標籤、行內強調。搭配 `.fz-tit`。
@@ -67,7 +81,7 @@
 
 ## 圖示
 
-**字體家族。** `symicon-fill` —— 172 個 glyph、單一線重的 filled 風格。幾何形狀對齊 24×24 畫板、2px 視覺筆畫；每個 icon 視覺量約佔 18×18。整套刻意只服務本產品族群：求職動詞為主（`interview-logo`、`interview-luckybag`、`allowance-book`、`atm`、`receipt`、`factory`），不收一般通用 dev / file 圖示。
+**字體家族。** `symicon-fill` —— 250 個 glyph、單一線重的 filled 風格。幾何形狀對齊 24×24 畫板、2px 視覺筆畫；每個 icon 視覺量約佔 18×18。整套刻意只服務本產品族群：求職動詞為主（`interview-logo`、`interview-luckybag`、`allowance-book`、`atm`、`receipt`、`factory`），不收一般通用 dev / file 圖示。
 
 **用法。**
 
@@ -98,12 +112,25 @@
 - `--radius-xl` : 24px
 - `--radius-xxl` : 32px
 - `--radius-pill` : 999px
+- `--corner-shape` : `superellipse(1.05)` —— **不是尺寸，是圓角的形狀**
+
+`--corner-shape` 是 2024 才進規格的新 CSS 屬性，沒有任何標準 reset 會提供。元件的
+20 處 `border-radius` 全靠它，少了圓角會變成正圓。因此它放在 `_component-base.scss`
+（元件契約）而不是等專案的 reset 給 —— 詳見 [1b](#1b-三個-scss-入口選哪個) 下方說明。
+
+完整 token 清單（170 個）見 preview 的 `/foundation/tokens`，可搜尋、點擊複製。
 
 ---
 
 ## 安裝與使用
 
-前端切版時用法：clone 下來，本機跑預覽頁，對照元件樣式與 class 名稱即可。
+兩種身份，看不同小節：
+
+| 你是 | 看 |
+|---|---|
+| 前端／設計，想對照元件與 token | [1 啟動預覽](#1-啟動預覽)、[2 切版怎麼對照](#2-切版怎麼對照) |
+| 要把設計系統接進 Laravel 專案 | [3 Composer 安裝](#3-laravel-專案怎麼裝composer)、[1b SCSS 入口](#1b-三個-scss-入口選哪個)、[1c `@layer`](#1c-樣式隔離layer) |
+| PM／agent，要產 prototype | [5 prototype 流程](#5-pm-與-ai-agent-討論-prototype) |
 
 ### 1. 啟動預覽
 
@@ -160,12 +187,82 @@ npm run dev               # Vite（host）→ 5178
 - **查 token / 色票 / 圖示**：preview 的 `/foundation`。`/foundation/tokens` 是全部 170 個 token 一頁列完（可搜尋、點擊複製 `var(--x)`），`/foundation/icons` 是 250 個 icon。兩者都是掃原始碼生成，不會與實際程式碼不同步。
 - **禁自創 token / class**：切版只能用設計系統已存在的 token / class，不確定先 `grep resources/scss/` 或讀 `resources/scss/tokens`、`resources/scss/components` 確認。
 
-### 3. 給原型專案使用（vendored）
+### 3. Laravel 專案怎麼裝（Composer）
 
-PM + AI agent 的原型專案把本 repo 的 `resources/scss/` 與 `docs/ai-guide.md` 複製（vendored）進去，agent 依 guideline 產出畫面。完整複製清單、指令與規則範本：
+> ⚠️ **Phase 4 尚未執行** —— repo 目前還在個人帳號下、未推到 `pi-tw` org，所以下面的
+> URL 還不能用。步驟本身已定案，進度見 [TODO.md](TODO.md)。
 
-- [docs/prototype-README.template.md](docs/prototype-README.template.md) —— 原型 repo 的 README 範本
-- [docs/prototype-CLAUDE.template.md](docs/prototype-CLAUDE.template.md) —— 原型 repo 的 CLAUDE.md 範本
+一次性設定，每個專案只做一次：
+
+```bash
+composer config repositories.pi vcs git@github.com:pi-tw/<repo>.git
+composer require pi-tw/pi-design-system:^1.0
+```
+
+ServiceProvider 由 Laravel 自動發現，裝完就能用 `<x-pi::button>`。
+
+**SCSS 那邊**：Sass 不吃 Vite alias，只吃 `loadPaths`。建議在專案放一支 shim：
+
+```scss
+// resources/sass/_pi-ds.scss
+@forward '../../vendor/pi-tw/pi-design-system/resources/scss/index';
+```
+
+然後 `app.scss`：
+
+```scss
+@use "pi-ds";        // 進 @layer pi
+@use "legacy/main";  // 未分層 → 衝突時勝出（見 1c）
+```
+
+**導入驗證（必做）**：接上套件但**先不掛任何新頁面**，把既有主要頁面前後截圖比對。
+**理論上應該零差異** —— 有差異就是漏了裸元素選擇器或 reset 汙染，趁這時候抓出來。
+之後每次升版都跑一次，成本很低但能擋掉最惡劣的那類 regression。
+
+**升級時機由各專案自行決定。** 半年前上線、目前沒在維護的專案鎖在 `^1.8` 完全沒問題
+—— 這是版本化最大的好處，不需要「所有專案都跟到最新」。
+
+### 4. Blade 元件
+
+13 支，呼叫寫法 `<x-pi::button tone="success" size="md">送出</x-pi::button>`。
+
+完整清單見 [CLAUDE.md](CLAUDE.md) 的「可用元件清單」（由
+`scripts/sync-component-list.php` 自動生成，永遠與實際程式碼一致），
+各元件的 props 值域與注意事項見 preview 的 `/components/<name>`。
+
+**各元件的 tone / size 清單並不一致** —— button 有 8 個 tone、callout / alert /
+notification 6 個（無 `orange`）、toggle 5 個且沒有 `xl` 尺寸、checkbox / radio
+4 個（無 `warning` / `purple`）、content-switcher 3 個。給錯值元件會**直接丟例外**，
+不會輸出一個不存在的 class。動手前讀 `resources/views/components/<name>.meta.php`。
+
+**已知元件缺口**（不要自己刻，走缺口流程提報）：`dropdown` 只有選單項目、沒有浮出
+面板；`modal` 只有面板外觀、沒有遮罩／置中／focus trap。缺口清單也在 CLAUDE.md 內。
+
+### 5. PM 與 AI agent 討論 prototype
+
+在**本 repo** 的 `prototypes/<project>/` 進行，不複製 preview 環境到各專案。
+
+```
+prototypes/<project>/
+├── pages/<name>.blade.php        整頁
+├── fragments/<name>.blade.php    頁面中一塊（宣告 @piFragment manifest）
+├── fixtures/<name>.php           假資料 = 給後端的資料契約
+└── _hosts/<name>.html            專案頁面的 rendered 快照（fragment 用）
+```
+
+定案後交接：
+
+```bash
+php scripts/apply.php <project> <name>                    # 印出可貼的 blade
+php scripts/apply.php <project> <name> --output=patch \   # fragment 才有
+    --target=<專案路徑>/resources/views/<...>.blade.php
+```
+
+前端只需改兩處（刪 `@piFixture`、換 `@extends`），**body 一個字都不用改** —— 因為
+專案與 preview 吃同一版元件套件。後端看 fixture 就知道要提供什麼結構。
+
+完整流程（含缺件提報的中斷規則）見 [docs/prototype-flow.md](docs/prototype-flow.md)；
+產 prototype 的規範見 `.claude/skills/pm-to-preview/`。
 
 ---
 
@@ -215,7 +312,7 @@ resources/scss/tokens/_typography.scss ← --font-sans / --font-display CSS vari
 `_fonts.scss` 用 `$font-path !default` 留了**覆寫鉤子**：
 
 ```scss
-$font-path: "../../fonts" !default;
+$font-path: "/fonts" !default;
 
 @font-face {
   font-family: "symicon";
@@ -224,9 +321,17 @@ $font-path: "../../fonts" !default;
 }
 ```
 
-預設 `"/fonts"`（web root 起算的絕對路徑）。預覽頁與下游專案（字型放 `public/fonts/`）都吃這個預設值即可，不用改；只有字型放 CDN 時才需覆寫 `$font-path`。
+預設 `"/fonts"`（web root 起算的絕對路徑）。preview 與專案端（字型放 `public/fonts/`）都吃這個預設值即可，不用改；只有字型放 CDN 時才需覆寫：
 
-> 為什麼用絕對路徑：Sass 不會 rebase `url()`，會原樣輸出；Vite 是相對於「entry CSS 檔的目錄」去解，不是相對於 `_fonts.scss` 這支 partial。因此任何相對路徑都只能對其中一個消費端正確（`sass` CLI 輸出到 `dist/`、Vite entry 在 `resources/scss/`、專案端 entry 在 `resources/sass/`，三者位置各不相同）。
+```scss
+@use "pi-design-system/base/fonts" with (
+  $font-path: "https://cdn.example.com/fonts"
+);
+```
+
+> 為什麼用絕對路徑：Sass 不會 rebase `url()`，會原樣輸出；Vite 是相對於「entry CSS 檔的目錄」去解，不是相對於 `_fonts.scss` 這支 partial。因此任何相對路徑都只能對其中一個消費端正確（`sass` CLI 輸出到 `dist/`、preview 的 Vite entry 在 `preview/resources/scss/`、專案端 entry 在 `resources/sass/`，三者位置各不相同）。絕對路徑對三者都成立。
+>
+> preview 的 `/fonts` 由 `preview/public/fonts` → `../../fonts` 的 symlink 服務。
 
 ### 換 / 升級字型怎麼做
 
@@ -261,9 +366,10 @@ assets/icons-preview.html          ← glyph 視覺索引
 
 > ⚠️ **codepoint 對應**：icon 字型工具（IcoMoon / Fontello）匯出時附 `selection.json`（每個 icon 的 codepoint）。**glyph 順序一變，所有 `content: "\eXXX"` 都要重新對應** —— 升級前務必拿到對照表確認。
 
-### 情境 1：在本預覽專案升級 icon 字型
+### 情境 1：在本 repo 升級 icon 字型
 
-本 repo 用 Vite 預覽。`assets/` 與 `fonts/` 是靜態檔，Vite 直接服務，**不用改 `vite.config`**。
+`assets/` 與 `fonts/` 由 preview 的 `public/` symlink 服務（`preview/public/assets` →
+`../../assets`、`preview/public/fonts` → `../../fonts`），**加檔不用改任何設定**。
 
 ```bash
 # 1. 放新字型檔進 fonts/，檔名帶新版本號（如 6.4s → 7.0s），舊檔先留著
@@ -286,44 +392,42 @@ npm run dev               # Vite → 5178
 # 4. 全部 OK → 刪舊 symicon-6.4s.*，寫 CHANGELOG
 ```
 
-### 情境 2：在其他專案（Vite）實際使用
+### 情境 2：專案端使用 icon
 
-下游專案不 link 整包，而是**把 icon 字型檔與 class 表 vendored 進自己專案**。典型 Vite 專案做法：
+**字型檔與 class 表都隨套件出貨** —— `fonts/` 與 `assets/symicon.css` 刻意**沒有**
+`export-ignore`（元件吃 `icon-*` class，漏了 icon 全空）。專案端不需要複製任何檔案。
 
-**a. 放字型檔**：把 `fonts/symicon-X.woff2 / .woff` copy 到該專案 `public/fonts/`（Vite 對 `public/` 靜態服務，不經打包）。
+**a. 讓 `/fonts` 解得到**。`symicon.css` 的 `@font-face` 走 `../fonts/`（相對 `assets/`），
+但元件的 `_fonts.scss` 用的是絕對路徑 `/fonts`。專案端把 vendor 內的字型接到 web root：
 
-**b. 宣告 `@font-face`**（該專案某支 scss，url 用絕對路徑指向 `public/`）：
+```bash
+# Laravel：在 public/ 建 symlink（或用 build 步驟 copy）
+ln -s ../vendor/pi-tw/pi-design-system/fonts public/fonts
+```
+
+或覆寫 `$font-path` 指到專案已有的字型位置：
 
 ```scss
-@font-face {
-  font-family: "symicon";
-  src: url("/fonts/symicon-X.woff2") format("woff2"),
-       url("/fonts/symicon-X.woff")  format("woff");
-  font-display: swap;
-}
+@use "pi-design-system/base/fonts" with ($font-path: "/assets/fonts");
 ```
 
-**c. icon class 表**：把 `assets/symicon.css` 的 `.icon` / `.icon-*` 規則 vendored 進該專案（或只挑用到的 glyph），class 名與 codepoint 以本 repo 的 `symicon.css` 為唯一真相。
-
-**d. （建議）preload 首屏會用到的 icon 字型**，降 FOUT：
+**b. 載 icon class 表**。`assets/symicon.css` 是編譯好的 CSS（含 `@layer pi`），
+直接在 layout 引入 vendor 內的那支，或在 build 步驟 copy 進 `public/`：
 
 ```html
-<link rel="preload" href="/fonts/symicon-X.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/vendor/pi-ds/symicon.css">
 ```
 
-**e. 該專案升級 icon 版本流程**：
+**c.（建議）preload 首屏會用到的 icon 字型**，降 FOUT：
 
-```
-1. 新 symicon-N.woff2/woff 放 public/fonts/（新版本號檔名，舊檔先留）
-2. 改 @font-face 的 src url → 新檔名
-3. 改 preload href → 新檔名
-4. 若 glyph 順序變 → 依新 selection.json 重對 content codepoint
-   ↳ 連動檢查寫死 codepoint 的地方：表單 valid/invalid feedback icon、
-     loading 動畫 icon、layout icon
-5. npm run build / dev 驗證 → icon 全正常 → 刪舊檔
+```html
+<link rel="preload" href="/fonts/symicon-6.4s.woff2" as="font" type="font/woff2" crossorigin>
 ```
 
-> 兩種情境共通鐵則：**版本號寫進檔名**（cache-bust）、**舊檔驗證通過才刪**、**glyph 順序變動務必重對 codepoint**。
+**d. 升級**：`composer update pi-tw/pi-design-system`。字型檔名帶版本號（cache-bust），
+所以升級後要同步改 preload 的 `href`。glyph 順序變動屬 breaking change，會寫在 CHANGELOG。
+
+> 共通鐵則：**版本號寫進檔名**（cache-bust）、**舊檔驗證通過才刪**、**glyph 順序變動務必重對 codepoint**。
 
 ---
 

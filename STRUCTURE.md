@@ -117,5 +117,8 @@ Pi-Design-System/
 
 ## 3. 定位
 
-這個 repo 是 **token 與 component 的唯一真相來源**，目前用途：**給前端切版時對照目前的元件內容與樣式**，本機起 `preview/` 跑預覽即可（見 [preview/README.md](preview/README.md)）。**不發布 npm**。
-下游專案實際使用時，採 vendored 方式：複製需要的 `resources/scss/*.scss` / `assets/symicon.css` / `fonts/` 進自己專案，以本 repo 為唯一真相（詳見 README）。
+這個 repo 是 **token 與 component 的唯一真相來源**，出貨 SCSS 原始碼 + Blade 元件兩層。本機起 `preview/` 跑預覽（見 [preview/README.md](preview/README.md)）。**不發布 npm**（Node 只用於本 repo 的 SCSS build 與 preview）。
+
+專案端透過 **Composer 版本化依賴**取得：`composer require pi-tw/pi-design-system`。
+**不採 vendored（複製檔案進專案）** —— 那條路無法回答「專案 B 現在用哪一版」，理由見
+[design-guideline-spec.md](design-guideline-spec.md) 的 **D1**。安裝步驟詳見 README。
