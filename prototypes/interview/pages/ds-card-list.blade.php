@@ -75,9 +75,9 @@
 
                             <x-pi::button
                                 as="a"
-                                size="sm"
+                                size="xs"
                                 variant="outline"
-                                tone="basic"
+                                tone="success"
                                 :href="$card['action']['href']"
                             >{{ $card['action']['label'] }}</x-pi::button>
                         </div>
