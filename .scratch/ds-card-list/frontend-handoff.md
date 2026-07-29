@@ -43,9 +43,18 @@ iv-page（max-width 1120px，置中）
 - **卡片外框** — `gl_border-outer`（1px outline）+ `gl_radius-lg`（16px）+ `gl_shadow-sm`，底色 `var(--cl-basic-0)`，內距 `var(--sp-4)` — ⚠️ 待確認「組合而非正式元件」
 - **卡片縮圖** — 設計系統沒有 image / thumbnail 元件，用裸 `<img>` + page-scoped class（`object-fit: cover`）— ⚠️ 待確認
 
-### 候選缺口：`card`
+### 候選缺口：`card` — **PM 已決定不立案**
 
-同一卡片結構在本頁重複 3 次，已超出「一次性組合」的範圍。**提報 `card` 為候選元件缺口**（尚未走完提議 loop，PM 這輪只審批了 `nav-link`）：
+同一卡片結構在本頁重複 3 次，已超出「一次性組合」的範圍，曾提報為候選元件缺口。
+
+**PM 決定：不立案，卡片樣式到各專案後自行改成專案獨有的樣式。**
+
+因此設計系統不會有 `card` 元件，本頁的三 class 疊加 + page-scoped 排版就是最終交付物 ——
+interview 端可以直接改它，不需要回頭跟設計系統對齊。
+
+已知後果（決策已定，記錄用）：跨頁的圓角階、陰影階、內距不會一致，且沒有機制會抓到。
+
+原提議留檔備查：
 
 | # | 欄位 | 內容 |
 |---|---|---|
@@ -54,7 +63,6 @@ iv-page（max-width 1120px，置中）
 | 3 | 為何組不出 | 疊得出視覺，但「哪個 radius 階 + 哪個 shadow 階 + 內距多少」每次組都要重新決定，跨頁一定 drift |
 | 4 | prototype 先用什麼頂替 | 就是現在這個三 class 疊加 + page-scoped 排版 |
 
-要不要立案由 PM / 設計決定。
 
 ## Page-scoped SCSS
 
@@ -73,7 +81,18 @@ iv-page（max-width 1120px，置中）
 
 ## 待確認新件
 
-### `nav-link` — 🆕 待確認（PM 已同意為新件）
+### `nav-link` — 🆕 PM 已同意為新件，但**實作由各專案自行處理**
+
+**PM 決定：設計系統這輪不做 `nav-link`，前端到各別專案後自行實作 active 樣式。**
+
+所以 interview 端要做的是：拆掉下方 placeholder（`iv-nav__current` 的框 + 可見標籤
+「🆕 nav-link active（待確認）」），換成 interview 自己的 active 視覺。
+**不要用 `gl_` 前綴** —— 那是設計系統出貨的命名空間，自訂的 active 樣式不屬於它。
+
+已知後果（決策已定，記錄用）：每個專案會長出不同的 active 視覺，設計系統不會知道，
+因為缺口被各專案自行實作吸收掉了。
+
+原提議留檔備查：
 
 | # | 欄位 | 內容 |
 |---|---|---|
@@ -82,7 +101,7 @@ iv-page（max-width 1120px，置中）
 | 3 | 為何組不出 | active 的視覺規格（底色色階？左側指示條？字色 + 字重？）是設計系統該定的事。`_dropdown.scss` 沒有任何 active modifier；`content-switcher.is-active` 綁死在水平底線 + `border-bottom` 容器上，垂直清單套不了。prototype 自己挑一個色階疊出來 = 把缺口藏起來 |
 | 4 | prototype 先用什麼頂替 | `<x-pi::dropdown-item href>` 當殼，current 那一項外層包 `gl_border-outer` + `gl_radius-sm` 框出範圍，加可見標籤「🆕 nav-link active（待確認）」 |
 
-**正式 class 待設計。** 無 dashed border token（已查 `resources/scss/` 確認），故 placeholder 用現有 solid 描邊。
+無 dashed border token（已查 `resources/scss/` 確認），故 placeholder 用現有 solid 描邊。
 
 ## Prototype
 
