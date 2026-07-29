@@ -26,7 +26,7 @@ iv-page（max-width 1120px，置中）
 
 | 實例 | Pi DS 元件 | props |
 |---|---|---|
-| 卡片的行動按鈕 | `<x-pi::button>` | `as="a" size="xs" variant="outline" tone="success" :href` |
+| 卡片的行動按鈕 | `<x-pi::button>` | `as="a" size="xs" tone="success" :href`（variant 用預設 `solid`） |
 | Sidebar 導覽連結 | `<x-pi::dropdown-item>` | `:href :icon`（size 用預設 `md`） |
 
 卡片本身與圖片**沒有對應元件** —— 見下方「組合件」。
