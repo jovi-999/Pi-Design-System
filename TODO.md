@@ -269,7 +269,7 @@ Pi-Design-System/          ← 套件本體：無 framework、無 build、無 DB
 - [x] `resources/views/components/.gitkeep` —— 該目錄已有 26 檔
 - [x] `.scratch/pm-to-blade-skill/`（7 檔）—— `pm-to-blade` 舊 skill 草稿，description 開頭就寫「用 **vendored** 的 Pi DS」，含 `vendor-copy.sh`（D1 排除的做法）
 - [x] `.scratch/pm-to-preview-test/`（4 檔）、`.scratch/prototype-handoff/`（8 檔）—— 舊路線的測試輸出與 issue 記錄
-- [x] `docs/agents/domain.md` —— 指向的 `CONTEXT.md` 與 `docs/adr/` **從未存在**。CLAUDE.md 改為明講「本專案不採 domain docs 慣例」，架構決策記在 `design-guideline-spec.md` 的 D1–D6
+- [x] `docs/agents/domain.md` 與 `triage-labels.md` —— 標準是「本專案實際有在用嗎」。domain docs 的 `CONTEXT.md` / `docs/adr/` 從未存在（架構決策記在 `design-guideline-spec.md` 的 D1–D6）；triage-labels 只為了 5 個字串獨立一支檔、且左右欄完全相同，已併進 `issue-tracker.md`。`issue-tracker.md` 保留 —— `.scratch/<feature>/` 就是那個慣例，實際有在用
 - [x] `preview/` 的 Laravel skeleton 殘留（16 檔）：`app/Models/User.php`、`config/{auth,mail,filesystems,database}.php`、`database/{factories,migrations,seeders}`、`tests/`、`phpunit.xml`
 
 **刪 DB 相關檔案前必須先切 driver。** 原本 session / cache / queue 全部預設 `database`（sqlite），直接刪 migration 會讓 preview 500。
