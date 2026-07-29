@@ -16,7 +16,7 @@
 1. **能用現成 `<x-pi::*>` 元件直接命中** → 直接用，不提議。
    判斷前先讀該元件的 `resources/views/components/<name>.meta.php` —— props 值域各元件不同，給錯值元件會丟例外。
 2. **不能，但用現有 token（border / shadow / spacing / color / radius / type）加一層 wrapper 疊得出視覺** → **組合件**：prototype 直接跑，handoff 標 `⚠️ 待確認` 並註明「組合而非正式元件」，**不進提議 loop**。
-   排版用的 `<style>` 計入 `CLAUDE.md` 第 3 條的 30 行上限；超過就升級成第 3 層。
+   排版用的 `<style>` **與 inline `style=""`** 都計入 `CLAUDE.md` 第 3 條的 30 行上限（CI 會擋）；超過就升級成第 3 層。
 3. **兩者皆不能**（需 JS 行為或全新視覺 primitive，例：日曆彈窗、可排序表格、浮出面板）→ **真缺件**，進提議 loop。
 
 > 缺 token 同走此門檻：幾乎總能用「最接近的現有階」頂替；真需新 token 才進提議。

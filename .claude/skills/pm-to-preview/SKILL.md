@@ -60,7 +60,7 @@ Fragment 需要專案脈絡時，做法是**把專案頁面的 rendered HTML 抓
 
 - **只用 `<x-pi::*>`**，不手刻元件 markup、不寫裸 `gl_` class。
 - **資料一律進 `fixtures/`**，blade 內不得寫死。fixture 的 key 結構就是給後端的資料契約。
-- **page-scoped `<style>` 上限 30 行**（`CLAUDE.md` 第 3 條）。超過即視為元件缺口 —— 停下來提報，不要自己刻。行數會顯示在 `/prototypes` 清單頁。
+- **page-scoped 樣式上限 30 行**（`CLAUDE.md` 第 3 條）= `<style>` 行數 + inline `style=""` 宣告數。超過即視為元件缺口 —— 停下來提報，不要自己刻。**CI 會擋**（`scripts/check-prototypes.php`）。行數會顯示在 `/prototypes` 清單頁。
 - 不需要任何註冊 —— prototype 清單頁是掃檔生成的。
 
 收尾：開 `http://localhost:8100/prototypes/<project>/<name>` 確認回 **200**、畫面正確。
@@ -84,7 +84,7 @@ Fragment 需要專案脈絡時，做法是**把專案頁面的 rendered HTML 抓
 - [ ] 每個元件都過了三層門檻；缺件有走提議 loop 或標組合件
 - [ ] 每個用到的元件都讀過 `.meta.php` 確認 props 值域
 - [ ] blade 內零寫死資料，全部走 `@piFixture`
-- [ ] page-scoped `<style>` ≤ 30 行（超過已提報，不是自己刻）
+- [ ] `php scripts/check-prototypes.php` 通過（樣式 ≤ 30 行、fragment manifest 完整）
 - [ ] `/prototypes/<project>/<name>` 回 200、畫面正確
 - [ ] fragment：已注入宿主快照（不是顯示「未注入宿主快照」的裸片段）
 - [ ] `php scripts/apply.php <project> <name>` 跑得起來

@@ -34,6 +34,12 @@ Pi-Design-System/
 │           ├── _alert.scss  _callout.scss  _content-switcher.scss  _dropdown.scss
 │           ├── _pagination.scss  _notification.scss  _loading.scss  _modal.scss
 │           └── _border.scss  _shadow.scss  _radius.scss
+├── src/                      ★ PSR-4 PHP（`PiTw\PiDesignSystem\`，會出貨）
+│   ├── PiDesignSystemServiceProvider.php  # Blade 命名空間 pi + 兩個 directive
+│   └── Prototype/            #   prototype 流程用，專案端不執行但仍出貨
+│       ├── FixtureLoader.php #     @piFixture 的實作
+│       ├── Manifest.php      #     @piFragment manifest 解析（preview 與 CI 共用）
+│       └── StyleBudget.php   #     ⚠ 30 行門檻的唯一計算來源（preview 與 CI 共用）
 ├── assets/                   ★ 靜態資源
 │   ├── symicon.css           #   icon 字體 @font-face + class（icon-*）+ codepoint
 │   └── icon-names.json / icon-cp-map.json  # icon 清單與 codepoint（preview 的
@@ -53,7 +59,8 @@ Pi-Design-System/
 ├── docs/ai-guide.md          ☆ 給 AI：Figma 名稱 ↔ class 對照表
 ├── docs/prototype-flow.md    ☆ PM 需求 → preview → 交接的流程圖
 ├── scripts/check-build.mjs   ☆ build 後 smoke 檢查
-├── scripts/sync-component-list.php  ☆ meta → CLAUDE.md 元件清單
+├── scripts/sync-component-list.php  ☆ meta → CLAUDE.md 元件清單（--check 給 CI）
+├── scripts/check-prototypes.php  ☆ prototype 的 CI 檢查（樣式門檻 + manifest）
 ├── scripts/fetch-host.php  scripts/apply.php  ☆ fragment 的宿主快照與交接
 ├── package.json              ☆ 只剩 SCSS build / lint（不發布 npm）
 ├── .nvmrc                    ☆ Node 版本（24 = 現行 LTS）。`cd` 進來後 `nvm use`
@@ -61,6 +68,7 @@ Pi-Design-System/
 ├── README.md  CHANGELOG.md  TODO.md
 ├── CLAUDE.md  SKILL.md       # agent 規則
 ├── docs/ai-guide.md
+├── .github/workflows/ci.yml  ☆ CI 四個 gate（SCSS / 元件清單 / prototype / composer）
 ├── .claude/skills/           # 專案 skill（如 figma-to-pi-ds）
 └── dist/                     # SCSS build 產物（gitignore，勿手改/commit）
 

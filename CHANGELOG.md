@@ -65,6 +65,30 @@ repo 從「vendored SCSS 對照用」轉為 **Composer 套件**。下游已 vend
 - `scripts/apply.php` —— fragment → blade 片段或 unified diff patch。
 - CLAUDE.md 新增 prototype 六條硬性規則與自動生成的元件清單。
 
+### Added — CI（repo 原本沒有）
+
+`.github/workflows/ci.yml`，四個 gate，任一失敗擋 PR：
+
+| Gate | 指令 | 為什麼 |
+|---|---|---|
+| SCSS build + smoke | `npm test` | 14 項檢查，含 `@layer` 分層防護 |
+| 元件清單同步 | `php scripts/sync-component-list.php --check` | 手寫清單三個月後一定對不上，然後 agent 開始產出不存在的元件 |
+| Prototype 檢查 | `php scripts/check-prototypes.php` | 30 行樣式門檻 + fragment manifest |
+| 套件定義 | `composer validate --no-check-publish` | |
+
+**`CLAUDE.md` 第 3 條的 30 行門檻從「健康指標」變成「CI 硬擋」。** 超標時要提報元件
+缺口，不是把門檻調高 —— 這是元件庫持續完整的唯一機制。失敗訊息直接指向缺件流程的
+三層門檻與提議格式。
+
+門檻的定義同時擴大：現在計 `<style>` 行數 **＋ inline `style=""` 的宣告數**。只數前者
+的話，把樣式搬進 attribute 就能繞過，閥門形同不存在。現有 5 支 prototype 最高 11 行，
+無回歸。
+
+計算邏輯抽成 `src/Prototype/StyleBudget.php`（門檻的唯一來源）與
+`src/Prototype/Manifest.php`（manifest 解析），**preview 清單頁與 CI 共用同一份** ——
+先前兩邊各一份實作，CI 那份的 manifest regex 跑在整份原始碼而非 manifest 區塊內，
+blade 註解裡出現 `'slot' => 'x'` 就會誤判通過。
+
 ### Added — Foundation 頁，並廢除 `preview-static/`
 
 Preview 現在是三區：**Foundation** / **元件** / **Prototype**，全部在 `localhost:8100`。

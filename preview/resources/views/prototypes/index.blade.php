@@ -64,12 +64,22 @@
                             @endif
                         </td>
                         <td>
-                            {{-- CLAUDE.md 第 3 條的健康指標：超過 30 行就是元件缺口的訊號 --}}
-                            @if ($item['pageScopedScssLines'] > 30)
-                                <span class="pv-error">{{ $item['pageScopedScssLines'] }} 行 · 超過 30 行門檻</span>
+                            {{--
+                                CLAUDE.md 第 3 條的門檻。數字由套件的 StyleBudget 算，
+                                跟 scripts/check-prototypes.php（CI 阻擋）同一份實作。
+
+                                計入 inline style 的宣告數 —— 只數 <style> 區塊的話，
+                                把樣式搬進 style attribute 就能繞過門檻。
+                            --}}
+                            @php($budget = $item['styleBudget'])
+                            @if ($budget['overLimit'])
+                                <span class="pv-error">{{ $budget['total'] }} 行 · 超過 {{ $budget['limit'] }} 行門檻</span>
                             @else
-                                {{ $item['pageScopedScssLines'] }} 行
+                                {{ $budget['total'] }} 行
                             @endif
+                            <div class="pv-dim">
+                                &lt;style&gt; {{ $budget['styleLines'] }} + inline {{ $budget['inlineDeclarations'] }}
+                            </div>
                         </td>
                     </tr>
                 @endforeach

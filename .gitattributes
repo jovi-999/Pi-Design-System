@@ -47,7 +47,13 @@
 
 # 刻意「不」export-ignore 的（下游需要）：
 #   /resources   SCSS 原始碼 + Blade 元件 —— 套件本體
-#   /src         ServiceProvider
+#   /src         ServiceProvider，以及 src/Prototype/ 三支類別
+#
+#     src/Prototype/{FixtureLoader,Manifest,StyleBudget}.php 是 prototype 討論
+#     流程用的，專案端不會執行。仍然出貨的原因：ServiceProvider 註冊的
+#     @piFixture directive 會編譯成 FixtureLoader 的 FQCN 呼叫，把這個目錄
+#     export-ignore 掉會讓「專案端誤用 @piFixture」從一個清楚的錯誤變成
+#     class not found 的 fatal。三支合計約 8 KB，代價低於那個風險。
 #   /fonts       字型檔（含 symicon icon 字型）
 #   /assets      symicon.css + icon codepoint 對照
 #   /docs        ai-guide.md（Figma 名稱 ↔ class 對照，agent 產頁時要讀）

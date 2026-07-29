@@ -19,7 +19,10 @@
 
 1. **只能用 `<x-pi::*>` 元件**，不准手刻 HTML 或裸 `gl_` class。
 2. **資料一律放 `fixtures/`**，blade 內不得寫死。fixture 的 key 結構就是給後端的資料契約。
-3. **page-scoped SCSS 上限 30 行。超過即視為元件缺口 —— 停下來提報，不要自己刻。**
+3. **page-scoped 樣式上限 30 行。超過即視為元件缺口 —— 停下來提報，不要自己刻。**
+   計算方式：`<style>` 區塊的非空白行數 **＋ inline `style="…"` 的宣告數**（以 `;` 拆）。
+   inline 也計入，否則把樣式搬進 attribute 就能繞過門檻，閥門直接失效。
+   **由 CI 強制**（`scripts/check-prototypes.php`）—— 超標時要提報缺口，不是把門檻調高。
 4. 不得輸出裸元素選擇器（`h1` / `a` / `button` / `*`）。
 5. Fragment 必須宣告 `@piFragment` manifest（target / slot / host）。
 6. 元件樣式一律包在 `@layer pi` 內，class 前綴 `gl_`。

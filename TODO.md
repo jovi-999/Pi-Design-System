@@ -260,7 +260,48 @@ Pi-Design-System/          ← 套件本體：無 framework、無 build、無 DB
 - [x] `CHANGELOG.md` 記錄
 - [x] `git commit`
 - [x] **`pm-to-preview` skill 改產 blade**（見 3.8）
-- [ ] page-scoped SCSS 門檻進 CI（目前只在 preview 清單頁顯示行數）
+- [x] page-scoped SCSS 門檻進 CI（見 3.12）
+
+### 3.12 30 行門檻進 CI
+- [x] `src/Prototype/StyleBudget.php` —— 門檻的**唯一計算來源**，preview 清單頁與 CI 共用
+- [x] `src/Prototype/Manifest.php` —— manifest 解析同樣抽成共用（原本 preview 與 CI 各一份）
+- [x] `scripts/check-prototypes.php` —— 樣式門檻 + fragment manifest，`--path` 可指向別的目錄
+- [x] `.github/workflows/ci.yml` —— **repo 原本完全沒有 CI**，四個 gate：SCSS build / 元件清單同步 / prototype 檢查 / composer validate
+- [x] `PrototypeCatalog` 移除自己的兩份實作，改用共用類別
+- [x] 文件同步：CLAUDE.md 第 3 條、README 新增「CI 的四個 gate」、STRUCTURE 補 `src/` 樹狀圖與新 script、skill 三處
+
+**三處刻意偏離請求範圍（review 點出，記錄在此而非默默夾帶）**
+
+1. **門檻定義從「`<style>` 行數」擴大為「`<style>` 行數 + inline `style=""` 宣告數」。**
+   使用者只要求「把門檻進 CI」，沒要求改定義。但不計 inline 的話，把樣式搬進
+   attribute 就能繞過，閥門形同不存在（先前 review 實際抓到 `<div style="height: 24px">`
+   完全不計入）。**實測無回歸**：現有 5 支最高 11 行，`project-a/member-list` 由 0 變 4。
+   連帶：`CLAUDE.md` 第 3 條的文字從「page-scoped SCSS」改為「page-scoped 樣式」，
+   但 `design-guideline-spec.md` §5.6 的規則原文仍是舊措辭 —— **兩份文件現在不一致**，
+   要改 spec 需另行確認（那是 spec 原文，不是本 repo 的偏離記錄）。
+
+2. **spec §8.6 原文是「超過 30 行就要 review」，不是 block。** 改成 CI 硬擋是立場翻轉。
+   使用者說「進 CI」可支持硬擋，但這個轉變原本沒有記在任何地方（`PrototypeCatalog`
+   裡「這是健康指標而不是硬性阻擋」的註解也被一併刪掉了）。現在記在這裡。
+
+3. **CI 的另外三個 gate（SCSS build / 元件清單 / composer validate）與 30 行門檻無關。**
+   最小可行只需一個 job。理由是 repo 原本沒有任何 CI，只放一個 job 等於白建一次
+   workflow；四個 gate 本機都實跑 exit 0。**副作用**：從此 PR 會因與門檻無關的
+   SCSS smoke 失敗而被擋。
+
+**未完成（spec §5.6 只做到一半）**：spec 寫的是「`sync-component-list.php` 掛進 CI，
+**PR 時自動更新** COMPONENTS 區段」。目前只做 `--check`（不一致就擋），不是自動 commit
+回 PR —— 那需要 CI 有寫入權限，屬另一個決定。
+
+**Code review 抓到並修掉的 5 個 bug**（都是實測驗證，不是猜測）：
+- `style='…'`（單引號）完全不計 → 門檻可繞。實測 fixture 修正前計 0、修正後計 3
+- `data-style="…"` 與 `:style="…"`（blade 綁定）被誤計 → 加 `(?<![-:\w])` 排除
+- `<style>` 區塊內出現 `style="` 字串會被重複計 → 計 inline 前先剝掉 `<style>` 區塊
+- 未閉合的 `<style>` 整段不計入 → 計到檔尾（實測 40 行修正前計 0、修正後計 40）
+- manifest 檢查跑在整份原始碼而非 manifest 區塊內 → blade 註解寫 `'slot' => 'x'` 就誤判通過
+- 邊界：`file_get_contents` 失敗回 `?: ''` 會讓所有檢查「通過」（CI 綠燈但什麼都沒檢查）
+  → 改為中止；`preg_match_all` 回 `false` 與 `0` 原本走同一條路 → 分開處理
+- `sort($prototypes)` 是拿整個 assoc array 比大小 → 改 `usort` 明確按 label
 
 ### 3.11 清掉無用與過時的檔案（共 39 檔）
 - [x] `assets/logo.svg`（34 KB）—— 唯一引用者是已刪的 `preview-static/index.html`。**`assets/` 會出貨**，等於每個專案都拿到一支沒人用的 34 KB

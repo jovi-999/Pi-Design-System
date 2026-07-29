@@ -3,6 +3,8 @@
 namespace App\Support;
 
 use Illuminate\Support\Collection;
+use PiTw\PiDesignSystem\Prototype\Manifest;
+use PiTw\PiDesignSystem\Prototype\StyleBudget;
 use RuntimeException;
 
 /**
@@ -13,9 +15,6 @@ use RuntimeException;
  */
 class PrototypeCatalog
 {
-    /** manifest 的三個欄位（spec 5.3） */
-    public const MANIFEST_KEYS = ['target', 'slot', 'host'];
-
     public static function path(): string
     {
         // preview/ 的上一層就是 repo 根
@@ -88,59 +87,12 @@ class PrototypeCatalog
             'file' => $file,
             // 相對 repo 根的路徑，顯示用
             'relativePath' => 'prototypes/' . $project . '/' . $kind . '/' . $name . '.blade.php',
-            'manifest' => static::parseManifest($source),
-            'pageScopedScssLines' => static::countInlineStyleLines($source),
+            'manifest' => Manifest::parse($source),
+            // 用套件的 StyleBudget 而不是自己數：同一份數字也被
+            // scripts/check-prototypes.php（CI 阻擋）使用，兩邊分開實作遲早
+            // 一邊算 25 一邊算 32，然後沒人知道該信哪個。
+            'styleBudget' => StyleBudget::measure($source),
         ];
     }
 
-    /**
-     * 從 blade 原始碼靜態解析 `@piFragment([...])`。
-     *
-     * 為什麼用靜態解析而不是 runtime：manifest 是給 preview 與
-     * scripts/apply.php 讀的中介資料，兩者都需要「不 render 就知道內容」。
-     * apply.php 更是完全在 Laravel 之外執行。
-     *
-     * @return array<string, string> 空陣列＝這不是 fragment（或沒宣告 manifest）
-     */
-    public static function parseManifest(string $source): array
-    {
-        if (! preg_match('/@piFragment\s*\(\s*\[(.*?)\]\s*\)/s', $source, $matches)) {
-            return [];
-        }
-
-        $manifest = [];
-
-        foreach (static::MANIFEST_KEYS as $key) {
-            // 只認單／雙引號的字面值 —— manifest 不該有運算式
-            if (preg_match("/['\"]" . $key . "['\"]\s*=>\s*['\"](.*?)['\"]/", $matches[1], $m)) {
-                $manifest[$key] = $m[1];
-            }
-        }
-
-        return $manifest;
-    }
-
-    /**
-     * 數 <style> 區塊的行數 —— CLAUDE.md 第 3 條的 30 行門檻。
-     *
-     * 這是健康指標而不是硬性阻擋：數字浮出來，超標的自然會被 review 注意到。
-     */
-    protected static function countInlineStyleLines(string $source): int
-    {
-        if (! preg_match_all('/<style[^>]*>(.*?)<\/style>/s', $source, $matches)) {
-            return 0;
-        }
-
-        $lines = 0;
-
-        foreach ($matches[1] as $block) {
-            foreach (explode("\n", trim($block)) as $line) {
-                if (trim($line) !== '') {
-                    $lines++;
-                }
-            }
-        }
-
-        return $lines;
-    }
 }

@@ -287,6 +287,25 @@ npm test                  # 檢查產出 css 含關鍵 token / class
 # 3. 寫 CHANGELOG → commit → push
 ```
 
+### CI 的四個 gate
+
+`.github/workflows/ci.yml` —— 任一失敗就擋 PR。四個都能在本機跑：
+
+```bash
+npm test                              # ① SCSS build + 14 項 smoke（含 @layer 分層防護）
+php scripts/sync-component-list.php --check   # ② CLAUDE.md 的元件清單是否與 *.meta.php 同步
+php scripts/check-prototypes.php      # ③ prototype 樣式門檻 + fragment manifest
+composer validate --no-check-publish  # ④ 套件定義合法
+```
+
+**② 存在的理由**：手寫的元件列表三個月後一定跟實際元件對不上，然後 agent 開始產出不存在的元件。清單自動生成，CI 確認沒人忘記跑。
+
+**③ 存在的理由**：`CLAUDE.md` 第 3 條的 30 行樣式門檻是整套流程的品質閥門 —— 自訂樣式寫太多代表元件庫缺東西。門檻計入 `<style>` 行數**與 inline `style=""` 的宣告數**（只數前者的話，把樣式搬進 attribute 就能繞過）。preview 清單頁顯示的數字與 CI 用同一份實作（`src/Prototype/StyleBudget.php`），不會一邊算 25 一邊算 32。
+
+**超標時要提報元件缺口，不是把門檻調高。**
+
+CI 刻意不跑 `preview/` 的 Laravel app（它是開發工具、整個 `export-ignore`），也還沒跑 `lint:scss`（stylelint 目前不在 `devDependencies`，靠本機全域安裝）。
+
 ### 編輯規則
 
 - 只改 `resources/scss/` 內檔案；CSS 一律由 `npm run build` 從 SCSS 產出，不手寫 CSS。

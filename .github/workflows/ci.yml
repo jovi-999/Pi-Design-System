@@ -1,0 +1,78 @@
+# ============================================================
+# Pi Design System — CI
+#
+# 四個 gate，任一失敗就擋 PR：
+#
+#   1. SCSS build + smoke（14 項檢查，含 @layer 分層防護）
+#   2. 元件清單同步（CLAUDE.md 的 COMPONENTS 區段 vs 實際 *.meta.php）
+#   3. Prototype 樣式門檻（CLAUDE.md 第 3 條的 30 行）與 fragment manifest
+#   4. composer.json 合法性
+#
+# 刻意不在 CI 跑 preview 的 Laravel app：它是開發工具（整個 export-ignore），
+# 不是出貨內容。CI 只驗「會出貨的東西」與「規範有沒有被遵守」。
+#
+# 也刻意不裝 stylelint 跑 lint:scss —— 那需要 devDependency 而目前
+# package.json 沒有列 stylelint（`npm run lint:scss` 在本機靠全域安裝）。
+# 要進 CI 得先把它加進 devDependencies，那是另一件事。
+# ============================================================
+
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  scss:
+    name: SCSS build + smoke
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - run: npm ci
+
+      # npm run test = build + scripts/check-build.mjs（14 項）
+      - run: npm test
+
+  conventions:
+    name: 元件清單與 prototype 規範
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          # 與 composer.json 的 require 一致
+          php-version: '8.2'
+          # 這兩支 script 不依賴 Laravel，也不需要 composer install
+          coverage: none
+
+      # CLAUDE.md 的元件清單是自動生成的 —— 不一致就是有人加了元件但沒跑 sync。
+      # 手寫的元件列表三個月後一定跟實際元件對不上，然後 agent 開始產出不存在的元件。
+      - name: 元件清單已同步
+        run: php scripts/sync-component-list.php --check
+
+      # CLAUDE.md 第 3 條：page-scoped 樣式 ≤ 30 行。
+      # 超標不是把數字調高，而是提報元件缺口 —— 這是讓元件庫持續完整的機制。
+      - name: Prototype 樣式門檻與 manifest
+        run: php scripts/check-prototypes.php
+
+  package:
+    name: Composer 套件
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          coverage: none
+
+      # --no-check-publish：私有套件，不上 Packagist
+      - run: composer validate --no-check-publish

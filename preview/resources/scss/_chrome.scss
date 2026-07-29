@@ -49,6 +49,11 @@
 
 .pv-header { margin-bottom: 32px; }
 
+// 次要說明文字（路徑、行數細目）。有既有 inline style 的地方逐步換過來。
+.pv-dim {
+  color: var(--fg-3);
+}
+
 // 只給輔助技術讀的文字（例如「開新分頁」的提示）。
 // 設計系統沒有 sr-only utility —— 這是 preview 自己的殼，用 pv- 命名空間自備。
 .pv-sr {
