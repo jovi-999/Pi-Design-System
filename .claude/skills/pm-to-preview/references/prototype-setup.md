@@ -155,6 +155,26 @@ php scripts/apply.php <project> <name> --output=patch \
 
 `--output=patch` **只適用 fragment**：page 是整頁搬進專案的新檔案，沒有插入點，產 diff 沒有意義（對 page 給這個參數會直接報錯）。Page 的交接就是「刪掉 `@piFixture`、換 `@extends`」兩處。
 
+## 三個命名空間，各有主人
+
+| 前綴 | 誰的 | 出貨？ | 在 `@layer pi` 內？ |
+|---|---|---|---|
+| `gl_`（與 `iw_`、`fz-`、`text-`） | 設計系統 | ✅ | ✅ |
+| `pv-` | preview app 自己的頁面殼 | ❌ | ❌ |
+| **`<專案縮寫>-`** | **prototype 的 page-scoped 排版** | ❌ | ❌ |
+
+Prototype 的 `<style>` 裡的 class **一律用專案縮寫開頭**（`project-a` → `pa-`、
+`jobar` → `jb-`），不要用 `gl_`，也絕不用 `pv-`。
+
+三個理由：
+
+1. **`gl_` 是出貨的命名空間。** prototype 裡寫 `gl_my-thing` 會讓人以為那是設計
+   系統的 class，交接後前端找不到對應的 SCSS。
+2. **`pv-` 只存在於 preview app。** 用了它，prototype 在 preview 看起來對，貼進
+   專案完全沒樣式 —— 因為套件裡沒有那些 class。
+3. **前綴讓誤用可被機械檢查。** 「prototype 裡出現非 `gl_` / 非專案縮寫的 class」
+   就是可疑，grep 一下就抓到。
+
 ## 元件與 class 慣例
 
 - 元件一律 `<x-pi::*>`（清單見 `CLAUDE.md` 的 COMPONENTS 區段，自動生成）。

@@ -5,11 +5,16 @@
 
 @section('content')
 <div class="pv-main" style="max-width: 1080px; margin: 0 auto;">
+    <nav class="pv-crumbs fz-body-sm">
+        <a href="{{ route('home') }}">← 首頁</a>
+        <a href="{{ route('foundation.index') }}">Foundation</a>
+        <a href="{{ route('components.index') }}">元件</a>
+    </nav>
+
     <header class="pv-header">
         <h1 class="fz-headline-sm fz-tit">Prototype</h1>
         <p class="fz-body-md" style="color: var(--fg-2);">
             共 {{ $prototypes->count() }} 份。掃 <code>prototypes/&lt;project&gt;/{pages,fragments}/</code> 生成。
-            <a href="{{ route('components.index') }}">→ 元件目錄</a>
         </p>
     </header>
 
@@ -32,7 +37,16 @@
                 @foreach ($prototypes as $key => $item)
                     <tr>
                         <td>
-                            <a href="{{ route('prototypes.show', [$item['project'], $item['name']]) }}">{{ $key }}</a>
+                            {{--
+                                開新分頁：prototype 頁是完整畫面（page 佔滿、fragment 坐在宿主
+                                快照裡），在同一個分頁跳過去會失去清單。rel="noopener" 是必要的
+                                安全預設 —— 不讓新分頁拿到 window.opener。
+                            --}}
+                            <a
+                                href="{{ route('prototypes.show', [$item['project'], $item['name']]) }}"
+                                target="_blank"
+                                rel="noopener"
+                            >{{ $key }} <span aria-hidden="true" style="color: var(--fg-3);">↗</span><span class="pv-sr">（開新分頁）</span></a>
                             <div style="color: var(--fg-3);">{{ $item['relativePath'] }}</div>
                         </td>
                         <td>{{ $item['kind'] }}</td>

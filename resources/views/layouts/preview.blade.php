@@ -25,6 +25,15 @@
     @stack('head')
 </head>
 <body>
+    {{--
+        preview 的導覽列（選用）。由 render 端傳入已 render 好的 HTML 字串。
+
+        為什麼是變數而不是 @include：這支 layout 隨套件出貨，不能依賴
+        preview app 的 view。交接進專案時整個 @extends 會被換掉，所以這一行
+        永遠不會出現在專案裡。
+    --}}
+    {!! $pvBar ?? '' !!}
+
     @yield('content')
 
     @stack('scripts')

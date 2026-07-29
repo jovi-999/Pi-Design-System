@@ -42,10 +42,15 @@ class PrototypeController extends Controller
             PrototypeCatalog::path() . '/' . $prototype['project'] . '/fixtures'
         );
 
+        $bar = view('prototypes._bar', ['prototype' => $prototype])->render();
+
         try {
             // View::file() 而不是 view()：fragment 檔名含 dot（member-list.filters），
             // 用 view name 解析會被當成目錄分隔。
-            $html = ViewFactory::file($prototype['file'])->render();
+            //
+            // $pvBar 傳給 pi::layouts.preview（page 才會 extends 它）。fragment
+            // 不 extends layout，導覽列在下面注入宿主快照時另外加。
+            $html = ViewFactory::file($prototype['file'], ['pvBar' => $bar])->render();
         } finally {
             // 不留殘留狀態：下一個 request 若忘了設定，要拿到明確的錯誤而不是
             // 悄悄讀到別的專案的 fixture。
@@ -53,10 +58,31 @@ class PrototypeController extends Controller
         }
 
         if ($prototype['kind'] === 'fragment') {
-            $html = $this->injectIntoHost($prototype, $html);
+            $html = $this->prependBar($this->injectIntoHost($prototype, $html), $bar);
         }
 
         return response($html);
+    }
+
+    /**
+     * 把導覽列插在宿主快照的 <body> 之後。
+     *
+     * fragment 不 extends layout，所以拿不到 layout 的 $pvBar —— 導覽列必須直接
+     * 塞進 rendered HTML。這只影響 preview 畫面：apply.php 讀的是 prototype 原始檔，
+     * 不會經過這裡。
+     *
+     * 找不到 <body> 就整份前置（例如宿主快照是個片段而不是完整文件）——
+     * 位置不完美但不會讓人失去導覽。
+     */
+    protected function prependBar(string $html, string $bar): string
+    {
+        $injected = preg_replace('/(<body\b[^>]*>)/i', '$1' . str_replace('$', '\\$', $bar), $html, 1, $count);
+
+        if ($injected === null || $count === 0) {
+            return $bar . $html;
+        }
+
+        return $injected;
     }
 
     /**
