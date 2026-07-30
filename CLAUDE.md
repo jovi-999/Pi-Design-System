@@ -16,7 +16,7 @@
 | `gl_` `fz-` `text-` `icon-` | **公共樣式**（各專案共用）—— 設計系統是它的單一來源 | ✅ 這就是套件的內容 |
 | `iw_` `sa_` `ta_` … | **各專案私有**（interview / salary / task 各自的前綴） | ❌ **絕對不行** |
 | `pv-` | preview app 的頁面殼 | ❌ 不出貨 |
-| `<專案縮寫>-` | prototype 的 page-scoped 排版 | ❌ 不出貨 |
+| `pt-` | prototype 的 page-scoped 排版（**不分專案，一律 `pt-`**） | ❌ 不出貨 |
 
 **第二列是硬規則。** 專案私有前綴不得出現在套件的任何地方 —— 不能定義它、也不能用
 屬性選擇器（`[class*="iw_"]`）匹配它。
@@ -50,7 +50,7 @@
 
 ## Prototype 硬性規則（手寫，勿刪）
 
-產 prototype（`prototypes/` 底下的 blade）時，以下六條沒有例外：
+產 prototype（`prototypes/` 底下的 blade）時，以下七條沒有例外：
 
 1. **只能用 `<x-pi::*>` 元件**，不准手刻 HTML 或裸 `gl_` class。
 2. **資料一律放 `fixtures/`**，blade 內不得寫死。fixture 的 key 結構就是給後端的資料契約。
@@ -58,9 +58,13 @@
    計算方式：`<style>` 區塊的非空白行數 **＋ inline `style="…"` 的宣告數**（以 `;` 拆）。
    inline 也計入，否則把樣式搬進 attribute 就能繞過門檻，閥門直接失效。
    **由 CI 強制**（`scripts/check-prototypes.php`）—— 超標時要提報缺口，不是把門檻調高。
-4. 不得輸出裸元素選擇器（`h1` / `a` / `button` / `*`）。
-5. Fragment 必須宣告 `@piFragment` manifest（target / slot / host）。
-6. 元件樣式一律包在 `@layer pi` 內，class 前綴 `gl_`。
+4. **page-scoped 的 class 一律 `pt-` 開頭，不分專案。** 其餘只准設計系統的
+   `gl_` / `fz-` / `text-` / `icon-`。**由 CI 強制**（同一支腳本）。
+   不要用專案私有前綴（`iw_` / `sa_` …），也絕不用 `pv-`（那只存在於 preview app，
+   貼進專案會完全沒樣式）。
+5. 不得輸出裸元素選擇器（`h1` / `a` / `button` / `*`）。
+6. Fragment 必須宣告 `@piFragment` manifest（target / slot / host）。
+7. 元件樣式一律包在 `@layer pi` 內，class 前綴 `gl_`。
 
 第 3 條是整套流程的品質閥門。PM 不會知道什麼做得到什麼做不到；如果 agent 遇到缺口就自己刻一個出來，元件庫的缺口就被藏起來了，drift 從這裡開始。
 

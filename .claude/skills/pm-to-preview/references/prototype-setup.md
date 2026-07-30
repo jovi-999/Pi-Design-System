@@ -68,7 +68,7 @@ npm run dev               # Vite（host）→ 5178
 
 @piFixture($statuses, 'member-status')
 
-<div class="pa-filters">
+<div class="pt-filters">
     <x-pi::form-control name="keyword" icon="icon-search" placeholder="姓名 · Email" />
     <x-pi::form-control type="select" name="status" placeholder="全部狀態" :options="$statuses" />
 </div>
@@ -162,7 +162,7 @@ php scripts/apply.php <project> <name> --output=patch \
 | `gl_` `fz-` `text-` `icon-` | **公共樣式**（各專案共用）→ 設計系統是它的單一來源 | ✅ | ✅ |
 | `iw_` `sa_` `ta_` … | **各專案私有**（interview / salary / task）→ **套件絕不能收** | ❌ | ❌ |
 | `pv-` | preview app 自己的頁面殼 | ❌ | ❌ |
-| **`<專案縮寫>-`** | **prototype 的 page-scoped 排版** | ❌ | ❌ |
+| **`pt-`** | **prototype 的 page-scoped 排版**（不分專案） | ❌ | ❌ |
 
 **第二列是硬規則**：專案私有前綴不得出現在套件裡，也不得被套件的屬性選擇器匹配。
 違反的後果是雙向的 —— 其他專案拿到對它們無意義的 class；而該專案的私有命名空間
@@ -178,8 +178,12 @@ php scripts/apply.php <project> <name> --output=patch \
 但也意味著同名 class 的新樣式吃不到。專案要真正吃到得移除自己那份，或改用
 `index.scss` 註解裡的方案 B（只吃 tokens、不吃 `gl_` class）。
 
-Prototype 的 `<style>` 裡的 class **一律用專案縮寫開頭**（`project-a` → `pa-`、
-`jobar` → `jb-`），不要用 `gl_`，也絕不用 `pv-`。
+Prototype 的 `<style>` 裡的 class **一律 `pt-` 開頭，不分專案**，不要用 `gl_`，
+也絕不用 `pv-` 或任何專案的私有前綴（`iw_` / `sa_` …）。
+
+**由 CI 強制**：`scripts/check-prototypes.php` 會掃 class 屬性與 `<style>` 選擇器，
+只放行 `pt-` 與設計系統的 `gl_` / `fz-` / `text-` / `icon-`，其餘一律擋下
+（判斷邏輯在 `src/Prototype/ClassPrefix.php`，與 preview 共用同一份）。
 
 三個理由：
 
@@ -187,8 +191,22 @@ Prototype 的 `<style>` 裡的 class **一律用專案縮寫開頭**（`project-
    系統的 class，交接後前端找不到對應的 SCSS。
 2. **`pv-` 只存在於 preview app。** 用了它，prototype 在 preview 看起來對，貼進
    專案完全沒樣式 —— 因為套件裡沒有那些 class。
-3. **前綴讓誤用可被機械檢查。** 「prototype 裡出現非 `gl_` / 非專案縮寫的 class」
-   就是可疑，grep 一下就抓到。
+3. **前綴固定，規則才能機械檢查。** 允許集合只有四個前綴，是死的，CI 寫得出來。
+
+### 為什麼是固定的 `pt-`，不是各專案的縮寫
+
+原本的規則是「用專案縮寫」（`project-a` → `pa-`、`jobar` → `jb-`）。兩個問題：
+
+- **縮寫沒有登記在任何地方**，誰產 prototype 誰現取。interview 專案自己的私有前綴
+  明明是 `iw_`，prototype 卻取了 `iv-` —— 同一個專案兩個縮寫，沒人說得出為什麼。
+- **它防不了它想防的事。** 同專案的所有 prototype 本來就共用一個縮寫，兩份
+  prototype 各寫一個 `.iv-card` 照樣會撞。
+
+改成固定 `pt-` 後，同專案內的碰撞風險完全沒變，卻換到「允許集合是固定的」——
+這才讓 CI 有辦法檢查，也不必再維護一張縮寫對照表。
+
+殘留風險：同一個專案的兩份 prototype 都定義 `.pt-card` 且最後被打包進同一支 CSS。
+各頁有自己的 entry 時不會發生；真的碰到就把名字加上頁面（`.pt-cardlist-card`）。
 
 ## 元件與 class 慣例
 
