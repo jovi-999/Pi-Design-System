@@ -5,18 +5,18 @@
 ## 版面結構
 
 ```
-iv-page（max-width 1120px，置中）
-├── iv-head
+pt-page（max-width 1120px，置中）
+├── pt-head
 │   └── h1 面試邀約
-└── iv-layout（CSS grid，8fr / 4fr，gap var(--sp-6)，align-items: start）
-    ├── iv-main（8）— 垂直堆疊，gap var(--sp-4)
+└── pt-layout（CSS grid，8fr / 4fr，gap var(--sp-6)，align-items: start）
+    ├── pt-main（8）— 垂直堆疊，gap var(--sp-4)
     │   └── 卡片 ×3（資料驅動，@foreach $cards）
-    │       ├── iv-card__media（固定寬 160px）→ img
-    │       └── iv-card__body
+    │       ├── pt-card__media（固定寬 160px）→ img
+    │       └── pt-card__body
     │           ├── 標題（1 行，超出 ellipsis）
     │           ├── 內文（2 行，超出 -webkit-line-clamp 截斷）
     │           └── 按鈕
-    └── iv-nav（4）— 導覽連結清單，垂直堆疊，gap var(--sp-1)
+    └── pt-nav（4）— 導覽連結清單，垂直堆疊，gap var(--sp-1)
         └── 連結 ×5（資料驅動，@foreach $navLinks；current 那一項是 placeholder）
 ```
 
@@ -85,7 +85,7 @@ interview 端可以直接改它，不需要回頭跟設計系統對齊。
 
 **PM 決定：設計系統這輪不做 `nav-link`，前端到各別專案後自行實作 active 樣式。**
 
-所以 interview 端要做的是：拆掉下方 placeholder（`iv-nav__current` 的框 + 可見標籤
+所以 interview 端要做的是：拆掉下方 placeholder（`pt-nav__current` 的框 + 可見標籤
 「🆕 nav-link active（待確認）」），換成 interview 自己的 active 視覺。
 **不要用 `gl_` 前綴** —— 那是設計系統出貨的命名空間，自訂的 active 樣式不屬於它。
 

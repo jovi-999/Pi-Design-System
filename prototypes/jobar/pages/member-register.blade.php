@@ -28,12 +28,12 @@
         自訂樣式 6 行，未超過 CLAUDE.md 第 3 條的 30 行上限。
     --}}
     <style>
-        .jb-form { max-width: 480px; margin: 40px auto; padding: 0 24px; }
-        .jb-field { margin-bottom: 20px; }
-        .jb-field__label { margin-bottom: 6px; }
-        .jb-consent { margin: 24px 0; }
-        .jb-actions { display: flex; gap: 12px; }
-        .jb-cta { margin-top: 40px; }
+        .pt-form { max-width: 480px; margin: 40px auto; padding: 0 24px; }
+        .pt-field { margin-bottom: 20px; }
+        .pt-field__label { margin-bottom: 6px; }
+        .pt-consent { margin: 24px 0; }
+        .pt-actions { display: flex; gap: 12px; }
+        .pt-cta { margin-top: 40px; }
     </style>
 
     @php
@@ -45,11 +45,11 @@
         $fieldErrors = $form['errors'] ?? [];
     @endphp
 
-    <div class="jb-form">
+    <div class="pt-form">
         <h1 class="fz-headline-sm fz-tit">建立帳號</h1>
 
-        <div class="jb-field">
-            <label class="jb-field__label fz-title-sm fz-tit" for="name">姓名</label>
+        <div class="pt-field">
+            <label class="pt-field__label fz-title-sm fz-tit" for="name">姓名</label>
             <x-pi::form-control
                 id="name"
                 name="name"
@@ -60,8 +60,8 @@
             />
         </div>
 
-        <div class="jb-field">
-            <label class="jb-field__label fz-title-sm fz-tit" for="email">Email</label>
+        <div class="pt-field">
+            <label class="pt-field__label fz-title-sm fz-tit" for="email">Email</label>
             <x-pi::form-control
                 id="email"
                 type="email"
@@ -74,8 +74,8 @@
             />
         </div>
 
-        <div class="jb-field">
-            <label class="jb-field__label fz-title-sm fz-tit" for="password">密碼</label>
+        <div class="pt-field">
+            <label class="pt-field__label fz-title-sm fz-tit" for="password">密碼</label>
             <x-pi::form-control
                 id="password"
                 type="password"
@@ -94,7 +94,7 @@
             樣式（已 grep 確認 resources/scss 內無對應 utility），會變成裸 <a>。
             這裡先用純文字，連結樣式待前端決定，不自創 class。
         --}}
-        <div class="jb-consent">
+        <div class="pt-consent">
             <x-pi::checkbox
                 tone="success"
                 name="agreePrivacy"
@@ -103,7 +103,7 @@
             >我已閱讀並同意隱私權政策</x-pi::checkbox>
         </div>
 
-        <div class="jb-actions">
+        <div class="pt-actions">
             <x-pi::button tone="success" icon-left="icon-checked">註冊</x-pi::button>
         </div>
 
@@ -112,7 +112,7 @@
             長相是「左側圓形 icon + 標題 + 內文 + 右側按鈕」的橫向提示條，
             不是置中大 CTA。文案全部來自 fixture。
         --}}
-        <div class="jb-cta">
+        <div class="pt-cta">
             <x-pi::callout
                 :tone="$cta['tone']"
                 :icon="$cta['icon']"

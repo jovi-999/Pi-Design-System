@@ -18,22 +18,22 @@
     自訂樣式 11 行，未超過 CLAUDE.md 第 3 條的 30 行上限。
 --}}
 <style>
-    .pa-toolbar {
+    .pt-toolbar {
         display: flex;
         align-items: flex-end;
         justify-content: space-between;
         gap: 12px;
         padding: 8px 0 16px;
     }
-    .pa-toolbar__dates { display: flex; align-items: flex-end; gap: 8px; }
-    .pa-toolbar__field { display: flex; flex-direction: column; gap: 6px; }
+    .pt-toolbar__dates { display: flex; align-items: flex-end; gap: 8px; }
+    .pt-toolbar__field { display: flex; flex-direction: column; gap: 6px; }
     /* .gl_form-group 是 width:100%，工具列裡要收成固定寬才不會把匯出鈕推掉 */
-    .pa-toolbar__field .gl_form-group { width: 168px; }
+    .pt-toolbar__field .gl_form-group { width: 168px; }
 </style>
 
-<div class="pa-toolbar">
-    <div class="pa-toolbar__dates">
-        <div class="pa-toolbar__field">
+<div class="pt-toolbar">
+    <div class="pt-toolbar__dates">
+        <div class="pt-toolbar__field">
             <label class="fz-title-sm fz-tit" for="dateFrom">起始日</label>
             <x-pi::form-control
                 type="date"
@@ -43,7 +43,7 @@
             />
         </div>
 
-        <div class="pa-toolbar__field">
+        <div class="pt-toolbar__field">
             <label class="fz-title-sm fz-tit" for="dateTo">結束日</label>
             <x-pi::form-control
                 type="date"

@@ -14,17 +14,17 @@
     就該提報 filter-bar 元件缺口，而不是每頁各刻一次。
 --}}
 <style>
-    .pa-filters {
+    .pt-filters {
         display: flex;
         align-items: flex-end;
         gap: 12px;
         padding: 16px 0;
     }
-    .pa-filters > * { flex: 1; }
-    .pa-filters > .pa-filters__actions { flex: none; }
+    .pt-filters > * { flex: 1; }
+    .pt-filters > .pt-filters__actions { flex: none; }
 </style>
 
-<div class="pa-filters">
+<div class="pt-filters">
     <x-pi::form-control
         name="keyword"
         icon="icon-search"
@@ -38,7 +38,7 @@
         :options="$statuses"
     />
 
-    <div class="pa-filters__actions">
+    <div class="pt-filters__actions">
         <x-pi::button tone="basic" icon-left="icon-search">篩選</x-pi::button>
     </div>
 </div>

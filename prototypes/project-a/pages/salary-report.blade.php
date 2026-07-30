@@ -30,18 +30,18 @@
         自訂樣式 6 行，未超過 CLAUDE.md 第 3 條的 30 行上限。
     --}}
     <style>
-        .pa-form { max-width: 560px; margin: 40px auto; padding: 0 24px; }
-        .pa-field { margin-bottom: 20px; }
-        .pa-field__label { margin-bottom: 6px; }
-        .pa-field--gap { margin-bottom: 32px; }
-        .pa-row { display: flex; align-items: center; gap: 12px; }
-        .pa-actions { display: flex; gap: 12px; margin-top: 28px; }
+        .pt-form { max-width: 560px; margin: 40px auto; padding: 0 24px; }
+        .pt-field { margin-bottom: 20px; }
+        .pt-field__label { margin-bottom: 6px; }
+        .pt-field--gap { margin-bottom: 32px; }
+        .pt-row { display: flex; align-items: center; gap: 12px; }
+        .pt-actions { display: flex; gap: 12px; margin-top: 28px; }
     </style>
 
-    <div class="pa-form">
+    <div class="pt-form">
         <h1 class="fz-headline-sm fz-tit">回報薪資</h1>
 
-        <div class="pa-field pa-field--gap">
+        <div class="pt-field pt-field--gap">
             <x-pi::callout tone="success" icon="icon-shield-check" title="你的資料會匿名處理">
                 公司看不到你的姓名與 Email，只會看到整體薪資分佈。
             </x-pi::callout>
@@ -51,8 +51,8 @@
             標籤用 <label for> 綁 id：placeholder 也要能被讀螢幕軟體正確關聯，
             否則交接後 a11y 的債會留給前端。id 由 name 對應，不另發明命名規則。
         --}}
-        <div class="pa-field">
-            <label class="pa-field__label fz-title-sm fz-tit" for="jobTitle">職稱</label>
+        <div class="pt-field">
+            <label class="pt-field__label fz-title-sm fz-tit" for="jobTitle">職稱</label>
             <x-pi::form-control
                 id="jobTitle"
                 name="jobTitle"
@@ -61,8 +61,8 @@
             />
         </div>
 
-        <div class="pa-field">
-            <label class="pa-field__label fz-title-sm fz-tit" for="industry">產業別</label>
+        <div class="pt-field">
+            <label class="pt-field__label fz-title-sm fz-tit" for="industry">產業別</label>
             <x-pi::form-control
                 id="industry"
                 type="select"
@@ -73,8 +73,8 @@
             />
         </div>
 
-        <div class="pa-field">
-            <label class="pa-field__label fz-title-sm fz-tit" for="monthlySalary">月薪</label>
+        <div class="pt-field">
+            <label class="pt-field__label fz-title-sm fz-tit" for="monthlySalary">月薪</label>
             <x-pi::form-control
                 id="monthlySalary"
                 name="monthlySalary"
@@ -84,8 +84,8 @@
             />
         </div>
 
-        <div class="pa-field">
-            <label class="pa-field__label fz-title-sm fz-tit" for="note">補充說明</label>
+        <div class="pt-field">
+            <label class="pt-field__label fz-title-sm fz-tit" for="note">補充說明</label>
             <x-pi::form-control
                 id="note"
                 type="textarea"
@@ -95,7 +95,7 @@
             />
         </div>
 
-        <div class="pa-field pa-row">
+        <div class="pt-field pt-row">
             <x-pi::toggle
                 id="publicProfile"
                 size="sm"
@@ -106,7 +106,7 @@
             <label class="fz-body-sm" for="publicProfile">同意將這筆回報納入公開統計</label>
         </div>
 
-        <div class="pa-actions">
+        <div class="pt-actions">
             <x-pi::button tone="success" icon-left="icon-checked">送出回報</x-pi::button>
             <x-pi::button variant="gray" tone="basic">取消</x-pi::button>
         </div>

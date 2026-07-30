@@ -39,39 +39,39 @@
         所以只能寫實際值，不是自創斷點。
     --}}
     <style>
-        .iv-page { max-width: 1120px; margin: 0 auto; padding: 40px 24px; }
-        .iv-head { margin-bottom: var(--sp-6); }
-        .iv-layout { display: grid; grid-template-columns: 8fr 4fr; gap: var(--sp-6); align-items: start; }
-        .iv-main { display: flex; flex-direction: column; gap: var(--sp-4); }
-        .iv-card { display: flex; gap: var(--sp-4); padding: var(--sp-4); background: var(--cl-basic-0); }
-        .iv-card__media { flex: 0 0 160px; overflow: hidden; }
-        .iv-card__img { display: block; width: 100%; height: 100%; object-fit: cover; }
-        .iv-card__body { display: flex; flex-direction: column; align-items: flex-start; gap: var(--sp-2); min-width: 0; }
-        .iv-card__title { max-width: 100%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
-        .iv-card__text { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; }
-        .iv-nav { display: flex; flex-direction: column; gap: var(--sp-1); padding: var(--sp-3); background: var(--cl-basic-0); }
-        .iv-nav__current { display: flex; flex-direction: column; gap: var(--sp-1); padding: var(--sp-1); }
-        @media (max-width: 768px) { .iv-layout { grid-template-columns: 1fr; } }
+        .pt-page { max-width: 1120px; margin: 0 auto; padding: 40px 24px; }
+        .pt-head { margin-bottom: var(--sp-6); }
+        .pt-layout { display: grid; grid-template-columns: 8fr 4fr; gap: var(--sp-6); align-items: start; }
+        .pt-main { display: flex; flex-direction: column; gap: var(--sp-4); }
+        .pt-card { display: flex; gap: var(--sp-4); padding: var(--sp-4); background: var(--cl-basic-0); }
+        .pt-card__media { flex: 0 0 160px; overflow: hidden; }
+        .pt-card__img { display: block; width: 100%; height: 100%; object-fit: cover; }
+        .pt-card__body { display: flex; flex-direction: column; align-items: flex-start; gap: var(--sp-2); min-width: 0; }
+        .pt-card__title { max-width: 100%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+        .pt-card__text { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; }
+        .pt-nav { display: flex; flex-direction: column; gap: var(--sp-1); padding: var(--sp-3); background: var(--cl-basic-0); }
+        .pt-nav__current { display: flex; flex-direction: column; gap: var(--sp-1); padding: var(--sp-1); }
+        @media (max-width: 768px) { .pt-layout { grid-template-columns: 1fr; } }
     </style>
 
-    <div class="iv-page">
-        <div class="iv-head">
+    <div class="pt-page">
+        <div class="pt-head">
             <h1 class="fz-headline-sm fz-tit">面試邀約</h1>
         </div>
 
-        <div class="iv-layout">
+        <div class="pt-layout">
             {{-- 主欄（8）：卡片列表 --}}
-            <div class="iv-main">
+            <div class="pt-main">
                 @foreach ($cards as $card)
                     {{-- ⚠️ 組合件：卡片外框 = 描邊 + 圓角 + 陰影三個 utility class 疊加 --}}
-                    <article class="iv-card gl_border-outer gl_radius-lg gl_shadow-sm">
-                        <div class="iv-card__media gl_radius-md">
-                            <img class="iv-card__img" src="{{ $card['image'] }}" alt="{{ $card['imageAlt'] }}">
+                    <article class="pt-card gl_border-outer gl_radius-lg gl_shadow-sm">
+                        <div class="pt-card__media gl_radius-md">
+                            <img class="pt-card__img" src="{{ $card['image'] }}" alt="{{ $card['imageAlt'] }}">
                         </div>
 
-                        <div class="iv-card__body">
-                            <div class="iv-card__title fz-title-md fz-tit">{{ $card['title'] }}</div>
-                            <p class="iv-card__text fz-body-sm text-basic-700">{{ $card['excerpt'] }}</p>
+                        <div class="pt-card__body">
+                            <div class="pt-card__title fz-title-md fz-tit">{{ $card['title'] }}</div>
+                            <p class="pt-card__text fz-body-sm text-basic-700">{{ $card['excerpt'] }}</p>
 
                             <x-pi::button
                                 as="a"
@@ -85,7 +85,7 @@
             </div>
 
             {{-- 側欄（4）：導覽連結 --}}
-            <aside class="iv-nav gl_border-outer gl_radius-lg">
+            <aside class="pt-nav gl_border-outer gl_radius-lg">
                 @foreach ($navLinks as $link)
                     @if ($link['current'])
                         {{--
@@ -94,7 +94,7 @@
                             字色字重？）由前端定案，不在這裡自己挑一個色階。
                             無 dashed border token（已查 resources/scss/），故用現有 solid 描邊。
                         --}}
-                        <div class="iv-nav__current gl_border-outer gl_radius-sm">
+                        <div class="pt-nav__current gl_border-outer gl_radius-sm">
                             <div class="fz-body-xs text-basic-500">🆕 nav-link active（待確認）</div>
                             <x-pi::dropdown-item :href="$link['href']" :icon="$link['icon']">
                                 {{ $link['label'] }}
