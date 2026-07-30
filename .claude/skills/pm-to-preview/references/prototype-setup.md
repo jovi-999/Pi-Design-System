@@ -155,13 +155,28 @@ php scripts/apply.php <project> <name> --output=patch \
 
 `--output=patch` **只適用 fragment**：page 是整頁搬進專案的新檔案，沒有插入點，產 diff 沒有意義（對 page 給這個參數會直接報錯）。Page 的交接就是「刪掉 `@piFixture`、換 `@extends`」兩處。
 
-## 三個命名空間，各有主人
+## 命名空間，各有主人
 
 | 前綴 | 誰的 | 出貨？ | 在 `@layer pi` 內？ |
 |---|---|---|---|
-| `gl_`（與 `iw_`、`fz-`、`text-`） | 設計系統 | ✅ | ✅ |
+| `gl_` `fz-` `text-` `icon-` | **公共樣式**（各專案共用）→ 設計系統是它的單一來源 | ✅ | ✅ |
+| `iw_` `sa_` `ta_` … | **各專案私有**（interview / salary / task）→ **套件絕不能收** | ❌ | ❌ |
 | `pv-` | preview app 自己的頁面殼 | ❌ | ❌ |
 | **`<專案縮寫>-`** | **prototype 的 page-scoped 排版** | ❌ | ❌ |
+
+**第二列是硬規則**：專案私有前綴不得出現在套件裡，也不得被套件的屬性選擇器匹配。
+違反的後果是雙向的 —— 其他專案拿到對它們無意義的 class；而該專案的私有命名空間
+被套件佔用，之後自己要改就會撞。
+
+實際發生過：`.iw_pagination-outer-v3` 曾被收進套件（理由是「對齊生產環境命名」），
+連帶 `_component-base.scss` 用 `[class*="iw_"]` 匹配它 —— 結果套件對 interview
+**全站**的 `iw_*` 元素套了 `corner-shape` 與 `font-weight: 500`。0.0.2 已改名為
+`.gl_pagination-*` 並移除該匹配。
+
+**注意 `gl_` 撞名不是巧合**：各專案本來就有自己那份公共樣式拷貝，Pi DS 的目的是
+取代它。`@layer` 讓專案未分層的那份永遠勝出，所以裝了套件不會動到既有畫面 ——
+但也意味著同名 class 的新樣式吃不到。專案要真正吃到得移除自己那份，或改用
+`index.scss` 註解裡的方案 B（只吃 tokens、不吃 `gl_` class）。
 
 Prototype 的 `<style>` 裡的 class **一律用專案縮寫開頭**（`project-a` → `pa-`、
 `jobar` → `jb-`），不要用 `gl_`，也絕不用 `pv-`。
