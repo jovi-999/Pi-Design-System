@@ -14,24 +14,52 @@
 //   @use "pi-design-system/base/fonts" with (
 //     $font-path: "https://cdn.example.com/fonts"
 //   );
+//
+// ---------- $load-text-fonts：文字字型的載入開關 ----------
+//
+// 預設 true（載 Google Sans Flex + Noto Sans TC）。已針對 SEO 自行載入
+// 字型的專案要設 false：
+//
+//   @forward "pi-design-system/resources/scss/index" with (
+//     $load-text-fonts: false
+//   );
+//
+// 為什麼需要這個開關：Noto Sans TC 走 CSS `@import`，而 CSS `@import` 是
+// render-blocking，會延後首次繪製 —— 對做過 LCP 優化的專案是退步。那些專案
+// 已在 HTML `<head>` 用 `<link rel="preload">` / `preconnect` 自己控制載入
+// 時序，套件再發一次 request 只是重複下載。
+//
+// 關掉後專案要自己載這兩支（HTML `<head>`，可加 preconnect / preload）：
+//
+//   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+//   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700&display=swap">
+//
+// 字型名稱本身由 $font-sans（tokens/_typography.scss）決定，不受這個開關
+// 影響 —— 開關只管「誰負責發 request」，不管「用哪個字型」。
+//
+// symicon 不受這個開關控制：那是設計系統專屬的 icon 字型，專案不會有自己
+// 的一份，關掉會讓所有 icon-* 變空白。它的路徑仍由 $font-path 決定。
 // ============================================================
 
 $font-path: "/fonts" !default;
+$load-text-fonts: true !default;
 
 // ---------- Google Sans Flex（英數 / variable）400–700 / 48%–150% ----------
-@font-face {
-  font-family: "Google Sans Flex";
-  font-style: normal;
-  font-weight: 400 700;
-  font-stretch: 48% 150%;
-  font-optical-sizing: 18;
-  font-display: swap;
-  src: url("https://fonts.gstatic.com/s/googlesansflex/v20/t5svIQcYNIWbFgDgAAzZ34auoVyXkJCOvp3SFWJbN5hF8Ju1x6sKCyp0l9sI40swNJwInycYAJzz0m7kJ4qFQOJBOjLvDSndo26GGn9Q3I8i.woff2")
-      format("woff2");
-  unicode-range:
-      U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
-      U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
-      U+2212, U+2215, U+FEFF, U+FFFD;
+@if $load-text-fonts {
+  @font-face {
+    font-family: "Google Sans Flex";
+    font-style: normal;
+    font-weight: 400 700;
+    font-stretch: 48% 150%;
+    font-optical-sizing: 18;
+    font-display: swap;
+    src: url("https://fonts.gstatic.com/s/googlesansflex/v20/t5svIQcYNIWbFgDgAAzZ34auoVyXkJCOvp3SFWJbN5hF8Ju1x6sKCyp0l9sI40swNJwInycYAJzz0m7kJ4qFQOJBOjLvDSndo26GGn9Q3I8i.woff2")
+        format("woff2");
+    unicode-range:
+        U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
+        U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+        U+2212, U+2215, U+FEFF, U+FFFD;
+  }
 }
 
 // ---------- symicon（圖示，symicon-6.4s 最新版）----------
@@ -46,4 +74,6 @@ $font-path: "/fonts" !default;
 // 由 Google Fonts CDN 載入。HTML <head> 建議加 preconnect：
 //   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 //   <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
-@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700&display=swap");
+@if $load-text-fonts {
+  @import url("https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700&display=swap");
+}
