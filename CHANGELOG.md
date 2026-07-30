@@ -9,6 +9,53 @@
 
 ---
 
+## [0.0.2] — 2026-07-30
+
+自 tag `0.0.1`（= commit `aa4bc96`）以來的變更。
+
+### ⚠ Breaking — pagination 的 `iw_` 私有前綴改 `gl_`
+
+- `.iw_pagination-outer-v3` → `.gl_pagination-outer`
+- `.iw_pagination-wrap` → `.gl_pagination-wrap`
+- `.iw_active` → `.gl_pagination-active`
+
+`iw_` 是 interview 專案的私有前綴，不該出現在公共套件裡。同時移除
+`_component-base.scss` 的 `[class*="iw_"]` 匹配。
+
+**下游注意**：0.0.1 的那條匹配會對載入 DS 的頁面上**所有** `iw_*` 元素套用
+`corner-shape: superellipse(1.05)` 與 `font-weight: 500`。移除後這些元素會失去
+超橢圓圓角。升級時請對載入 DS 的頁面做前後截圖比對。
+
+### Added — 斷點第四階與 `max-width` 上界
+
+- `--bp-xl` / `$bp-xl` = `1536px`（第四階，值取自 interview 的 `largeDesktop`）
+- `$bp-md-max` / `$bp-lg-max` / `$bp-xl-max` —— 各減 `0.02px` 的上界。
+  **寫 `max-width` 一律用這組**：直接用 `$bp-md` 的話，在裝置寬度剛好 768px 時
+  它會與 `min-width: $bp-md` 同時命中。減 `0.02` 而非 `0.01` 是 Safari 捨入 bug
+  的 workaround（[webkit#178261](https://bugs.webkit.org/show_bug.cgi?id=178261)），
+  與 interview 的 `sz-down()` 一致。
+
+### Added — 12 欄格線
+
+`tokens/_grid.scss` 與 `components/_grid.scss`：`.gl_container` / `.gl_row` /
+`.gl_col` / `.gl_col-1` ~ `.gl_col-12`，token 為 `--grid-margin` / `--grid-gutter` /
+`--container-md` / `--container-lg`。值取自 interview 既有的 grid，行為亦相同 ——
+`.gl_col-{n}` 只在 md（768px）以上生效，以下自動堆疊成單欄。
+
+preview 新增 `/foundation/grid` 分頁（token 表 + 12 欄示意）。
+
+### Added — `$load-text-fonts` 開關
+
+讓專案自己決定字型來源，不強制由套件載入。
+
+### Fixed
+
+- `components/_border.scss` 與 `components/_pagination.scss` 的 `max-width`
+  改吃 `$bp-md-max`（後者原本寫死 `768px`）
+- `SKILL.md` 的 token 表原本就列了 `$bp-xl`，但該變數從未存在 —— 本次補實
+
+---
+
 ## [Unreleased]
 
 ### ⚠ Breaking — 平台化 Phase 1（`design-guideline-spec.md`）

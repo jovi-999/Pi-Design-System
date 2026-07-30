@@ -45,7 +45,9 @@ Phase 4 之前，「blade 貼進專案就能跑」只在 preview 環境與檔案
 - `corner-shape: superellipse(1.05)` —— 新 CSS 屬性，2024 才進規格，無任何標準 reset 提供。元件內 20 處 `border-radius` 全靠它
 - `font-weight: 500` —— normalize.css / Tailwind preflight / Bootstrap reboot 一律給 400 或 inherit。16 支元件只有 1 處自己宣告
 
-用聚合 attribute selector 一條規則覆蓋（而非灑進 20 處），因為半數 `border-radius` 的擁有者不是 `gl_` 前綴（`input[type=checkbox]`、`&::before`、`.layer`、`.knobs`、`.form-feedback`、`.iw_pagination-outer-v3`）。
+用聚合 attribute selector 一條規則覆蓋（而非灑進 20 處），因為半數 `border-radius` 的擁有者不是 `gl_` 前綴（`input[type=checkbox]`、`&::before`、`.layer`、`.knobs`、`.form-feedback`）。
+
+> 本段原本還列了 `.iw_pagination-outer-v3`，並在 `_component-base.scss` 用 `[class*="iw_"]` 一併匹配。0.0.2 已改名為 `.gl_pagination-outer`（本身就吃 `gl_` 匹配），`iw_` 匹配同步移除 —— 理由見 CLAUDE.md 命名空間規則。
 
 ### 容器邊界（本次新增決策）
 
@@ -64,7 +66,7 @@ Pi-Design-System/          ← 套件本體：無 framework、無 build、無 DB
 - `fonts/` + `assets/symicon.css` 納入套件出貨清單（元件吃 `icon-*` class，漏了 icon 全空）
 - `@extend .fz-tit` → mixin（**實測** `@extend` 會讓樣式逃出 `@layer`，破壞 D5 保證）
 - `resources/scss/tokens/` 實際輸出 `:root {}`（7 支檔）與 `.fz-*` class，不是 spec 3.4 說的「零 CSS 輸出」→ 文件要更正
-- 無前綴 class 清單（撞名風險）：`.fz-*`、`.text-*`、`.form-feedback`、`.form-prompt-text`、`.is-invalid`、`.is-valid`、`.iw_pagination-outer-v3`
+- 無前綴 class 清單（撞名風險）：`.fz-*`、`.text-*`、`.form-feedback`、`.form-prompt-text`、`.is-invalid`、`.is-valid`（`.iw_pagination-outer-v3` 原本也在此列，0.0.2 已改名 `.gl_pagination-outer`，不再是撞名風險）
 
 ### 待使用者提供
 - [x] ~~**公司 GitHub org 名稱**~~ → `pi-tw`（Symmetry Information Co., Ltd.）。套件名已定為 `pi-tw/pi-design-system`、namespace `PiTw\PiDesignSystem\`
@@ -472,6 +474,78 @@ Pi-Design-System/          ← 套件本體：無 framework、無 build、無 DB
       但 `CLAUDE.md` 已改為「page-scoped **樣式**」並計入 inline —— **兩份文件不一致**，要改 spec 原文需確認
 - [ ] `preview/.env.example` 仍寫著 `SESSION_DRIVER=database` 等舊 driver（hook 保護，需手動改）。
       因 config 已寫死 driver，不影響運作，只剩文件不一致
+
+---
+
+## 0.0.2 → 0.0.3：斷點對齊 interview + 收 grid
+
+起因是掃描 interview2020 量遷移成本（148 支 `gl_`、57 個撞名、模板 5373 處使用）。
+兩項決策已與使用者確認：斷點以 interview 為準（**值**對齊，命名維持 DS 的
+`sm/md/lg/xl`，不用裝置名）、grid 收進套件。
+
+### A. 斷點補齊
+
+interview 的實際斷點在 `resources/sass/basic/_variables.scss:13`（不是
+`mixins/_breakpoints.scss:2` 那句過期註解寫的 672/1184）：
+
+```
+mobile: 0   tablet: 768px   desktop: 1152px   largeDesktop: 1536px
+```
+
+前三階與 DS 的 `--bp-sm/md/lg` 已經相同，所以只有兩件事要補：
+
+- [x] `tokens/_breakpoints.scss` 加第四階 `--bp-xl: 1536px`（= interview `largeDesktop`）
+- [x] 同檔加 `$bp-*-max` 三個 Sass 變數（`$bp-md - 0.02` 等）。interview 的
+      `sz-down()` 一律減 0.02px（Safari 捨入 bug 的 workaround，見
+      `mixins/_breakpoints.scss:4`）；DS 目前直接用 `max-width: $bp-md`，
+      **在剛好 768px 時 down 與 up 兩條規則會同時命中**
+- [x] `components/_border.scss:24` 改吃 `$bp-md-max`
+- [x] `components/_pagination.scss:77` 的寫死 `768px` 改吃 `$bp-md-max`
+- [x] `SKILL.md:89` 已經寫了 `$bp-sm/md/lg/xl` 但 `$bp-xl` 從來不存在 —— 文件先行的 bug，
+      這次補實後順便標註 `-max` 變體
+
+### B. grid 收進套件
+
+interview 模板使用量：`gl_container` 72 處、`gl_row` 76 處、`gl_col*` 215 處。
+值全部來自 `interview2020/resources/sass/basic/_variables.scss:25-41` 與
+`component/_grid.scss`，沒有任何自創。
+
+- [x] 新增 `tokens/_grid.scss` —— 欄數 12、外距 16px、槽距 16px、容器上限 768/1152
+- [x] 新增 `components/_grid.scss`（`@layer pi`）—— `.gl_container` / `.gl_row` /
+      `.gl_col` / `.gl_col-1..12`
+- [x] 兩支 barrel（`tokens/index.scss`、`components/index.scss`）各加一行 `@forward`
+- [x] preview：`TokenCatalog::GROUPS` 與 `FoundationController::PAGES` 各加 `grid` 一筆，
+      `foundation/group.blade.php` 加一段 12 欄示意（比照 shadow 頁的 Ring 區塊）
+
+**不收的三項**（掃描後判斷，理由記在這裡免得之後又被提起）：
+
+- `_grid-v2.scss` —— 用 `gl-v2_` 前綴（第三種命名），且把 1536/1120/768 與
+  `col-2`/`col-12` 綁死在特定版面，那是 page-scoped 排版不是 grid system
+- `gl_gs-modal-*` —— `gs` = GSAP，樣式綁 `GsapModal.js`（該檔註解自己寫明「進場
+  transform 完全交給 GSAP」）。DS 不出貨 JS，收了其他專案會拿到不會動的面板。
+  正確做法是把 DS 現有 modal 補齊 header/content/footer 三段 + 手機 bottom-sheet，
+  用 DS 自己的 `gl_modal-*` 命名 —— **待 PM 決策**
+- `gl_gradient-bg-*` —— 253 支 blade + 35 支 js 全掃過，**使用 0 處**，且 4 個漸層是
+  寫死色碼沒走 token。收進來等於把死碼變成套件契約 —— **待 PM 確認是否還要用**
+
+### C. 驗收
+
+- [x] `npm test`（build + `scripts/check-build.mjs`）通過，特別是「無未分層規則」那項 —— 14/14
+- [x] preview 的 `/foundation/grid` 回 200、token 表 4 筆、12 欄示意 5 列的 HTML 結構正確
+- [ ] **使用者目視確認**後才 commit、push、打 tag `0.0.2`
+
+### D. 執行中發現、順手處理或留待處理的事
+
+- **`--grid-columns` 不出 CSS 變數版。** 一開始有宣告，但 preview 的 token 表會拿每個
+  token 去畫 `width: var(--x)` 的長度預覽格 —— `12` 是無單位數，那格永遠是 0 寬。
+  欄數只有 `@for` 迴圈用得到，所以只留 Sass `$grid-columns`。
+  教訓：**進 `:root` 的東西等於進 preview 的 token 表，不是長度就會畫出壞掉的預覽格。**
+- **`npm run lint:scss` 跑不了** —— `stylelint: command not found`，devDependencies 只有
+  `sass`。`package.json` 有這條 script 但沒裝套件，等於一直沒在跑。**未處理**，
+  要嘛裝 stylelint 要嘛拿掉這條 script。
+- `preview/public/hot` 是 `npm run dev` 的殘留（已 gitignore）。它在時頁面會去
+  `127.0.0.1:5178` 抓 CSS，vite dev 沒開就整頁沒樣式 —— 與 `vite.config.js:39` 註解
+  記錄過的症狀同一件事。
 
 ---
 

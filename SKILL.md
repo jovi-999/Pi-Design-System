@@ -86,7 +86,8 @@ Pi-Design-System/         ← token 與 component 的唯一真相來源
 | 陰影 | `tokens/shadow` | `$shadow-xs` ~ `$shadow-xxl`（無 ring；ring = `.gl_shadow-*` + `.gl_border-outer/inner`） |
 | 字體 | `tokens/typography` | `$font-sans`、`$font-display`、`$font-icon` |
 | 動畫 | `tokens/motion` | `$dur-fast/base/slow`、`$ease-standard` |
-| 斷點 | `tokens/breakpoints` | `$bp-sm/md/lg/xl` |
+| 斷點 | `tokens/breakpoints` | `$bp-sm/md/lg/xl`（0 / 768 / 1152 / 1536）。寫 `max-width` 一律用 `$bp-md-max` 這組上界，不要用 `$bp-md` |
+| 格線 | `tokens/grid` | `$grid-columns`（12）、`$grid-margin`、`$grid-gutter`、`$container-md/lg` |
 
 在 component 檔最上面寫：
 ```scss
