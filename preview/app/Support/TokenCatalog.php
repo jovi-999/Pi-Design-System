@@ -39,6 +39,7 @@ class TokenCatalog
         'shadow' => ['label' => '陰影', 'kind' => 'shadow'],
         'motion' => ['label' => '動態', 'kind' => 'raw'],
         'breakpoints' => ['label' => 'RWD 斷點', 'kind' => 'length'],
+        'grid' => ['label' => '格線', 'kind' => 'length'],
     ];
 
     /**

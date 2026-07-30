@@ -25,6 +25,7 @@ class FoundationController extends Controller
         'shadow' => '陰影，以及與描邊疊成 Ring 的組合',
         'motion' => '時長與緩動',
         'breakpoints' => 'RWD 斷點',
+        'grid' => '12 欄格線：容器、列、欄寬',
     ];
 
     public function index(): View

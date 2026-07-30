@@ -1,0 +1,42 @@
+// ============================================================
+// Pi DS — Grid Tokens
+//
+// 值全部取自 interview2020 的既有 grid，不是新訂的：
+//
+//   resources/sass/basic/_variables.scss:25   $container-max-widths (768 / 1152)
+//   resources/sass/basic/_variables.scss:36   $grid-margin-width    16px
+//   resources/sass/basic/_variables.scss:37   $grid-columns-desktop 12
+//   resources/sass/basic/_variables.scss:41   $col-padding-width    = $grid-margin-width
+//
+// 命名改用 DS 的短名（$grid-margin / $grid-gutter / $container-md），
+// 與 $sp-* / $bp-* 一致。對照如上表。
+//
+// 容器上限與斷點同值是刻意的：`.gl_container` 在跨過 md 斷點時上限就是 768px，
+// 跨過 lg 就是 1152px —— 容器寬度永遠等於剛好進入該階時的視窗寬度。
+// ============================================================
+
+@layer pi {
+  :root {
+    --grid-margin: 16px;   // 容器左右內距
+    --grid-gutter: 16px;   // 欄間槽距（單邊；.gl_row 用負 margin 抵銷）
+
+    --container-md: 768px;
+    --container-lg: 1152px;
+  }
+}
+
+// 欄數刻意「不」出 CSS 變數版：它只在 components/_grid.scss 的 @for 迴圈用得到，
+// 而且 12 是無單位數 —— 宣告成 --grid-columns 的話，preview 的 token 表會拿它去畫
+// `width: var(--grid-columns)` 的長度預覽格，那是不合法的 CSS。
+$grid-columns: 12;
+
+$grid-margin: var(--grid-margin);
+$grid-gutter: var(--grid-gutter);
+
+$container-md: var(--container-md);
+$container-lg: var(--container-lg);
+
+// Numeric form —— 負值與 SCSS 運算不能用 var()（`-var(--x)` 不是合法 CSS），
+// 比照 tokens/_spacing.scss 的 $sp-*-n 慣例另出一組。
+$grid-margin-n: 16px;
+$grid-gutter-n: 16px;

@@ -242,6 +242,23 @@
   background: var(--cl-basic-0);
 }
 
+// 格線示範格。填在 .gl_col 內當可見的色塊 —— .gl_col 自己只有寬度與 padding，
+// 不畫任何東西，沒有這層就看不出欄寬。
+.pv-grid-cell {
+  padding: 12px 8px;
+  border-radius: var(--radius-sm);
+  background: var(--cl-basic-100);
+  color: var(--fg-2);
+  text-align: center;
+  white-space: nowrap;
+}
+
+// 示範用的容器外框。.gl_container 本身沒有可見樣式（只有寬度上限與內距），
+// 標出邊界才看得出 max-width 在斷點上的變化。
+.pv-grid-frame {
+  outline: 1px dashed var(--cl-basic-alpha-200);
+}
+
 // ---------- Icon 索引 ----------
 
 .pv-icons {

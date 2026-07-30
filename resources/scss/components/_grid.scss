@@ -1,0 +1,74 @@
+// ============================================================
+// Pi DS — Grid (.gl_container / .gl_row / .gl_col / .gl_col-1..12)
+//
+// 12 欄 flex 格線，行為對齊 interview2020 的 component/_grid.scss：
+//
+//   <div class="gl_container">
+//     <div class="gl_row">
+//       <div class="gl_col gl_col-8">主欄</div>
+//       <div class="gl_col gl_col-4">側欄</div>
+//     </div>
+//   </div>
+//
+// 兩個容易誤解的行為（兩者都是照搬既有實作，不是新設計）：
+//
+//   1. `.gl_col-{n}` 只在 md 斷點以上生效。md 以下所有欄都是 `.gl_col` 的
+//      width: 100%，自動堆疊成單欄 —— 不需要另外寫 mobile 版 class。
+//   2. `.gl_col` 在 md 以下把左右 padding 歸零。手機版容器已經有
+//      --grid-margin 的內距，欄再加一層會讓內容被擠掉 32px。
+// ============================================================
+
+@use "sass:math";
+@use "../tokens" as *;
+
+@layer pi {
+  .gl_container {
+    width: 100%;
+    margin-right: auto;
+    margin-left: auto;
+    padding-left: $grid-margin;
+    padding-right: $grid-margin;
+
+    @media (min-width: $bp-md) {
+      max-width: $container-md;
+    }
+
+    @media (min-width: $bp-lg) {
+      max-width: $container-lg;
+    }
+  }
+
+  // 負 margin 抵銷子欄的 padding，讓第一欄與最後一欄能貼齊容器邊緣。
+  // 這裡必須用數值形式（$grid-gutter-n）—— `-var(--grid-gutter)` 不是合法 CSS。
+  .gl_row {
+    display: flex;
+    flex-wrap: wrap;
+    margin-right: -$grid-gutter-n;
+    margin-left: -$grid-gutter-n;
+  }
+
+  .gl_col {
+    width: 100%;
+    padding-left: $grid-gutter;
+    padding-right: $grid-gutter;
+
+    // md 以下取消槽距，見檔頭第 2 點
+    @media (max-width: $bp-md-max) {
+      padding: 0;
+    }
+  }
+
+  // .gl_col-1 ~ .gl_col-12。整組包在同一個 media query 內（而非每條規則各包一次），
+  // 產出的 CSS 少 11 個 @media 區塊。
+  @media (min-width: $bp-md) {
+    @for $i from 1 through $grid-columns {
+      .gl_col-#{$i} {
+        // n 欄佔 n/12 —— 先算百分比再帶單位，避免 Sass 的除法回傳無單位數
+        $width: math.div(100 * $i, $grid-columns) * 1%;
+
+        flex: 0 0 $width;
+        max-width: $width;
+      }
+    }
+  }
+}

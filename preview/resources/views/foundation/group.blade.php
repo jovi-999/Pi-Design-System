@@ -79,6 +79,38 @@
                 </div>
             </section>
         @endif
+
+        @if ($group['file'] === 'grid')
+            <section class="pv-section">
+                <div class="pv-section__head">
+                    <h2 class="fz-title-lg fz-tit">12 欄示意</h2>
+                </div>
+                <p class="fz-body-sm" style="color: var(--fg-2);">
+                    <code>.gl_col-{n}</code> <strong>只在 md（768px）以上生效</strong>。
+                    把瀏覽器縮到 768px 以下，下面每一列都會自動堆疊成單欄 ——
+                    不需要另外寫 mobile 版 class。虛線是 <code>.gl_container</code> 的邊界。
+                </p>
+                <div class="pv-demo pv-demo--stack">
+                    @foreach ([[12], [8, 4], [6, 6], [4, 4, 4], [3, 3, 3, 3]] as $rowSpec)
+                        <div class="gl_container pv-grid-frame">
+                            <div class="gl_row">
+                                @foreach ($rowSpec as $span)
+                                    <div class="gl_col gl_col-{{ $span }}">
+                                        <div class="pv-grid-cell fz-body-xs">gl_col-{{ $span }}</div>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+                <pre class="pv-code fz-body-xs"><code>&lt;div class="gl_container"&gt;
+  &lt;div class="gl_row"&gt;
+    &lt;div class="gl_col gl_col-8"&gt;主欄&lt;/div&gt;
+    &lt;div class="gl_col gl_col-4"&gt;側欄&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+            </section>
+        @endif
     </main>
 </div>
 @endsection
