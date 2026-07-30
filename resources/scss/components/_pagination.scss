@@ -1,12 +1,12 @@
 // ============================================================
-// Pi DS — Pagination v3 (.iw_pagination-outer-v3 > .iw_pagination-wrap)
+// Pi DS — Pagination v3 (.gl_pagination-outer > .gl_pagination-wrap)
 //
-// 結構（對齊生產環境 iw_pagination-outer-v3）：
-//   .iw_pagination-outer-v3   最外層：置中容器（width:100%）
-//     └ .iw_pagination-wrap   列：prev 箭頭 | 頁組 | next 箭頭（推到兩端）
+// 結構（對齊生產環境 gl_pagination-outer）：
+//   .gl_pagination-outer   最外層：置中容器（width:100%）
+//     └ .gl_pagination-wrap   列：prev 箭頭 | 頁組 | next 箭頭（推到兩端）
 //         ├ .gl_page-link         prev / next 箭頭（wrap 直接子）
 //         ├ .gl_pagination-group  數字清單（<ul>），彼此 gap 4px
-//         │   └ li.page（當前頁加 .iw_active）> .gl_page-link
+//         │   └ li.page（當前頁加 .gl_pagination-active）> .gl_page-link
 //         └ .gl_page-link         next 箭頭
 //
 // 設計重點：非當前頁與箭頭皆白底，當前頁深色實心；箭頭 .is-disabled 不可點。
@@ -17,12 +17,12 @@
 
 @layer pi {
   // 頁碼 v3 樣式
-  .iw_pagination-outer-v3 {
+  .gl_pagination-outer {
     width: 100%;
     display: flex;
     justify-content: center;
 
-    .iw_pagination-wrap {
+    .gl_pagination-wrap {
       display: flex;
       justify-content: space-between;
       max-width: 408px;
@@ -81,7 +81,7 @@
     }
 
     // 當前頁：深色實心
-    .iw_active {
+    .gl_pagination-active {
       .gl_page-link {
         color: $cl-basic-0;
         background: $cl-basic-900;

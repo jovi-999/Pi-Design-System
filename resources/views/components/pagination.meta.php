@@ -12,10 +12,10 @@ return [
     ],
 
     'notes' => [
-        '前綴是 iw_ 不是 gl_（.iw_pagination-outer-v3 / .iw_active）—— 對齊生產環境既有命名，改掉是 breaking change。',
-        '.iw_active 掛在 <li> 上而不是 <a> 上：SCSS 的選擇器是 `.iw_active .gl_page-link`。',
+        '0.0.2 起改名：.iw_pagination-outer-v3 → .gl_pagination-outer、.iw_pagination-wrap → .gl_pagination-wrap、.iw_active → .gl_pagination-active。iw_ 是 interview 專案的私有前綴，不該出現在公共套件裡。專案端沿用舊 class 名的 HTML 要一起改。',
+        '.gl_pagination-active 掛在 <li> 上而不是 <a> 上：SCSS 的選擇器是 `.gl_pagination-active .gl_page-link`。',
         '目前是「列出全部頁碼」，沒有省略號（…）邏輯 —— SCSS 沒有對應樣式，頁數多時需要走元件缺口流程。',
-        '.iw_pagination-wrap 的 max-width 是 408px，外層寬度由使用端決定。',
+        '.gl_pagination-wrap 的 max-width 是 408px，外層寬度由使用端決定。',
     ],
 
     'examples' => [

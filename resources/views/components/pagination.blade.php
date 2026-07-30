@@ -1,22 +1,21 @@
 {{--
-    Pi DS — Pagination v3
+    Pi DS — Pagination
 
     對應 resources/scss/components/_pagination.scss。
-    結構沿用 blade 化前的 preview-static/pagination.html（該目錄已廢除）。前綴是 iw_ 不是 gl_，這是對齊
-    生產環境的既有命名，不要「順手改成 gl_」——那是 breaking change）：
+    結構沿用 blade 化前的 preview-static/pagination.html（該目錄已廢除）：
 
-      <div class="iw_pagination-outer-v3">
-        <div class="iw_pagination-wrap">
+      <div class="gl_pagination-outer">
+        <div class="gl_pagination-wrap">
           <a class="gl_page-link is-disabled" aria-label="上一頁"><i class="icon icon-arrow-left"></i></a>
           <ul class="gl_pagination-group">
-            <li class="page iw_active"><a class="gl_page-link">1</a></li>
+            <li class="page gl_pagination-active"><a class="gl_page-link">1</a></li>
             …
           </ul>
           <a class="gl_page-link" aria-label="下一頁"><i class="icon icon-arrow-right"></i></a>
         </div>
       </div>
 
-    當前頁的深色實心是 `.iw_active .gl_page-link`，所以 .iw_active 要掛在
+    當前頁的深色實心是 `.gl_pagination-active .gl_page-link`，所以 .gl_pagination-active 要掛在
     <li> 上而不是 <a> 上。
 --}}
 @props([
@@ -38,8 +37,8 @@
     $url = fn (int $page) => str_replace(':page', (string) $page, $urlTemplate);
 @endphp
 
-<div {{ $attributes->class(['iw_pagination-outer-v3']) }}>
-    <div class="iw_pagination-wrap">
+<div {{ $attributes->class(['gl_pagination-outer']) }}>
+    <div class="gl_pagination-wrap">
         <a
             @class(['gl_page-link', 'is-disabled' => $current <= 1])
             href="{{ $url(max(1, $current - 1)) }}"
@@ -49,7 +48,7 @@
 
         <ul class="gl_pagination-group">
             @for ($page = 1; $page <= $last; $page++)
-                <li @class(['page', 'iw_active' => $page === $current])>
+                <li @class(['page', 'gl_pagination-active' => $page === $current])>
                     <a class="gl_page-link" href="{{ $url($page) }}" data-page="{{ $page }}">{{ $page }}</a>
                 </li>
             @endfor

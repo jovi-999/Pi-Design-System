@@ -24,8 +24,14 @@
 //
 // 為什麼用聚合 attribute selector 而不是逐處補在 20 個元件規則裡：
 // 那 20 處 border-radius 有一半的擁有者不帶 gl_ 前綴（input[type=checkbox]、
-// &::before / &::after、.layer、.knobs、.form-feedback、.iw_pagination-outer-v3），
-// 逐處補要動 20 個地方且容易漏；一條規則涵蓋且日後新增元件自動適用。
+// &::before / &::after、.layer、.knobs、.form-feedback），逐處補要動 20 個
+// 地方且容易漏；一條規則涵蓋且日後新增元件自動適用。
+//
+// 這裡刻意只匹配設計系統自己的前綴（gl_ / fz-）。0.0.2 前還匹配 [class*="iw_"]，
+// 那是為了涵蓋改名前的 .iw_pagination-outer-v3 —— 但 iw_ 是 interview 專案的
+// 私有前綴，匹配它等於對該專案全站的 iw_* 元素套 corner-shape 與
+// font-weight: 500（實測在 interview 生效中，是實質的樣式汙染）。
+// pagination 改用 gl_ 前綴後這個匹配已無必要，一併移除。
 //
 // corner-shape 廣泛套用是安全的：border-radius 為 0 時它沒有視覺效果。
 // font-weight 只套在元件根與工具 class 上，靠元件內繼承往下傳，不用逐元素。
@@ -47,8 +53,7 @@
   :where(
     [class*="gl_"], [class*="gl_"] *,
     [class*="gl_"]::before, [class*="gl_"]::after,
-    [class*="gl_"] *::before, [class*="gl_"] *::after,
-    [class*="iw_"], [class*="iw_"] *
+    [class*="gl_"] *::before, [class*="gl_"] *::after
   ) {
     corner-shape: $corner-shape;
   }
@@ -56,7 +61,7 @@
   // font-weight 只套元件根與字級工具 class，其餘靠繼承。
   // 不套後代（`[class*="gl_"] *`）—— 那會把 500 硬塞給塞進元件 slot 的
   // 專案內容（例如 .gl_modal 裡的 <strong>），不是元件該管的範圍。
-  :where([class*="gl_"], [class*="iw_"], [class^="fz-"], [class*=" fz-"]) {
+  :where([class*="gl_"], [class^="fz-"], [class*=" fz-"]) {
     font-weight: 500;
   }
 }
