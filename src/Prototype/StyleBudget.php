@@ -119,9 +119,13 @@ class StyleBudget
     /**
      * 取出所有 `<style>` 區塊的內容（含未閉合的，計到檔尾）。
      *
+     * public 而非 protected：ClassPrefix 要掃同樣這些區塊裡的選擇器。
+     * 「哪些文字算 `<style>` 內容」（含未閉合區塊的處理）只能有一份定義 ——
+     * 兩處各寫一份 regex 遲早分岔，行數與 class 檢查會對不同的範圍生效。
+     *
      * @return array<int, string>
      */
-    protected static function styleBlocks(string $source): array
+    public static function styleBlocks(string $source): array
     {
         // 閉合的區塊
         $count = preg_match_all('/<style[^>]*>(.*?)<\/style>/is', $source, $matches);

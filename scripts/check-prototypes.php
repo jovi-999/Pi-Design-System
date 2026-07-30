@@ -3,10 +3,12 @@
 /**
  * Prototype 的 CI 檢查。
  *
- * 兩項：
+ * 三項：
  *   1. page-scoped 樣式用量 ≤ 30（CLAUDE.md 第 3 條）
  *      —— `<style>` 區塊行數 + inline `style="…"` 的宣告數
- *   2. fragment 必須宣告完整的 `@piFragment` manifest（target / slot / host）
+ *   2. class 命名空間 —— 只准 `pt-`（page-scoped）與設計系統的
+ *      `gl_` / `fz-` / `text-` / `icon-`
+ *   3. fragment 必須宣告完整的 `@piFragment` manifest（target / slot / host）
  *      —— 少了任何一個，preview 無法注入宿主快照、apply.php 也決定不了插入位置
  *
  * 第 1 項是整套流程的品質閥門：自訂樣式寫太多代表元件庫缺東西。超標時
@@ -26,8 +28,10 @@
 declare(strict_types=1);
 
 require __DIR__ . '/../src/Prototype/StyleBudget.php';
+require __DIR__ . '/../src/Prototype/ClassPrefix.php';
 require __DIR__ . '/../src/Prototype/Manifest.php';
 
+use PiTw\PiDesignSystem\Prototype\ClassPrefix;
 use PiTw\PiDesignSystem\Prototype\Manifest;
 use PiTw\PiDesignSystem\Prototype\StyleBudget;
 
@@ -132,6 +136,10 @@ foreach ($prototypes as $prototype) {
         );
     }
 
+    foreach (ClassPrefix::violations($prototype['source']) as $class => $reason) {
+        $problems[] = "class `{$class}` 不合命名空間 —— {$reason}";
+    }
+
     if ($prototype['kind'] === 'fragment') {
         if (! Manifest::isDeclared($prototype['source'])) {
             $problems[] = 'fragment 沒有宣告 @piFragment manifest';
@@ -194,6 +202,10 @@ if ($failures !== []) {
 
       三層門檻與提議格式：.claude/skills/pm-to-preview/references/missing-component.md
       流程第 ⑥ 步的中斷規則：design-guideline-spec.md 的 7.1
+
+    class 命名空間：prototype 的 page-scoped 排版一律 `pt-` 開頭，不分專案。
+    要用設計系統的樣式就用 `gl_` / `fz-` / `text-` / `icon-`，不要自己造一個
+    看起來像 DS 的名字 —— 交接後前端會找不到對應的 SCSS。
 
     manifest 不完整：三個欄位的意義見
     .claude/skills/pm-to-preview/references/prototype-setup.md 的「Fragment prototype」。
