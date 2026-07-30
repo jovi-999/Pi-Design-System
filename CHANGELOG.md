@@ -9,6 +9,45 @@
 
 ---
 
+## [0.0.3] — 2026-07-30
+
+只影響 prototype 流程與 CI，**對下游專案零影響** —— `prototypes/` 有
+`export-ignore` 不出貨，新增的 `src/Prototype/ClassPrefix.php` 只有 CI 與
+preview 用得到。
+
+### ⚠ Breaking — prototype 的 page-scoped 前綴統一為 `pt-`
+
+原本是「用專案縮寫」（`project-a` → `pa-`、`jobar` → `jb-`、interview → `iv-`）。
+改為固定 `pt-`，不分專案。兩個理由：
+
+1. 縮寫沒登記在任何地方，誰產 prototype 誰現取 —— interview 專案自己的私有前綴
+   是 `iw_`，prototype 卻取了 `iv-`，同一個專案兩個縮寫。
+2. 它防不了它想防的事：同專案的所有 prototype 本來就共用一個縮寫，兩份
+   prototype 各寫一個 `.iv-card` 照樣會撞。
+
+改成固定前綴後同專案內的碰撞風險完全沒變，但允許集合變成固定的四個
+（`pt-` + `gl_` / `fz-` / `text-` / `icon-`），CI 才寫得出檢查。
+
+**已 apply 進專案的 prototype** 若還用舊前綴，改名即可（純改名，無行為變化）。
+
+### Added — CI 檢查 prototype 的 class 命名空間
+
+`scripts/check-prototypes.php` 從兩項檢查變三項。新增的第 2 項掃 class 屬性與
+`<style>` 選擇器，只放行上述四個前綴。`pv-`（preview app 專用）與專案私有前綴
+各給專屬錯誤訊息 —— `pv-` 的症狀是「preview 看起來對、貼進專案完全沒樣式」，
+值得一條訊息直接點破。
+
+判斷邏輯在新增的 `src/Prototype/ClassPrefix.php`，與 preview 共用同一份。
+
+### Changed
+
+- `StyleBudget::styleBlocks()` 從 `protected` 改 `public`，供 `ClassPrefix` 取用。
+  「哪些文字算 `<style>` 內容」（含未閉合區塊）只能有一份定義 —— 兩處各寫一份
+  regex 遲早分岔，會讓行數與 class 兩個檢查對不同範圍生效。
+- `CLAUDE.md` 的 Prototype 硬性規則從六條變七條（新增第 4 條：class 命名空間）。
+
+---
+
 ## [0.0.2] — 2026-07-30
 
 自 tag `0.0.1`（= commit `aa4bc96`）以來的變更。
