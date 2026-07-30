@@ -1,5 +1,13 @@
 // ============================================================
 // Pi DS — Breakpoints & z-index
+//
+// 四階斷點的值對齊 interview2020 的 $breakpoints
+// （`resources/sass/basic/_variables.scss:13`）：
+//
+//   mobile: 0   tablet: 768px   desktop: 1152px   largeDesktop: 1536px
+//
+// 命名維持 DS 自己的 sm/md/lg/xl，不用裝置名 —— 1152px 早就不只是「desktop」，
+// 而 DS 是給多個專案共用的公共資產，不該綁單一專案的語彙。
 // ============================================================
 
 @layer pi {
@@ -7,6 +15,7 @@
     --bp-sm: 0;
     --bp-md: 768px;
     --bp-lg: 1152px;
+    --bp-xl: 1536px;
 
     --z-navbar: 23;
     --z-dropdown: 23;
@@ -20,6 +29,23 @@
 $bp-sm: 0;
 $bp-md: 768px;
 $bp-lg: 1152px;
+$bp-xl: 1536px;
+
+// max-width 用的上界。**一律用這組寫 `max-width`，不要直接用 $bp-*。**
+//
+// 直接寫 `@media (max-width: $bp-md)` 的話，在裝置寬度剛好 768px 時，它與
+// `@media (min-width: $bp-md)` 會同時命中 —— 兩條規則都生效，最終看誰在後面，
+// 是個會隨檔案順序漂移的邊界 bug。
+//
+// 減 0.02px 而非 0.01px：Safari 的捨入 bug，見
+// https://bugs.webkit.org/show_bug.cgi?id=178261
+// 這也是 interview 的 sz-down() 的做法（`mixins/_breakpoints.scss:4`），
+// 兩邊必須一致，否則同一個斷點在兩套 CSS 裡的邊界會差 1px。
+//
+// 只有 Sass 形式、沒有 CSS 變數版：CSS 的 @media 條件不吃 var()。
+$bp-md-max: $bp-md - 0.02;  // 767.98px
+$bp-lg-max: $bp-lg - 0.02;  // 1151.98px
+$bp-xl-max: $bp-xl - 0.02;  // 1535.98px
 
 $z-navbar:     var(--z-navbar);
 $z-dropdown:   var(--z-dropdown);

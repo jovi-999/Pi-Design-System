@@ -73,8 +73,8 @@
         &:hover { background: transparent; }
       }
 
-      // RWD：≤768px（tablet 以下）縮為 32px
-      @media (max-width: 768px) {
+      // RWD：md 斷點以下（<768px）縮為 32px
+      @media (max-width: $bp-md-max) {
         width: 32px;
         height: 32px;
       }

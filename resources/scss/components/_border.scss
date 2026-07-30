@@ -21,7 +21,9 @@
     outline-offset: -1px;
 
     // 手機下：描邊貼齊外框、色階降為 alpha-50
-    @media (max-width: $bp-md) {
+    // 用 $bp-md-max（767.98px）不是 $bp-md —— 後者在剛好 768px 時會與
+    // min-width: 768px 的規則同時命中，見 tokens/_breakpoints.scss。
+    @media (max-width: $bp-md-max) {
       outline: 1px solid $cl-basic-alpha-50;
       outline-offset: 0;
     }
